@@ -134,3 +134,19 @@ option {
     overflow: visible !important;
   }
 }
+
+/* Tighter spacing so the parts and cart links fit on mid-size screens */
+@media (min-width: 1216px) and (max-width: 1600px) {
+  .nav-item {
+    padding: 20px 8px;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1215px) {
+  .nav-item {
+    padding: 10px 2px;
+  }
+  .nav-link {
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,12 @@
+# Angular SPA routing for cPanel (Apache).
+# Real files and the Node.js API under /api are served as-is;
+# every other path falls back to index.html so routes like /parts/12 work on refresh.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^api(/|$) - [L]
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+  RewriteRule ^ index.html [L]
+</IfModule>

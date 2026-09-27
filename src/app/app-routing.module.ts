@@ -11,6 +11,10 @@ import { AboutusComponent } from './aboutus/aboutus.component';
 import { AdminpanelComponent } from './adminpanel/adminpanel.component';
 import { PartsComponent } from './parts/parts.component';
 import { ResourcesComponent } from './resources/resources.component';
+import { PartDetailComponent } from './part-detail/part-detail.component';
+import { CartComponent } from './cart/cart.component';
+import { AdminLoginComponent } from './admin-login/admin-login.component';
+import { adminGuard } from './shop/admin.guard';
 
 const routes: Routes = [
   {path:'', component:HomeComponent},
@@ -21,8 +25,12 @@ const routes: Routes = [
   {path:'tailormade', component:TailormodeComponent},
   {path:'aboutus', component:AboutusComponent},
   {path: 'lifts', component:LiftsComponent},
-  {path: 'adminpanel', component:AdminpanelComponent},
+  {path: 'admin/login', component:AdminLoginComponent},
+  {path: 'admin', component:AdminpanelComponent, canActivate:[adminGuard]},
+  {path: 'adminpanel', redirectTo:'admin'},
   {path: 'parts', component:PartsComponent},
+  {path: 'parts/:id', component:PartDetailComponent},
+  {path: 'cart', component:CartComponent},
   {path: 'resources', component:ResourcesComponent}
   
 ];

@@ -11,7 +11,7 @@ import { TextaboutComponent } from './textabout/textabout.component';
 import { WhyComponent } from './why/why.component';
 import { MeetComponent } from './meet/meet.component';
 import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './home/home.component';
 import { DumbwaitersComponent } from './dumbwaiters/dumbwaiters.component';
 import { AosDirective } from './aos.directive';
@@ -34,6 +34,11 @@ import { LiftsComponent } from './lifts/lifts.component';
 import { AdminpanelComponent } from './adminpanel/adminpanel.component';
 import { PartsComponent } from './parts/parts.component';
 import { ResourcesComponent } from './resources/resources.component';
+import { PartDetailComponent } from './part-detail/part-detail.component';
+import { CartComponent } from './cart/cart.component';
+import { AdminLoginComponent } from './admin-login/admin-login.component';
+import { LocalizedPipe } from './shop/localized.pipe';
+import { AuthInterceptor } from './shop/auth.interceptor';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n-v2/', '.json');
 }
@@ -62,6 +67,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     LiftsComponent,
     AdminpanelComponent,
     PartsComponent,
+    PartDetailComponent,
+    CartComponent,
+    AdminLoginComponent,
+    LocalizedPipe,
   ],
   imports: [
     BrowserModule,
@@ -81,7 +90,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     }),
   ],
   exports: [AosDirective],
-  providers: [TranslatePipe],
+  providers: [TranslatePipe, { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -1,0 +1,68 @@
+-- ecolift.ge database schema (MySQL 5.7+ / MariaDB 10.3+)
+-- Import once via phpMyAdmin in cPanel.
+
+SET NAMES utf8mb4;
+
+CREATE TABLE IF NOT EXISTS admins (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(190) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS categories (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name_ka VARCHAR(190) NOT NULL,
+  name_en VARCHAR(190) NULL,
+  name_ru VARCHAR(190) NULL,
+  sort_order INT NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS products (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  category_id INT UNSIGNED NULL,
+  code VARCHAR(100) NOT NULL UNIQUE,
+  name_ka VARCHAR(255) NOT NULL,
+  name_en VARCHAR(255) NULL,
+  name_ru VARCHAR(255) NULL,
+  description_ka TEXT NULL,
+  description_en TEXT NULL,
+  description_ru TEXT NULL,
+  price DECIMAL(10,2) NULL COMMENT 'NULL = price on request',
+  in_stock TINYINT(1) NOT NULL DEFAULT 1,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_products_category FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS product_images (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  product_id INT UNSIGNED NOT NULL,
+  file_name VARCHAR(255) NOT NULL,
+  sort_order INT NOT NULL DEFAULT 0,
+  CONSTRAINT fk_images_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS orders (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  customer_name VARCHAR(190) NOT NULL,
+  phone VARCHAR(50) NOT NULL,
+  email VARCHAR(190) NULL,
+  company VARCHAR(190) NULL,
+  comment TEXT NULL,
+  status ENUM('new','in_progress','done','cancelled') NOT NULL DEFAULT 'new',
+  email_sent TINYINT(1) NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS order_items (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  order_id INT UNSIGNED NOT NULL,
+  product_id INT UNSIGNED NULL,
+  product_code VARCHAR(100) NOT NULL,
+  product_name VARCHAR(255) NOT NULL,
+  quantity INT UNSIGNED NOT NULL,
+  CONSTRAINT fk_items_order FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+  CONSTRAINT fk_items_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
