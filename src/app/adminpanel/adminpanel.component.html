@@ -1,70 +1,159 @@
-<div class="admin-panel">
-    <h1>Add New Product</h1>
-  
-    <form (ngSubmit)="onSubmit()" #productForm="ngForm">
-      <!-- Product Name -->
-      <div class="form-group">
-        <label for="productName">Product Name</label>
-        <input
-          type="text"
-          id="productName"
-          name="name"
-          class="form-control"
-          [(ngModel)]="product.name"
-          required
-        />
-      </div>
-  
-      <!-- Product Code -->
-      <div class="form-group">
-        <label for="productCode">Product Code</label>
-        <input
-          type="text"
-          id="productCode"
-          name="code"
-          class="form-control"
-          [(ngModel)]="product.code"
-          required
-        />
-      </div>
-  
-      <!-- Product Description -->
-      <div class="form-group">
-        <label for="productDescription">Product Description</label>
-        <textarea
-          id="productDescription"
-          name="description"
-          class="form-control"
-          [(ngModel)]="product.description"
-          rows="4"
-          required
-        ></textarea>
-      </div>
-  
-      <!-- Image Upload -->
-      <div class="form-group">
-        <label for="productImages">Upload Product Images</label>
-        <input
-          type="file"
-          id="productImages"
-          name="images"
-          class="form-control"
-          (change)="onImageUpload($event)"
-          multiple
-          accept="image/*"
-        />
-        <div class="image-preview" *ngIf="images.length">
-          <h3>Preview:</h3>
+<div class="admin-panel container">
+  <div class="topbar">
+    <h1>ადმინ პანელი</h1>
+    <button class="btn btn-outline-secondary btn-sm" (click)="logout()">გასვლა</button>
+  </div>
+
+  <ul class="nav nav-tabs mb-4">
+    <li class="nav-item"><button class="nav-link" [class.active]="tab === 'products'" (click)="tab = 'products'">ნაწილები</button></li>
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="tab === 'orders'" (click)="tab = 'orders'; loadOrders()">
+        შეკვეთები <span *ngIf="newOrdersCount" class="badge bg-danger">{{ newOrdersCount }}</span>
+      </button>
+    </li>
+    <li class="nav-item"><button class="nav-link" [class.active]="tab === 'categories'" (click)="tab = 'categories'">კატეგორიები</button></li>
+  </ul>
+
+  <!-- Products -->
+  <ng-container *ngIf="tab === 'products'">
+    <form class="product-form" (ngSubmit)="save()" #f="ngForm">
+      <h2>{{ editing ? "რედაქტირება: " + editing.code : "ახალი ნაწილი" }}</h2>
+
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">კოდი *</label>
+          <input class="form-control" name="code" [(ngModel)]="form.code" required />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">კატეგორია</label>
+          <select class="form-select" name="category_id" [(ngModel)]="form.category_id">
+            <option [ngValue]="null">-</option>
+            <option *ngFor="let c of categories" [ngValue]="c.id">{{ c.name_ka }}</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">ფასი (₾) — ცარიელი = შეთანხმებით</label>
+          <input class="form-control" type="number" min="0" step="0.01" name="price" [(ngModel)]="form.price" />
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">დასახელება (ქართ.) *</label>
+          <input class="form-control" name="name_ka" [(ngModel)]="form.name_ka" required />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Name (English)</label>
+          <input class="form-control" name="name_en" [(ngModel)]="form.name_en" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Название (рус.)</label>
+          <input class="form-control" name="name_ru" [(ngModel)]="form.name_ru" />
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">აღწერა (ქართ.)</label>
+          <textarea class="form-control" rows="4" name="description_ka" [(ngModel)]="form.description_ka"></textarea>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Description (English)</label>
+          <textarea class="form-control" rows="4" name="description_en" [(ngModel)]="form.description_en"></textarea>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Описание (рус.)</label>
+          <textarea class="form-control" rows="4" name="description_ru" [(ngModel)]="form.description_ru"></textarea>
+        </div>
+
+        <div class="col-12 d-flex gap-4">
+          <label class="form-check"><input class="form-check-input" type="checkbox" name="in_stock" [(ngModel)]="form.in_stock" /> მარაგშია</label>
+          <label class="form-check"><input class="form-check-input" type="checkbox" name="is_active" [(ngModel)]="form.is_active" /> საიტზე ჩანს</label>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label">სურათები (jpg, png, webp, მაქს. 5MB)</label>
+          <input class="form-control" type="file" multiple accept="image/jpeg,image/png,image/webp" (change)="onFiles($event)" />
           <div class="image-list">
-            <div *ngFor="let image of images; let i = index" class="image-item">
-              <img [src]="image" alt="Product Image {{ i + 1 }}" />
-              <button type="button" (click)="removeImage(i)">Remove</button>
+            <div *ngFor="let img of editing?.images" class="image-item">
+              <img [src]="api.imageUrl(img.url)" alt="" />
+              <button type="button" class="btn btn-sm btn-danger" (click)="deleteImage(img.id)">✕</button>
+            </div>
+            <div *ngFor="let f of newFiles; let i = index" class="image-item new">
+              <img [src]="f.preview" alt="" />
+              <button type="button" class="btn btn-sm btn-danger" (click)="removeNewFile(i)">✕</button>
             </div>
           </div>
         </div>
       </div>
-  
-      <button type="submit" class="btn btn-primary">Save Product</button>
+
+      <p *ngIf="message" class="text-success mt-3">{{ message }}</p>
+      <p *ngIf="error" class="text-danger mt-3">{{ error }}</p>
+
+      <div class="d-flex gap-2 mt-3">
+        <button type="submit" class="btn btn-success" [disabled]="f.invalid || saving">{{ saving ? "ინახება..." : "შენახვა" }}</button>
+        <button type="button" class="btn btn-outline-secondary" *ngIf="editing" (click)="resetForm()">გაუქმება</button>
+      </div>
     </form>
-  </div>
-  
+
+    <table class="table table-hover align-middle mt-4">
+      <thead>
+        <tr><th></th><th>კოდი</th><th>დასახელება</th><th>კატეგორია</th><th>ფასი</th><th>სტატუსი</th><th></th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of products">
+          <td><img *ngIf="p.images.length" [src]="api.imageUrl(p.images[0].url)" class="thumb" alt="" /></td>
+          <td>{{ p.code }}</td>
+          <td>{{ p.name_ka }}</td>
+          <td>{{ categoryName(p.category_id) }}</td>
+          <td>{{ p.price !== null ? p.price + " ₾" : "-" }}</td>
+          <td>
+            <span *ngIf="!p.is_active" class="badge bg-secondary">დამალული</span>
+            <span *ngIf="!p.in_stock" class="badge bg-warning text-dark">არ არის მარაგში</span>
+          </td>
+          <td class="text-end text-nowrap">
+            <button class="btn btn-sm btn-outline-primary" (click)="edit(p)">რედაქტირება</button>
+            <button class="btn btn-sm btn-outline-danger ms-1" (click)="deleteProduct(p)">წაშლა</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+
+  <!-- Orders -->
+  <ng-container *ngIf="tab === 'orders'">
+    <p *ngIf="!orders.length" class="text-muted">შეკვეთები ჯერ არ არის.</p>
+    <div class="order-card" *ngFor="let o of orders">
+      <div class="d-flex justify-content-between flex-wrap gap-2">
+        <div>
+          <strong>#{{ o.id }}</strong> · {{ o.created_at | date: "dd.MM.yyyy HH:mm" }}
+          <span *ngIf="!o.email_sent" class="badge bg-warning text-dark ms-2">მეილი ვერ გაიგზავნა</span>
+        </div>
+        <select class="form-select form-select-sm status" [ngModel]="o.status" (ngModelChange)="setStatus(o, $event)">
+          <option *ngFor="let s of statuses" [value]="s.value">{{ s.label }}</option>
+        </select>
+      </div>
+      <div class="mt-2">
+        {{ o.customer_name }} · <a [href]="'tel:' + o.phone">{{ o.phone }}</a>
+        <ng-container *ngIf="o.email"> · <a [href]="'mailto:' + o.email">{{ o.email }}</a></ng-container>
+        <ng-container *ngIf="o.company"> · {{ o.company }}</ng-container>
+      </div>
+      <p *ngIf="o.comment" class="comment">{{ o.comment }}</p>
+      <ul class="mb-0">
+        <li *ngFor="let i of o.items">{{ i.product_code }} — {{ i.product_name }} × {{ i.quantity }}</li>
+      </ul>
+    </div>
+  </ng-container>
+
+  <!-- Categories -->
+  <ng-container *ngIf="tab === 'categories'">
+    <form class="row g-2 mb-4" (ngSubmit)="addCategory()">
+      <div class="col-md-3"><input class="form-control" name="cka" [(ngModel)]="newCategory.name_ka" placeholder="სახელი (ქართ.) *" required /></div>
+      <div class="col-md-3"><input class="form-control" name="cen" [(ngModel)]="newCategory.name_en" placeholder="Name (English)" /></div>
+      <div class="col-md-3"><input class="form-control" name="cru" [(ngModel)]="newCategory.name_ru" placeholder="Название (рус.)" /></div>
+      <div class="col-md-3"><button class="btn btn-success w-100">დამატება</button></div>
+    </form>
+    <ul class="list-group">
+      <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let c of categories">
+        <span>{{ c.name_ka }} <small class="text-muted">{{ c.name_en }} {{ c.name_ru }}</small></span>
+        <button class="btn btn-sm btn-outline-danger" (click)="deleteCategory(c)">წაშლა</button>
+      </li>
+    </ul>
+  </ng-container>
+</div>

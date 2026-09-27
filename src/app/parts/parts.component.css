@@ -1,66 +1,81 @@
 .parts-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  h1 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #333;
-  }
-  
-  .no-products {
-    text-align: center;
-    font-size: 18px;
-    color: #777;
-  }
-  
-  .product-card {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  h2 {
-    margin-top: 0;
-    color: #333;
-  }
-  
-  p {
-    margin: 5px 0;
-    color: #555;
-  }
-  
-  .image-gallery {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
-  }
-  
-  .image-gallery img {
-    max-width: 100px;
-    max-height: 100px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-  }
-  
-  .btn-delete {
-    background-color: #ff4d4d;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
-    display: inline-block;
-  }
-  
-  .btn-delete:hover {
-    background-color: #e60000;
-  }
-  
+  padding: 30px 16px 60px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  background: #fff;
+  border-radius: 8px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #333;
+}
+
+.search-bar {
+  display: flex;
+  gap: 8px;
+  max-width: 600px;
+  margin: 0 auto 16px;
+}
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.state {
+  text-align: center;
+  font-size: 18px;
+  color: #777;
+  padding: 40px 0;
+}
+
+.product-card {
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.img-wrap {
+  text-decoration: none;
+  display: block;
+  aspect-ratio: 4 / 3;
+  background: #f4f4f4;
+}
+
+.img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.no-img {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 20px;
+}
+
+.card-title a {
+  color: #333;
+  text-decoration: none;
+}
+
+.price {
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.pager {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+}

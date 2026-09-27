@@ -1,20 +1,64 @@
-<div class="parts-container">
-    <h1>Product Parts</h1>
-  
-    <div *ngIf="products.length === 0" class="no-products">
-      No products available. Please add products from the Admin Panel.
-    </div>
-  
-    <div class="product-card" *ngFor="let product of products">
-      <h2>{{ product.name }}</h2>
-      <p><strong>Code:</strong> {{ product.code }}</p>
-      <p><strong>Description:</strong> {{ product.description }}</p>
-  
-      <div class="image-gallery">
-        <img *ngFor="let image of product.images" [src]="image" alt="{{ product.name }}" />
+<div class="container parts-container">
+  <h1>{{ "shop.title" | translate }}</h1>
+
+  <form class="search-bar" (ngSubmit)="load()">
+    <input
+      type="search"
+      class="form-control"
+      name="search"
+      [(ngModel)]="search"
+      [placeholder]="'shop.searchPlaceholder' | translate"
+    />
+    <button type="submit" class="btn btn-success">{{ "shop.search" | translate }}</button>
+  </form>
+
+  <div class="categories" *ngIf="categories.length">
+    <button class="btn btn-sm" [class.btn-success]="!category" [class.btn-outline-success]="category" (click)="selectCategory(null)">
+      {{ "shop.all" | translate }}
+    </button>
+    <button
+      *ngFor="let c of categories"
+      class="btn btn-sm"
+      [class.btn-success]="category === c.id"
+      [class.btn-outline-success]="category !== c.id"
+      (click)="selectCategory(c.id)"
+    >
+      {{ c | localized: "name" }}
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="state">{{ "shop.loading" | translate }}</div>
+  <div *ngIf="error" class="state">{{ "shop.loadError" | translate }}</div>
+  <div *ngIf="!loading && !error && !products.length" class="state">{{ "shop.empty" | translate }}</div>
+
+  <div class="row g-4" *ngIf="!loading && !error">
+    <div class="col-12 col-sm-6 col-lg-4 col-xl-3" *ngFor="let p of products">
+      <div class="card h-100 product-card">
+        <a [routerLink]="['/parts', p.id]" class="img-wrap">
+          <img *ngIf="p.images.length; else noImg" [src]="api.imageUrl(p.images[0].url)" [alt]="p | localized: 'name'" />
+          <ng-template #noImg><div class="no-img">{{ p.code }}</div></ng-template>
+        </a>
+        <div class="card-body d-flex flex-column">
+          <small class="text-muted">{{ "shop.code" | translate }}: {{ p.code }}</small>
+          <h5 class="card-title">
+            <a [routerLink]="['/parts', p.id]">{{ p | localized: "name" }}</a>
+          </h5>
+          <div class="price">
+            <ng-container *ngIf="p.price !== null; else onRequest">{{ p.price }} ₾</ng-container>
+            <ng-template #onRequest>{{ "shop.priceOnRequest" | translate }}</ng-template>
+          </div>
+          <small *ngIf="!p.in_stock" class="text-danger">{{ "shop.outOfStock" | translate }}</small>
+          <button class="btn btn-success mt-auto" (click)="addToCart(p)">
+            {{ (addedId === p.id ? "shop.added" : "shop.addToCart") | translate }}
+          </button>
+        </div>
       </div>
-  
-      <button class="btn-delete" (click)="deleteProduct(product)">Delete Product</button>
     </div>
   </div>
-  
+
+  <nav *ngIf="pages > 1" class="pager">
+    <button class="btn btn-outline-secondary btn-sm" [disabled]="page <= 1" (click)="load(page - 1)">‹</button>
+    <span>{{ page }} / {{ pages }}</span>
+    <button class="btn btn-outline-secondary btn-sm" [disabled]="page >= pages" (click)="load(page + 1)">›</button>
+  </nav>
+</div>

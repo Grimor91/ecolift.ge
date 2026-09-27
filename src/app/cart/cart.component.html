@@ -1,0 +1,53 @@
+<div class="container cart-container">
+  <h1>{{ "shop.cart" | translate }}</h1>
+
+  <div *ngIf="orderId" class="alert alert-success text-center">
+    <h4>{{ "shop.thanks" | translate }}</h4>
+    <p>{{ "shop.orderNumber" | translate }}: #{{ orderId }}</p>
+    <p>{{ "shop.weWillContact" | translate }}</p>
+    <a routerLink="/parts" class="btn btn-success">{{ "shop.continue" | translate }}</a>
+  </div>
+
+  <ng-container *ngIf="!orderId">
+    <div *ngIf="!cart.items.length" class="state">
+      {{ "shop.cartEmpty" | translate }}
+      <div><a routerLink="/parts" class="btn btn-success mt-3">{{ "shop.title" | translate }}</a></div>
+    </div>
+
+    <div class="row g-4" *ngIf="cart.items.length">
+      <div class="col-lg-7">
+        <div class="cart-item" *ngFor="let item of cart.items$ | async">
+          <img *ngIf="item.image" [src]="api.imageUrl(item.image)" alt="" />
+          <div class="info">
+            <a [routerLink]="['/parts', item.productId]">{{ item.name }}</a>
+            <small class="text-muted d-block">{{ "shop.code" | translate }}: {{ item.code }}</small>
+          </div>
+          <input
+            type="number"
+            min="1"
+            class="form-control qty"
+            [ngModel]="item.quantity"
+            (ngModelChange)="cart.setQuantity(item.productId, +$event)"
+          />
+          <button class="btn btn-sm btn-outline-danger" (click)="cart.remove(item.productId)">✕</button>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <form class="order-form" #f="ngForm" (ngSubmit)="submit()">
+          <h4>{{ "shop.orderForm" | translate }}</h4>
+          <input class="form-control" name="name" [(ngModel)]="form.name" required [placeholder]="'shop.name' | translate" />
+          <input class="form-control" name="phone" [(ngModel)]="form.phone" required type="tel" [placeholder]="'shop.phone' | translate" />
+          <input class="form-control" name="email" [(ngModel)]="form.email" type="email" email [placeholder]="'shop.email' | translate" />
+          <input class="form-control" name="company" [(ngModel)]="form.company" [placeholder]="'shop.company' | translate" />
+          <textarea class="form-control" name="comment" rows="3" [(ngModel)]="form.comment" [placeholder]="'shop.comment' | translate"></textarea>
+          <p *ngIf="error" class="text-danger">{{ "shop.orderError" | translate }}</p>
+          <button type="submit" class="btn btn-success w-100" [disabled]="f.invalid || sending">
+            {{ (sending ? "shop.sending" : "shop.placeOrder") | translate }}
+          </button>
+          <small class="text-muted">{{ "shop.noPaymentNote" | translate }}</small>
+        </form>
+      </div>
+    </div>
+  </ng-container>
+</div>

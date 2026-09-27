@@ -13,7 +13,9 @@
     "contact": "Contact",
     "getQuote": "Get a Quote",
     "hoists": "Hoists",
-    "documentary":"Documentation"
+    "documentary": "Documentation",
+    "parts": "Parts",
+    "cart": "Cart"
   },
   "text": {
     "folow": "Follow us on social media",
@@ -71,35 +73,61 @@
     "service-Modernization": "Modernization",
     "service-Spare": "Spare parts and accessories"
   },
-  "documents":{
-"document":"Documentation",
-"elevators":"Elevators",
-"escalators":"Escalators",
-"hoists":"Hoists",
-"description":"Technical documents, catalogs and partner materials"
-
+  "documents": {
+    "document": "Documentation",
+    "elevators": "Elevators",
+    "escalators": "Escalators",
+    "hoists": "Hoists",
+    "description": "Technical documents, catalogs and partner materials"
   },
-  
   "categories": {
     "elevators": "Elevators",
     "escalators": "Escalators",
     "hoists": "Hoists",
     "partners": "Partners",
-
     "titletech": "Elevator Technical Documentation",
     "descriptiontech": "Technical issues, specifications and maintenance",
-
     "titledes": "Elevator Design Catalog",
     "descriptiondes": "Design and decoration options",
-
     "escalatorTech": "Escalator Technical Documentation",
     "hoistOverview": "Hoist Systems Overview",
     "partnerPresentation": "Partner Company Presentation"
   },
-  "doc":{
-    "doc":"Documentation",
-    "subtitle":"Technical documents, catalogs and partner materials"
+  "doc": {
+    "doc": "Documentation",
+    "subtitle": "Technical documents, catalogs and partner materials"
+  },
+  "shop": {
+    "title": "Elevator parts",
+    "search": "Search",
+    "searchPlaceholder": "Search by name or code",
+    "all": "All",
+    "loading": "Loading...",
+    "loadError": "Could not load parts. Please try again later.",
+    "empty": "No parts found.",
+    "code": "Code",
+    "priceOnRequest": "Price on request",
+    "outOfStock": "Out of stock",
+    "addToCart": "Add to cart",
+    "added": "Added to cart",
+    "goToCart": "Go to cart",
+    "back": "Parts",
+    "notFound": "Part not found.",
+    "cart": "Cart",
+    "cartEmpty": "Your cart is empty.",
+    "orderForm": "Place an order",
+    "name": "Full name *",
+    "phone": "Phone *",
+    "email": "Email",
+    "company": "Company",
+    "comment": "Comment",
+    "placeOrder": "Send order",
+    "sending": "Sending...",
+    "orderError": "The order could not be sent. Please try again or call us.",
+    "noPaymentNote": "No online payment is needed. We will contact you after receiving the order to confirm price and delivery.",
+    "thanks": "Thank you, your order has been received!",
+    "orderNumber": "Order number",
+    "weWillContact": "We will contact you shortly.",
+    "continue": "Browse parts"
   }
-
-
 }

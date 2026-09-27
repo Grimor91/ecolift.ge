@@ -1,0 +1,41 @@
+<div class="container detail-container">
+  <a routerLink="/parts" class="back">‹ {{ "shop.back" | translate }}</a>
+
+  <div *ngIf="notFound" class="state">{{ "shop.notFound" | translate }}</div>
+
+  <div class="row g-4" *ngIf="product as p">
+    <div class="col-md-6">
+      <div class="main-img">
+        <img *ngIf="p.images.length; else noImg" [src]="api.imageUrl(p.images[selectedImage].url)" [alt]="p | localized: 'name'" />
+        <ng-template #noImg><div class="no-img">{{ p.code }}</div></ng-template>
+      </div>
+      <div class="thumbs" *ngIf="p.images.length > 1">
+        <img
+          *ngFor="let img of p.images; let i = index"
+          [src]="api.imageUrl(img.url)"
+          [class.active]="i === selectedImage"
+          (click)="selectedImage = i"
+          alt=""
+        />
+      </div>
+    </div>
+    <div class="col-md-6">
+      <small class="text-muted">{{ "shop.code" | translate }}: {{ p.code }}</small>
+      <h1>{{ p | localized: "name" }}</h1>
+      <div class="price">
+        <ng-container *ngIf="p.price !== null; else onRequest">{{ p.price }} ₾</ng-container>
+        <ng-template #onRequest>{{ "shop.priceOnRequest" | translate }}</ng-template>
+      </div>
+      <p *ngIf="!p.in_stock" class="text-danger">{{ "shop.outOfStock" | translate }}</p>
+      <p class="description">{{ p | localized: "description" }}</p>
+
+      <div class="order-row">
+        <input type="number" min="1" class="form-control qty" [(ngModel)]="quantity" />
+        <button class="btn btn-success" (click)="addToCart()">{{ "shop.addToCart" | translate }}</button>
+      </div>
+      <p *ngIf="added" class="added">
+        {{ "shop.added" | translate }} · <a routerLink="/cart">{{ "shop.goToCart" | translate }}</a>
+      </p>
+    </div>
+  </div>
+</div>
