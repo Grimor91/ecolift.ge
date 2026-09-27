@@ -1,0 +1,25 @@
+<div class="resources-container">
+  <h1 class="doc">{{ "doc.doc" | translate }}</h1>
+  <p class="subtitle">{{ "doc.subtitle" | translate }}</p>
+
+  <div class="category" *ngFor="let category of pdfCategories">
+    <h2>{{ category.category | translate }}</h2>
+
+    <div class="pdf-list">
+      <a
+        class="pdf-card"
+        *ngFor="let pdf of category.items"
+        [href]="pdf.url"
+        target="_blank"
+      >
+        <div class="icon">📄</div>
+        <div class="info">
+          <h3>{{ pdf.title | translate }}</h3>
+          <p *ngIf="pdf.description">
+            {{ pdf.description | translate }}
+          </p>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>

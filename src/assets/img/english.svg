@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="34" height="25" viewBox="0 0 34 25">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_256" data-name="Rectangle 256" width="34" height="25" rx="4" transform="translate(1637 84)" fill="#fff"/>
+    </clipPath>
+  </defs>
+  <g id="eng" transform="translate(-1637 -84)" clip-path="url(#clip-path)">
+    <g id="_2634450_ensign_flag_kingdom_nation_icon" data-name="2634450_ensign_flag_kingdom_nation_icon" transform="translate(1637.623 -22.369)">
+      <rect id="Rectangle_255" data-name="Rectangle 255" width="33.863" height="24.867" transform="translate(0 106.7)" fill="#fff"/>
+      <path id="Path_181" data-name="Path 181" d="M309.612,115.691l10.575-7.892v-1.1h-.731L307.4,115.691Z" transform="translate(-286.324)" fill="#bd0034"/>
+      <path id="Path_182" data-name="Path 182" d="M334.8,303.4l11.075,8.25V310l-8.862-6.6Z" transform="translate(-312.012 -180.324)" fill="#bd0034"/>
+      <path id="Path_183" data-name="Path 183" d="M0,111.157l9.469,7.1h2.219L0,109.5Z" transform="translate(0 -2.567)" fill="#bd0034"/>
+      <path id="Path_184" data-name="Path 184" d="M11.181,303.4,0,311.742v.15H2.019L13.4,303.4Z" transform="translate(0 -180.324)" fill="#bd0034"/>
+      <path id="Path_185" data-name="Path 185" d="M308.906,106.7H297.7v8.359Z" transform="translate(-277.23)" fill="#1a237b"/>
+      <path id="Path_186" data-name="Path 186" d="M51.156,106.7H40l11.156,8.359Z" transform="translate(-37.5)" fill="#1a237b"/>
+      <path id="Path_187" data-name="Path 187" d="M398,151.811V146.1l-7.6,5.711Z" transform="translate(-364.137 -36.12)" fill="#1a237b"/>
+      <path id="Path_188" data-name="Path 188" d="M398,309.036V303.4h-7.6Z" transform="translate(-364.137 -180.324)" fill="#1a237b"/>
+      <path id="Path_189" data-name="Path 189" d="M50.1,318.767H60.625V310.9Z" transform="translate(-46.969 -187.2)" fill="#1a237b"/>
+      <path id="Path_190" data-name="Path 190" d="M297.7,318.767h10.556L297.7,310.9Z" transform="translate(-277.23 -187.2)" fill="#1a237b"/>
+      <path id="Path_191" data-name="Path 191" d="M0,303.4v5.894L7.863,303.4Z" transform="translate(0 -180.324)" fill="#1a237b"/>
+      <path id="Path_192" data-name="Path 192" d="M0,149.611H7.863L0,143.7Z" transform="translate(0 -33.92)" fill="#1a237b"/>
+      <path id="Path_193" data-name="Path 193" d="M15.5,106.7v10.465H0v4.429H15.5v9.974h3.142v-9.974H33.863v-4.429H18.645V106.7Z" fill="#bd0034"/>
+    </g>
+  </g>
+</svg>

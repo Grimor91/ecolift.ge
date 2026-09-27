@@ -1,0 +1,105 @@
+{
+  "language": {
+    "georgian": "Georgian",
+    "english": "English",
+    "russian": "Russian"
+  },
+  "navbar": {
+    "home": "Home",
+    "about": "About",
+    "elevators": "Elevators",
+    "escalators": "Escalators",
+    "ebrochure": "E-Brochure",
+    "contact": "Contact",
+    "getQuote": "Get a Quote",
+    "hoists": "Hoists",
+    "documentary":"Documentation"
+  },
+  "text": {
+    "folow": "Follow us on social media",
+    "products": "Products",
+    "productstext": "We offer a wide range of products for safe and comfortable travel, sush as elevators, escalators, travelators, platforms, dumbwaiters. Any Tailor made lifting equipment",
+    "design": "Design & Engineering",
+    "designtext": "We provide an individual design and our flexible solutions match to most geometry, within standarts code",
+    "planing": "Plannig & Construction Supervision",
+    "planingtext": "We plan your project taking into account your wishes, minimize all costs and delays due to proactive decisions. Constant monitoring of the construction site and the introduction of preventive measures and adjustments of the construction site in advance, ensures the fulfillment of orders on time",
+    "installation": "Installation",
+    "installationtext": "Installation is no less important than the product itself, which is why we pay special attention to personnel and execution technology",
+    "maintrance": "Maintenance",
+    "maintrancetext": "Regular maintenance guarantees the safety of passengers, prolongs the life-cycle of equipment and reduces costs. We provide flexible and affordable service packages, customized solutions and each client receives a cumulative package for free purchase of spare parts",
+    "modernization": "Modernization",
+    "modernizationtext": "For minimal costs, you give a second life to old equipment and get a safe and high-quality product. by prolonging the service life, you reduce your costs for a complete replacement of equipment",
+    "why": "Why choose us?",
+    "quality": "Quality & Safety are Our Absolutes!",
+    "transparency": "Transparency",
+    "transparencytext": "We provide full transparency at every stage of project",
+    "experience": "Experience",
+    "experiencetext": "Our extensive experience ensures quality and comfort",
+    "adaptation": "Adaptation",
+    "adaptationtext": "We adapt according to client's requirements and environment",
+    "price": "Price",
+    "pricetext": "Our pricing policy will suit everyone",
+    "meet": "Meet Our Management!",
+    "Bungalow": "Bungalow Elevators",
+    "Freight": "Freight Elevators",
+    "Hospital": "Hospital Elevators",
+    "Industrial": "Industrial Elevators",
+    "Dumbwaiters": "Dumbwaiters",
+    "Lifting": "Lifting platforms",
+    "Tailormade": "Tailormade Elevators",
+    "Passanger": "Passanger Elevators",
+    "Panoramic": "Panoramic Elevators",
+    "Services": "Products",
+    "Consulting": "Elevators ",
+    "equipment": " Escalators, Construction hoists ",
+    "commissioning": "Automatic doors ",
+    "decor": "Fire emergency exit doors",
+    "AdditionalServicesheader": "Services",
+    "AdditionalServices": " Consulting",
+    "Design-production": "Product selection support",
+    "Performancewarranty": "Performance warranty",
+    "productwarranty": "product warranty",
+    "Extendedwarranty": "Extended warranty",
+    "service-design": "Design",
+    "service-Technical": "Technical support and supervision",
+    "service-Production": "Production",
+    "service-Logistics": "Logistics and unloading at the construction site",
+    "service-Installation": "Installation, commissioning and testing",
+    "service-Handing": "Handing over to authorities",
+    "service-Tailor": "Tailor made decorative finishing",
+    "service-Maintenance": "Maintenance",
+    "service-Modernization": "Modernization",
+    "service-Spare": "Spare parts and accessories"
+  },
+  "documents":{
+"document":"Documentation",
+"elevators":"Elevators",
+"escalators":"Escalators",
+"hoists":"Hoists",
+"description":"Technical documents, catalogs and partner materials"
+
+  },
+  
+  "categories": {
+    "elevators": "Elevators",
+    "escalators": "Escalators",
+    "hoists": "Hoists",
+    "partners": "Partners",
+
+    "titletech": "Elevator Technical Documentation",
+    "descriptiontech": "Technical issues, specifications and maintenance",
+
+    "titledes": "Elevator Design Catalog",
+    "descriptiondes": "Design and decoration options",
+
+    "escalatorTech": "Escalator Technical Documentation",
+    "hoistOverview": "Hoist Systems Overview",
+    "partnerPresentation": "Partner Company Presentation"
+  },
+  "doc":{
+    "doc":"Documentation",
+    "subtitle":"Technical documents, catalogs and partner materials"
+  }
+
+
+}

@@ -1,0 +1,136 @@
+.navbar {
+  width: 100%;
+  background-color: white;
+  height: auto;
+  padding: 0;
+  box-sizing: border-box;
+}
+.ecoliftlogo {
+  width: 130px;
+  height: 60px;
+  margin-left: 50px;
+  filter: hue-rotate(1deg);
+}
+
+.container-fluid {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-collapse {
+  display: flex;
+  justify-content: flex-end;
+}
+
+
+.dropdown-item {
+  text-decoration: none !important;
+  text-align: center;
+}
+.dropdown-item:hover .dropdown-item {
+  color: #5d9c04 !important;
+  background-color: transparent !important;
+}
+.dropdown:hover .dropdown-menu {
+  display: block !important;
+}
+
+.nav-item {
+  padding: 20px;
+  margin: auto;
+}
+.nav-link {
+  color: black;
+  font-weight: bolder;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+.get {
+  background-color: #129588;
+  border-radius: 5px;
+  width: 153px;
+  height: 47px;
+  border: none;
+}
+.geta {
+  color: black !important;
+  font-size: 15px !important;
+}
+.dropdown-item {
+  width: 250px !important;
+  height: 30px !important;
+}
+
+option {
+  background-color: #fff;
+  color: #333;
+  font-size: 14px;
+}
+
+#language-dropdown ul.dropdown-menu-language {
+  width: 50px !important; /* Adjust the width as needed */
+}
+
+.language-option {
+  width: 24px;
+  height: 24px;
+  display: flex; /* Use flex to align the image and text vertically */
+  align-items: center; /* Center the content vertically */
+  cursor: pointer;
+  margin-right: 50px;
+}
+.languagebar li {
+  list-style: none;
+  width: 24px;
+}
+.languagebar img {
+  width: 24px;
+  height: 24px;
+}
+.language-list {
+  display: flex;
+  flex-direction: column;
+  width: 24px !important;
+  justify-content: space-around;
+  margin: 3px;
+}
+
+@media (max-width: 1215px) {
+  .ecoliftlogo {
+    margin-left: 0px;
+    width: 100px;
+  }
+  .navbar-brand {
+    padding: 0;
+    margin: 0;
+    margin-left: 15px;
+  }
+  .navbar-collapse {
+    margin-left: 0; /* Reset the left margin */
+    background-color: white; /* Change the background color */
+    justify-content: center;
+  }
+
+  .navbar-toggler {
+    display: block; /* Show the mobile toggle button */
+  }
+
+  .navbar-toggler-icon {
+    color: black; /* Customize the color of the toggle icon */
+  }
+
+  .navbar-nav {
+    margin-top: 10px; /* Adjust the top margin for better spacing */
+  }
+
+  .nav-item {
+    padding: 10px; /* Adjust the padding for better spacing */
+  }
+
+  .navbar {
+    padding: 5px; /* Add padding for better spacing */
+  }
+  .language-list {
+    overflow: visible !important;
+  }
+}
