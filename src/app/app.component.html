@@ -1,20 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  <div id="page">
-    <div class="main-header">
-      <app-nav></app-nav>
-      <router-outlet></router-outlet>
-      
+<app-nav></app-nav>
+<main>
+  <router-outlet></router-outlet>
+</main>
+
+<footer class="site-footer" id="contactusid">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img src="assets/img/photo_2023-10-26_20-04-05.jpg" alt="Ecolift" />
+      <p>{{ "home.heroText" | translate }}</p>
+    </div>
+
+    <div class="footer-col">
+      <h3>{{ "home.contactTitle" | translate }}</h3>
+      <a href="tel:+995598750006"><i class="fa-solid fa-phone"></i> +995 598 75 00 06</a>
+      <a href="https://wa.me/995598750006" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+      <a href="mailto:sales@ecolift.ge"><i class="fa-solid fa-envelope"></i> sales&#64;ecolift.ge</a>
+    </div>
+
+    <div class="footer-col">
+      <h3>{{ "home.address" | translate }}</h3>
+      <a href="https://maps.google.com/?q=Batumi,+David+Mamuladze+13" target="_blank" rel="noopener">
+        <i class="fa-solid fa-location-dot"></i> {{ "home.addressValue" | translate }}
+      </a>
+      <div class="footer-social">
+        <a href="https://www.linkedin.com/company/ecolift-plus-llc/" target="_blank" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://www.instagram.com/ecolift.plus" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://www.facebook.com/share/1aB7ekaAgQ/?mibextid=wwXIfr" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+      </div>
     </div>
   </div>
-  
-  
-</body>
-</html>
+  <div class="footer-bottom">© {{ year }} Ecolift Plus. {{ "home.rights" | translate }}</div>
+</footer>
+
+<!-- Always-visible actions on phones -->
+<nav class="mobile-bar">
+  <a href="tel:+995598750006"><i class="fa-solid fa-phone"></i> {{ "home.call" | translate }}</a>
+  <a routerLink="/parts" class="primary"><i class="fa-solid fa-cart-shopping"></i> {{ "navbar.parts" | translate }}</a>
+</nav>

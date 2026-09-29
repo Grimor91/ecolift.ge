@@ -1,10 +1,5 @@
 import { Component } from '@angular/core';
 
-interface item {
-  imageSrc:string
-  imageAlt:string
-
-}
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -12,5 +7,5 @@ interface item {
 })
 export class AppComponent {
   title = 'ecoliftplus';
- 
+  year = new Date().getFullYear();
 }

@@ -1,83 +1,64 @@
- 
- 
- 
- /* Background Gradient */
- .service-description {
-  display: flex;
-  color: black;
-  padding: 10px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+.product {
+  display: block;
   text-align: center;
-  justify-content: center;
-  align-items: center;
-  
-  
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s, transform 0.2s;
+}
+a.product:hover {
+  border-color: var(--brand);
+  transform: translateY(-2px);
+}
+.product .tile-icon {
+  margin: 0 auto 14px;
+}
+.product h3 {
+  font-size: 16px;
+  margin: 0;
+  line-height: 1.45;
 }
 
-/* Section Title */
-.service-description h2 {
-  font-size: 32px;
-  color: black; 
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  
-  
-  
+.services-title {
+  margin-top: 64px;
+  margin-bottom: 28px;
 }
-
-/* List Items */
-.service-text ul {
-  list-style-type: none;
+.service-list {
+  list-style: none;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px 24px;
+}
+.service-list li {
+  position: relative;
+  padding: 14px 16px 14px 46px;
+  background: var(--bg);
+  border-radius: 10px;
+  font-size: 15px;
+  line-height: 1.45;
+}
+.service-list li::before {
+  content: "\f00c";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  position: absolute;
+  left: 16px;
+  top: 14px;
+  color: var(--brand);
+}
+.service-list a {
+  color: var(--brand-dark);
+  font-weight: 600;
 }
 
-.service-text li {
-  font-size: 24px;
-  
-}
-
-/* Hover Effect for List Items */
-
-
-/* Elevator Icon */
-.service-text ul::before {
-  content: "🛗"; /* Elevator icon before each list item */
-  
-  font-size: 30px;
-  vertical-align: middle;
-}
-
-/* Optional: Text Shadow */
-.service-text h2 {
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
-.service-text {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-}
-
-
-.service-text-text {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  
-}
-
-
-@media (max-width: 767px) {
-
-  
-  
-  .service-description h2 {
-    font-size: 20px; /* Decrease the font size for headings */
+@media (max-width: 991px) {
+  .service-list {
+    grid-template-columns: 1fr 1fr;
   }
-  
-  .service-text li {
-    font-size: 16px; /* Decrease the font size for list items */
+}
+@media (max-width: 575px) {
+  .service-list {
+    grid-template-columns: 1fr;
   }
-  
 }

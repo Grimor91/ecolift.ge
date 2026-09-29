@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#"
+    <a class="navbar-brand" routerLink="/"
       ><img
         class="ecoliftlogo"
         src="assets/img/photo_2023-10-26_20-04-05.jpg"
@@ -20,7 +20,7 @@
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" routerLink="">{{
+          <a class="nav-link" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">{{
             "navbar.home" | translate
           }}</a>
         </li>
@@ -28,8 +28,8 @@
         <li class="nav-item">
           <a
             class="nav-link"
-            href="http://www.sunyearad.com/2019-08-20%20SCHNEIDER%20CABIN%20VR%20CATEGORY/SCHNEIDER_test.html?from=groupmessage&isappinstalled=0"
-            target="_blank"
+            routerLink="/lifts"
+            routerLinkActive="active"
             aria-expanded="false"
           >
             {{ "navbar.elevators" | translate }}
@@ -54,42 +54,12 @@
             </li>
             <hr />
             <li>
-              <a class="dropdown-item" routerLink="" (click)="closeDropdown()"
-                >{{ "text.Bungalow" | translate }}
-              </a>
-            </li>
-            <hr />
-            <li>
-              <a class="dropdown-item" href="#" (click)="closeDropdown()"
-                >{{ "text.Freight" | translate }}
-              </a>
-            </li>
-            <hr />
-            <li>
-              <a class="dropdown-item" href="#" (click)="closeDropdown()"
-                >{{ "text.Hospital" | translate }}
-              </a>
-            </li>
-            <hr />
-            <li>
-              <a class="dropdown-item" href="#" (click)="closeDropdown()"
-                >{{ "text.Industrial" | translate }}
-              </a>
-            </li>
-            <hr />
-            <li>
               <a
                 class="dropdown-item"
                 routerLink="Dumbwaiters"
                 (click)="closeDropdown()"
                 >{{ "text.Dumbwaiters" | translate }}</a
               >
-            </li>
-            <hr />
-            <li>
-              <a class="dropdown-item" href="#" (click)="closeDropdown()"
-                >{{ "text.Lifting" | translate }}
-              </a>
             </li>
             <hr />
             <li>
@@ -162,6 +132,7 @@
               alt="Georgian"
               class="language-icon"
             />
+            <span class="lang-code">{{ "language.code" | translate }}</span>
           </a>
           <div
             class="dropdown-menu dropdown-menu-language"

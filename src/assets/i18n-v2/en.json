@@ -2,7 +2,8 @@
   "language": {
     "georgian": "Georgian",
     "english": "English",
-    "russian": "Russian"
+    "russian": "Russian",
+    "code": "EN"
   },
   "navbar": {
     "home": "Home",
@@ -129,5 +130,23 @@
     "orderNumber": "Order number",
     "weWillContact": "We will contact you shortly.",
     "continue": "Browse parts"
+  },
+  "home": {
+    "heroTitle": "Elevators, escalators and spare parts",
+    "heroText": "From design and installation to maintenance, in Batumi and across Georgia.",
+    "orderParts": "Order parts",
+    "contactUs": "Contact us",
+    "whatWeDo": "What we do",
+    "servicesTitle": "Our services",
+    "years": "years of experience",
+    "yearUnit": "year",
+    "gallery": "Our production",
+    "contactTitle": "Contact",
+    "phoneEmail": "Phone & email",
+    "address": "Address",
+    "addressValue": "13 David Mamuladze St, Batumi",
+    "call": "Call",
+    "rights": "All rights reserved",
+    "follow": "Follow us"
   }
 }
