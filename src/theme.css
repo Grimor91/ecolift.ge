@@ -1,0 +1,120 @@
+/* Site-wide look: loaded after Bootstrap so it wins over its defaults. */
+:root {
+  --brand: #129588;
+  --brand-dark: #0d6f66;
+  --brand-soft: #e6f4f2;
+  --ink: #1d2b2a;
+  --muted: #5b6b69;
+  --line: #e2e8e7;
+  --bg: #f5f7f6;
+}
+
+html,
+body {
+  font-family: 'Noto Sans Georgian', 'Open Sans', sans-serif;
+  background-color: var(--bg) !important;
+  color: var(--ink);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Noto Sans Georgian', 'Open Sans', sans-serif;
+  color: var(--ink);
+}
+
+/* Blurry shadows on every heading and link made text hard to read. */
+* {
+  text-shadow: none !important;
+}
+
+.section {
+  padding: 72px 16px;
+}
+.section-white {
+  background: #fff;
+}
+.section-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.section-title {
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 12px;
+}
+.section-lead {
+  text-align: center;
+  color: var(--muted);
+  font-size: 17px;
+  max-width: 640px;
+  margin: 0 auto 40px;
+}
+
+.btn-brand {
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 26px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+}
+.btn-brand:hover {
+  background: var(--brand-dark);
+  color: #fff;
+}
+.btn-ghost {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+}
+.btn-ghost:hover {
+  background: #fff;
+  color: var(--ink);
+}
+
+.tile {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 26px;
+  height: 100%;
+}
+.tile-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: var(--brand-soft);
+  color: var(--brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin-bottom: 16px;
+}
+.tile h3 {
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.tile p {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+@media (max-width: 767px) {
+  .section {
+    padding: 48px 16px;
+  }
+  .section-title {
+    font-size: 26px;
+  }
+}

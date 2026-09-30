@@ -6,17 +6,13 @@ body {
     
     padding: 0;
     margin: 0;
-    font-family: 'Roboto', sans-serif;
-    background-color: #129588 !important;
+    font-family: 'Noto Sans Georgian', 'Open Sans', sans-serif;
+    background-color: #ffffff;
+    overflow-x: hidden;
     
 }
 
 @media (max-width: 767px){
-    *{
-        overflow-x: hidden;
-        
-        
-    }
 h2, h3, h1, h6, h4, h5{
     overflow: hidden;
 }

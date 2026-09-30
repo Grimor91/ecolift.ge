@@ -1,261 +1,77 @@
 .why {
-  margin-top: 200px;
-  background-image: url(/assets/img/images.jpg);
-  width: 100%;
-  height: auto;
-  
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  position: relative;
-  display: flex;
-  
-  flex-direction: column;
-  
-  
-  overflow: hidden;
+  background: #10201e;
 }
-.why::before {
-  content: ""; /* required for the pseudo-element */
-  position: absolute; /* position the element relative to its parent */
-  top: 0;
-  left: 0;
-  width: 100%;
+.why .section-title {
+  color: #fff;
+}
+.why .section-lead {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.stat {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  padding: 24px 16px;
+  text-align: center;
+  color: #fff;
+}
+.stat strong {
+  display: block;
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #4fd1c0;
+}
+.stat span {
+  display: block;
+  margin-top: 6px;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.8);
+}
+.stat-main {
+  background: var(--brand);
+  border-color: var(--brand);
+}
+.stat-main strong {
+  color: #fff;
+}
+
+.value {
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7); /* semi-transparent black color */
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 14px;
+  padding: 24px;
+  color: #fff;
 }
-
-.whytext {
-  z-index: 2;
-  
-  display: flex;
-  align-items: center;
-  
-  flex-direction: column;
-  text-align: center;
-  border-bottom: solid #129588 1px;
-  
-  text-shadow: 0px 5px 19px 4px rgb(201 201 201 / 50%) !important;
+.value i {
+  color: #4fd1c0;
+  font-size: 22px;
+  margin-bottom: 14px;
 }
-
-.h3 {
-  font-size: 40px ;
-  color: white ;
-}
-.h6 {
-  font-size: medium !important;
-  color: #fff !important;
-}
-.cards {
-  margin-top: 50px;
-  margin-bottom: 50px;
-  display: flex;
-  z-index: 2;
-  height: auto;
-  width: 100%;
-  justify-content: space-between;
- gap: 10px;
-  
-}
-.card {
-  
-  display: flex;
-flex-direction: column;
-  text-align: center;
-  width: 300px;
-  padding: 20px;
-  
-  align-items: center !important;
-  justify-content: center;
-  background-color: #129588;
-  border-style: solid;
-  border-width: 0px 0px 3px 0px !important;
-  border-color: #129588 !important;
-  border-radius: 10px 10px 10px 10px !important;
-  box-shadow: 0px 5px 19px 4px rgb(201 201 201 / 50%) !important;
-}
-
-.cardleft{
-  
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-direction: column;
-  
-}
-.cardright{
-  
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-direction: column;
-  
-}
-
-.middlecards{
-  display:flex ;
-  flex-direction: column;
- z-index: 2;
-  height: auto;
-
-gap: 40px;
-}
-.card-middle-main{
-  
-  display: flex;
-
-  
-  width: 100%;
-  align-items: center ;
-  justify-content: center;
-  background-color: #129588;
-  border-style: solid;
-  border-width: 0px 0px 3px 0px !important;
-  border-color: #129588 !important;
-  border-radius: 10px 10px 10px 10px !important;
-  box-shadow: 0px 5px 19px 4px rgb(201 201 201 / 50%) !important;
-  z-index: 2;
-}
-.card-middle-main h1 {
-  font-size: 250px;
-  padding: 0;
-  margin: 0;
-  text-align: center;
-  
-  
-  
-  
-  color: black;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-
-}
-
-.middle-little-cards{
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  z-index: 2;
-  height: auto;
-  gap: 15px;
-}
-
-.middle-card-first{
-  display: flex;
-flex-direction: column;
-  text-align: center;
-  width: auto;
-  
-  align-items: center !important;
-  justify-content: center;
-  background-color: #129588;
-  border-style: solid;
-  border-width: 0px 0px 3px 0px !important;
-  border-color: #129588 !important;
-  border-radius: 10px 10px 10px 10px !important;
-  box-shadow: 0px 5px 19px 4px rgb(201 201 201 / 50%) !important;
-  z-index: 2;
-  
-}
-.middle-card-second{
-  display: flex;
-flex-direction: column;
-  text-align: center;
-  width: auto;
-  align-items: center !important;
-  justify-content: center;
-  background-color: #129588;
-  border-style: solid;
-  border-width: 0px 0px 3px 0px !important;
-  border-color: #129588 !important;
-  border-radius: 10px 10px 10px 10px !important;
-  box-shadow: 0px 5px 19px 4px rgb(201 201 201 / 50%) !important;
-  z-index: 2;
-}
-.middle-card-third{
-  display: flex;
-  flex-direction: column;
-    text-align: center;
-    width: auto;
-    align-items: center !important;
-    justify-content: center;
-    background-color: #129588;
-    border-style: solid;
-    border-width: 0px 0px 3px 0px !important;
-    border-color: #129588 !important;
-    border-radius: 10px 10px 10px 10px !important;
-    box-shadow: 0px 5px 19px 4px rgb(201 201 201 / 50%) !important;
-    z-index: 2;
-    margin: 0;
-    padding: 0;
-}
-
-.title {
-  color: white;
+.value h3 {
+  color: #fff;
   font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
 }
-.title::selection {
-  background-color: #5d9c04;
-  color: #fff;
-}
-.h5 {
-  font-size: 15px !important;
-}
-.h5::selection {
-  background-color: #5d9c04;
-  color: #fff;
-}
-.middl-card-title{
-  font-size: 50px;
-margin: 0;
-padding: 0;
-}
-.middle-card-text{
-  font-size: 25px !important;
-  color: black;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+.value p {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
 }
 
-@media (max-width: 768px) {
-  /* Styles for screens with a maximum width of 768px (tablets and mobile devices) */
-.why{
-height: auto;
-}
-  .cards {
-    flex-direction: column; /* Stack cards in a column on smaller screens */
-    align-items: center;
-    padding: 10px;
-    justify-content: center;
-    
+@media (max-width: 767px) {
+  .stats {
+    grid-template-columns: 1fr 1fr;
   }
-
-  .card {
-    width: 80%;
-    margin-top: 20px;
-    height: auto !important;
-  }
-
-  .card-middle-main {
-    
-    height: auto !important;
-    
-  }
-
-  .card-middle-main h1 {
-    font-size: 100px; /* Adjust the font size as needed */
-    
-   
-    
-  }
-
-  
- 
-
-  .middl-card-title {
-    font-size: 30px; /* Adjust the font size as needed */
-  }
-
-  .middle-card-text {
-    font-size: 20px !important; /* Adjust the font size as needed */
-    text-shadow: none;
+  .stat strong {
+    font-size: 34px;
   }
 }
