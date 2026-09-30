@@ -10,3 +10,12 @@
   RewriteRule ^ - [L]
   RewriteRule ^ index.html [L]
 </IfModule>
+
+# index.html and the translation files have fixed names, so browsers must
+# re-check them on every visit; otherwise a new deploy stays invisible.
+# The hashed .js/.css bundles change name on every build and can be cached.
+<IfModule mod_headers.c>
+  <FilesMatch "(^index\.html|\.json)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
