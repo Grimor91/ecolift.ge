@@ -62,3 +62,66 @@ export interface Order {
   created_at: string;
   items: { product_code: string; product_name: string; quantity: number }[];
 }
+
+export type Equipment = 'passenger' | 'freight' | 'escalator' | 'other';
+export type Issue = 'stopped' | 'stuck' | 'doors' | 'noise' | 'maintenance' | 'modernization' | 'other';
+
+export interface ServiceRequestInput {
+  name: string;
+  phone: string;
+  address: string;
+  equipment: Equipment;
+  issue: Issue;
+  urgent: boolean;
+  comment?: string;
+  lang?: string;
+}
+
+export interface ServiceRequest {
+  id: number;
+  customer_name: string;
+  phone: string;
+  address: string;
+  equipment: Equipment;
+  issue: Issue;
+  urgent: boolean;
+  comment: string | null;
+  status: Order['status'];
+  email_sent: boolean;
+  created_at: string;
+}
+
+export type QuoteProduct = 'passenger' | 'freight' | 'panoramic' | 'home' | 'escalator' | 'other';
+export type Building = 'residential' | 'house' | 'office' | 'hotel' | 'hospital' | 'mall' | 'industrial' | 'other';
+export type Capacity = '400' | '630' | '1000' | '1600' | 'unsure';
+
+export interface QuoteRequestInput {
+  name: string;
+  phone: string;
+  email?: string;
+  company?: string;
+  city?: string;
+  product: QuoteProduct;
+  building: Building;
+  floors: number | null;
+  capacity: Capacity;
+  comment?: string;
+  lang?: string;
+}
+
+export interface QuoteRequest {
+  id: number;
+  customer_name: string;
+  phone: string;
+  email: string | null;
+  company: string | null;
+  city: string | null;
+  product: QuoteProduct;
+  building: Building;
+  floors: number | null;
+  capacity: Capacity;
+  comment: string | null;
+  status: Order['status'];
+  email_sent: boolean;
+  created_at: string;
+}

@@ -39,4 +39,6 @@ app.use((err, req, res, next) => {
 });
 
 const port = Number(process.env.PORT) || 3000;
-app.listen(port, () => console.log(`ecolift API listening on ${port}`));
+require('./config/migrate')()
+  .catch((err) => console.error('Schema migration failed:', err.message))
+  .finally(() => app.listen(port, () => console.log(`ecolift API listening on ${port}`)));

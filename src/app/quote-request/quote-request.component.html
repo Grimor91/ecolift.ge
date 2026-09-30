@@ -1,0 +1,78 @@
+<section class="section">
+  <div class="section-inner service-page">
+    <div class="intro">
+      <h1>{{ "quote.title" | translate }}</h1>
+      <p>{{ "quote.lead" | translate }}</p>
+      <ul class="steps">
+        <li><i class="fa-solid fa-pen-to-square"></i> {{ "quote.step1" | translate }}</li>
+        <li><i class="fa-solid fa-phone"></i> {{ "quote.step2" | translate }}</li>
+        <li><i class="fa-solid fa-file-invoice"></i> {{ "quote.step3" | translate }}</li>
+      </ul>
+    </div>
+
+    <div class="card-form">
+      <div *ngIf="requestId" class="done">
+        <i class="fa-solid fa-circle-check"></i>
+        <h2>{{ "quote.thanks" | translate }}</h2>
+        <p>{{ "service.requestNumber" | translate }}: #{{ requestId }}</p>
+        <p>{{ "shop.weWillContact" | translate }}</p>
+        <button type="button" class="btn-brand" (click)="requestId = null">{{ "service.another" | translate }}</button>
+      </div>
+
+      <form *ngIf="!requestId" #f="ngForm" (ngSubmit)="submit()">
+        <label for="qr-product">{{ "quote.product" | translate }}</label>
+        <div class="chips" id="qr-product">
+          <button type="button" *ngFor="let p of products" [class.on]="form.product === p" (click)="form.product = p">
+            {{ "quote.pr." + p | translate }}
+          </button>
+        </div>
+
+        <div class="row g-2">
+          <div class="col-sm-6">
+            <label for="qr-building">{{ "quote.building" | translate }}</label>
+            <select id="qr-building" class="form-select" name="building" [(ngModel)]="form.building">
+              <option *ngFor="let b of buildings" [value]="b">{{ "quote.bu." + b | translate }}</option>
+            </select>
+          </div>
+          <div class="col-sm-6">
+            <label for="qr-floors">{{ "quote.floors" | translate }}</label>
+            <input id="qr-floors" class="form-control" name="floors" type="number" min="1" max="200" [(ngModel)]="form.floors" />
+          </div>
+        </div>
+
+        <label for="qr-capacity">{{ "quote.capacity" | translate }}</label>
+        <select id="qr-capacity" class="form-select" name="capacity" [(ngModel)]="form.capacity">
+          <option *ngFor="let c of capacities" [value]="c">{{ "quote.ca." + c | translate }}</option>
+        </select>
+
+        <div class="row g-2">
+          <div class="col-sm-6">
+            <label for="qr-name">{{ "shop.name" | translate }}</label>
+            <input id="qr-name" class="form-control" name="name" [(ngModel)]="form.name" required />
+          </div>
+          <div class="col-sm-6">
+            <label for="qr-phone">{{ "shop.phone" | translate }}</label>
+            <input id="qr-phone" class="form-control" name="phone" type="tel" [(ngModel)]="form.phone" required />
+          </div>
+          <div class="col-sm-6">
+            <label for="qr-email">{{ "quote.email" | translate }}</label>
+            <input id="qr-email" class="form-control" name="email" type="email" email [(ngModel)]="form.email" />
+          </div>
+          <div class="col-sm-6">
+            <label for="qr-city">{{ "quote.city" | translate }}</label>
+            <input id="qr-city" class="form-control" name="city" [(ngModel)]="form.city" />
+          </div>
+        </div>
+
+        <label for="qr-comment">{{ "service.comment" | translate }}</label>
+        <textarea id="qr-comment" class="form-control" name="comment" rows="3" [(ngModel)]="form.comment"
+          [placeholder]="'quote.commentPlaceholder' | translate"></textarea>
+
+        <p *ngIf="error" class="text-danger mt-2">{{ "service.error" | translate }}</p>
+        <button type="submit" class="btn-brand w-100 mt-3" [disabled]="f.invalid || sending">
+          {{ (sending ? "shop.sending" : "quote.send") | translate }}
+        </button>
+      </form>
+    </div>
+  </div>
+</section>

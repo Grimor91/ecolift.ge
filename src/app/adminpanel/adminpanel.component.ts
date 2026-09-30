@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../shop/api.service';
 import { AuthService } from '../shop/auth.service';
-import { Category, Order, Product } from '../shop/models';
+import { Category, Order, Product, QuoteRequest, ServiceRequest } from '../shop/models';
 
-type Tab = 'products' | 'orders' | 'categories';
+type Tab = 'products' | 'orders' | 'service' | 'quotes' | 'categories';
 
 const emptyForm = () => ({
   code: '',
@@ -31,6 +31,8 @@ export class AdminpanelComponent implements OnInit, OnDestroy {
   products: Product[] = [];
   categories: Category[] = [];
   orders: Order[] = [];
+  serviceRequests: ServiceRequest[] = [];
+  quoteRequests: QuoteRequest[] = [];
 
   form = emptyForm();
   editing: Product | null = null;
@@ -48,12 +50,59 @@ export class AdminpanelComponent implements OnInit, OnDestroy {
     { value: 'cancelled', label: 'გაუქმებული' },
   ];
 
+  readonly equipmentLabels: Record<ServiceRequest['equipment'], string> = {
+    passenger: 'სამგზავრო ლიფტი',
+    freight: 'სატვირთო ლიფტი',
+    escalator: 'ესკალატორი',
+    other: 'სხვა',
+  };
+
+  readonly issueLabels: Record<ServiceRequest['issue'], string> = {
+    stopped: 'ლიფტი გაჩერდა',
+    stuck: 'ადამიანი გაიჭედა',
+    doors: 'კარების პრობლემა',
+    noise: 'ხმაური ან ვიბრაცია',
+    maintenance: 'გეგმიური მომსახურება',
+    modernization: 'მოდერნიზაცია',
+    other: 'სხვა',
+  };
+
+  readonly productLabels: Record<QuoteRequest['product'], string> = {
+    passenger: 'სამგზავრო ლიფტი',
+    freight: 'სატვირთო ლიფტი',
+    panoramic: 'პანორამული ლიფტი',
+    home: 'სახლის ლიფტი',
+    escalator: 'ესკალატორი',
+    other: 'სხვა',
+  };
+
+  readonly buildingLabels: Record<QuoteRequest['building'], string> = {
+    residential: 'საცხოვრებელი კორპუსი',
+    house: 'კერძო სახლი',
+    office: 'ოფისი ან ბიზნეს ცენტრი',
+    hotel: 'სასტუმრო',
+    hospital: 'საავადმყოფო',
+    mall: 'სავაჭრო ცენტრი',
+    industrial: 'საწარმო ან საწყობი',
+    other: 'სხვა',
+  };
+
+  readonly capacityLabels: Record<QuoteRequest['capacity'], string> = {
+    '400': '400 კგ',
+    '630': '630 კგ',
+    '1000': '1000 კგ',
+    '1600': '1600+ კგ',
+    unsure: 'ტვირთამწეობა უცნობია',
+  };
+
   constructor(public api: ApiService, private auth: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadProducts();
     this.loadCategories();
     this.loadOrders();
+    this.loadServiceRequests();
+    this.loadQuoteRequests();
   }
 
   ngOnDestroy(): void {
@@ -190,5 +239,33 @@ export class AdminpanelComponent implements OnInit, OnDestroy {
 
   setStatus(order: Order, status: Order['status']): void {
     this.api.setOrderStatus(order.id, status).subscribe(() => (order.status = status));
+  }
+
+  // ---- Service requests ----
+
+  loadServiceRequests(): void {
+    this.api.adminServiceRequests().subscribe((r) => (this.serviceRequests = r));
+  }
+
+  get newServiceCount(): number {
+    return this.serviceRequests.filter((r) => r.status === 'new').length;
+  }
+
+  setServiceStatus(request: ServiceRequest, status: ServiceRequest['status']): void {
+    this.api.setServiceRequestStatus(request.id, status).subscribe(() => (request.status = status));
+  }
+
+  // ---- Quote requests ----
+
+  loadQuoteRequests(): void {
+    this.api.adminQuoteRequests().subscribe((r) => (this.quoteRequests = r));
+  }
+
+  get newQuoteCount(): number {
+    return this.quoteRequests.filter((r) => r.status === 'new').length;
+  }
+
+  setQuoteStatus(request: QuoteRequest, status: QuoteRequest['status']): void {
+    this.api.setQuoteRequestStatus(request.id, status).subscribe(() => (request.status = status));
   }
 }

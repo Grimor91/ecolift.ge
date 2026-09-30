@@ -36,6 +36,8 @@ import { PartsComponent } from './parts/parts.component';
 import { ResourcesComponent } from './resources/resources.component';
 import { PartDetailComponent } from './part-detail/part-detail.component';
 import { CartComponent } from './cart/cart.component';
+import { ServiceRequestComponent } from './service-request/service-request.component';
+import { QuoteRequestComponent } from './quote-request/quote-request.component';
 import { AdminLoginComponent } from './admin-login/admin-login.component';
 import { LocalizedPipe } from './shop/localized.pipe';
 import { AuthInterceptor } from './shop/auth.interceptor';
@@ -69,6 +71,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     PartsComponent,
     PartDetailComponent,
     CartComponent,
+    ServiceRequestComponent,
+    QuoteRequestComponent,
     AdminLoginComponent,
     LocalizedPipe,
   ],

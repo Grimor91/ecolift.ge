@@ -176,4 +176,34 @@ router.patch('/orders/:id', async (req, res) => {
   res.status(204).end();
 });
 
+// ---- Service requests ----
+
+router.get('/service-requests', async (req, res) => {
+  const [rows] = await db.query('SELECT * FROM service_requests ORDER BY created_at DESC, id DESC LIMIT 200');
+  res.json(rows.map((r) => ({ ...r, urgent: !!r.urgent, email_sent: !!r.email_sent })));
+});
+
+router.patch('/service-requests/:id', async (req, res) => {
+  const status = req.body?.status;
+  if (!STATUSES.includes(status)) return res.status(400).json({ error: 'invalid status' });
+  const [result] = await db.query('UPDATE service_requests SET status = ? WHERE id = ?', [status, Number(req.params.id)]);
+  if (!result.affectedRows) return res.status(404).json({ error: 'Not found' });
+  res.status(204).end();
+});
+
+// ---- Quote requests ----
+
+router.get('/quote-requests', async (req, res) => {
+  const [rows] = await db.query('SELECT * FROM quote_requests ORDER BY created_at DESC, id DESC LIMIT 200');
+  res.json(rows.map((r) => ({ ...r, email_sent: !!r.email_sent })));
+});
+
+router.patch('/quote-requests/:id', async (req, res) => {
+  const status = req.body?.status;
+  if (!STATUSES.includes(status)) return res.status(400).json({ error: 'invalid status' });
+  const [result] = await db.query('UPDATE quote_requests SET status = ? WHERE id = ?', [status, Number(req.params.id)]);
+  if (!result.affectedRows) return res.status(404).json({ error: 'Not found' });
+  res.status(204).end();
+});
+
 module.exports = router;

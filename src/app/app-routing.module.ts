@@ -13,6 +13,8 @@ import { PartsComponent } from './parts/parts.component';
 import { ResourcesComponent } from './resources/resources.component';
 import { PartDetailComponent } from './part-detail/part-detail.component';
 import { CartComponent } from './cart/cart.component';
+import { ServiceRequestComponent } from './service-request/service-request.component';
+import { QuoteRequestComponent } from './quote-request/quote-request.component';
 import { AdminLoginComponent } from './admin-login/admin-login.component';
 import { adminGuard } from './shop/admin.guard';
 
@@ -31,6 +33,8 @@ const routes: Routes = [
   {path: 'parts', component:PartsComponent},
   {path: 'parts/:id', component:PartDetailComponent},
   {path: 'cart', component:CartComponent},
+  {path: 'service', component:ServiceRequestComponent},
+  {path: 'quote', component:QuoteRequestComponent},
   {path: 'resources', component:ResourcesComponent}
   
 ];

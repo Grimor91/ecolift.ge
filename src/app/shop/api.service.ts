@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Category, Order, OrderRequest, Product, ProductPage } from './models';
+import { Category, Order, OrderRequest, Product, ProductPage, QuoteRequest, QuoteRequestInput, ServiceRequest, ServiceRequestInput } from './models';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -32,6 +32,14 @@ export class ApiService {
 
   placeOrder(order: OrderRequest): Observable<{ id: number }> {
     return this.http.post<{ id: number }>(`${this.base}/orders`, order);
+  }
+
+  sendServiceRequest(request: ServiceRequestInput): Observable<{ id: number }> {
+    return this.http.post<{ id: number }>(`${this.base}/service-requests`, request);
+  }
+
+  sendQuoteRequest(request: QuoteRequestInput): Observable<{ id: number }> {
+    return this.http.post<{ id: number }>(`${this.base}/quote-requests`, request);
   }
 
   // ---- Admin ----
@@ -72,5 +80,21 @@ export class ApiService {
 
   setOrderStatus(id: number, status: Order['status']): Observable<void> {
     return this.http.patch<void>(`${this.base}/admin/orders/${id}`, { status });
+  }
+
+  adminServiceRequests(): Observable<ServiceRequest[]> {
+    return this.http.get<ServiceRequest[]>(`${this.base}/admin/service-requests`);
+  }
+
+  setServiceRequestStatus(id: number, status: ServiceRequest['status']): Observable<void> {
+    return this.http.patch<void>(`${this.base}/admin/service-requests/${id}`, { status });
+  }
+
+  adminQuoteRequests(): Observable<QuoteRequest[]> {
+    return this.http.get<QuoteRequest[]>(`${this.base}/admin/quote-requests`);
+  }
+
+  setQuoteRequestStatus(id: number, status: QuoteRequest['status']): Observable<void> {
+    return this.http.patch<void>(`${this.base}/admin/quote-requests/${id}`, { status });
   }
 }
