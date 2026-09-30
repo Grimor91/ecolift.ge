@@ -19,3 +19,9 @@
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
 </IfModule>
+
+# The host runs LiteSpeed, whose page cache kept serving an old index.html for "/"
+# after a deploy. This is a static Angular app, so skip that cache entirely.
+<IfModule LiteSpeed>
+  CacheLookup off
+</IfModule>
