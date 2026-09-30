@@ -11,6 +11,16 @@
         შეკვეთები <span *ngIf="newOrdersCount" class="badge bg-danger">{{ newOrdersCount }}</span>
       </button>
     </li>
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="tab === 'service'" (click)="tab = 'service'; loadServiceRequests()">
+        სერვისის განაცხადები <span *ngIf="newServiceCount" class="badge bg-danger">{{ newServiceCount }}</span>
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="tab === 'quotes'" (click)="tab = 'quotes'; loadQuoteRequests()">
+        ფასის მოთხოვნები <span *ngIf="newQuoteCount" class="badge bg-danger">{{ newQuoteCount }}</span>
+      </button>
+    </li>
     <li class="nav-item"><button class="nav-link" [class.active]="tab === 'categories'" (click)="tab = 'categories'">კატეგორიები</button></li>
   </ul>
 
@@ -138,6 +148,57 @@
       <ul class="mb-0">
         <li *ngFor="let i of o.items">{{ i.product_code }} — {{ i.product_name }} × {{ i.quantity }}</li>
       </ul>
+    </div>
+  </ng-container>
+
+  <!-- Service requests -->
+  <ng-container *ngIf="tab === 'service'">
+    <p *ngIf="!serviceRequests.length" class="text-muted">განაცხადები ჯერ არ არის.</p>
+    <div class="order-card" *ngFor="let r of serviceRequests">
+      <div class="d-flex justify-content-between flex-wrap gap-2">
+        <div>
+          <strong>#{{ r.id }}</strong> · {{ r.created_at | date: "dd.MM.yyyy HH:mm" }}
+          <span *ngIf="r.urgent" class="badge bg-danger ms-2">სასწრაფო</span>
+          <span *ngIf="!r.email_sent" class="badge bg-warning text-dark ms-2">მეილი ვერ გაიგზავნა</span>
+        </div>
+        <select class="form-select form-select-sm status" [ngModel]="r.status" (ngModelChange)="setServiceStatus(r, $event)">
+          <option *ngFor="let s of statuses" [value]="s.value">{{ s.label }}</option>
+        </select>
+      </div>
+      <div class="mt-2">
+        <strong>{{ issueLabels[r.issue] }}</strong> · {{ equipmentLabels[r.equipment] }}
+      </div>
+      <div>
+        {{ r.customer_name }} · <a [href]="'tel:' + r.phone">{{ r.phone }}</a> · {{ r.address }}
+      </div>
+      <p *ngIf="r.comment" class="comment mb-0">{{ r.comment }}</p>
+    </div>
+  </ng-container>
+
+  <!-- Quote requests -->
+  <ng-container *ngIf="tab === 'quotes'">
+    <p *ngIf="!quoteRequests.length" class="text-muted">ფასის მოთხოვნები ჯერ არ არის.</p>
+    <div class="order-card" *ngFor="let r of quoteRequests">
+      <div class="d-flex justify-content-between flex-wrap gap-2">
+        <div>
+          <strong>#{{ r.id }}</strong> · {{ r.created_at | date: "dd.MM.yyyy HH:mm" }}
+          <span *ngIf="!r.email_sent" class="badge bg-warning text-dark ms-2">მეილი ვერ გაიგზავნა</span>
+        </div>
+        <select class="form-select form-select-sm status" [ngModel]="r.status" (ngModelChange)="setQuoteStatus(r, $event)">
+          <option *ngFor="let s of statuses" [value]="s.value">{{ s.label }}</option>
+        </select>
+      </div>
+      <div class="mt-2">
+        <strong>{{ productLabels[r.product] }}</strong> · {{ buildingLabels[r.building] }}
+        <ng-container *ngIf="r.floors"> · {{ r.floors }} სართული</ng-container>
+        · {{ capacityLabels[r.capacity] }}
+      </div>
+      <div>
+        {{ r.customer_name }} · <a [href]="'tel:' + r.phone">{{ r.phone }}</a>
+        <ng-container *ngIf="r.email"> · <a [href]="'mailto:' + r.email">{{ r.email }}</a></ng-container>
+        <ng-container *ngIf="r.city"> · {{ r.city }}</ng-container>
+      </div>
+      <p *ngIf="r.comment" class="comment mb-0">{{ r.comment }}</p>
     </div>
   </ng-container>
 

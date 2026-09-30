@@ -2,7 +2,16 @@ const express = require('express');
 const rateLimit = require('express-rate-limit');
 const db = require('../config/db');
 const { withImages } = require('../services/products');
-const { sendOrderEmails } = require('../services/mailer');
+const {
+  sendOrderEmails,
+  sendServiceRequestEmail,
+  sendQuoteRequestEmail,
+  EQUIPMENT,
+  ISSUES,
+  PRODUCTS,
+  BUILDINGS,
+  CAPACITIES,
+} = require('../services/mailer');
 
 const router = express.Router();
 
@@ -109,6 +118,82 @@ router.post('/orders', orderLimiter, async (req, res) => {
   }
 
   res.status(201).json({ id: orderId });
+});
+
+router.post('/service-requests', orderLimiter, async (req, res) => {
+  const body = req.body || {};
+  const r = {
+    name: str(body.name, 190),
+    phone: str(body.phone, 50),
+    address: str(body.address, 255),
+    equipment: str(body.equipment, 30),
+    issue: str(body.issue, 30),
+    urgent: body.urgent === true,
+    comment: str(body.comment, 2000),
+    lang: ['ka', 'en', 'ru'].includes(body.lang) ? body.lang : null,
+  };
+  if (!r.name || !r.phone || !r.address) {
+    return res.status(400).json({ error: 'name, phone and address are required' });
+  }
+  if (!(r.equipment in EQUIPMENT) || !(r.issue in ISSUES)) {
+    return res.status(400).json({ error: 'invalid equipment or issue' });
+  }
+
+  const [result] = await db.query(
+    'INSERT INTO service_requests (customer_name, phone, address, equipment, issue, urgent, comment, lang) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+    [r.name, r.phone, r.address, r.equipment, r.issue, r.urgent ? 1 : 0, r.comment || null, r.lang]
+  );
+  const id = result.insertId;
+
+  // The request is already saved; a mail failure must not fail the request.
+  try {
+    await sendServiceRequestEmail(id, r);
+    await db.query('UPDATE service_requests SET email_sent = 1 WHERE id = ?', [id]);
+  } catch (err) {
+    console.error(`Service request #${id} email failed:`, err.message);
+  }
+
+  res.status(201).json({ id });
+});
+
+router.post('/quote-requests', orderLimiter, async (req, res) => {
+  const body = req.body || {};
+  const floors = Math.floor(Number(body.floors));
+  const q = {
+    name: str(body.name, 190),
+    phone: str(body.phone, 50),
+    email: str(body.email, 190),
+    company: str(body.company, 190),
+    city: str(body.city, 190),
+    product: str(body.product, 30),
+    building: str(body.building, 30),
+    floors: floors > 0 && floors <= 200 ? floors : null,
+    capacity: str(String(body.capacity ?? ''), 20),
+    comment: str(body.comment, 2000),
+    lang: ['ka', 'en', 'ru'].includes(body.lang) ? body.lang : null,
+  };
+  if (!q.name || !q.phone) return res.status(400).json({ error: 'name and phone are required' });
+  if (q.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(q.email)) return res.status(400).json({ error: 'invalid email' });
+  if (!(q.product in PRODUCTS) || !(q.building in BUILDINGS) || !(q.capacity in CAPACITIES)) {
+    return res.status(400).json({ error: 'invalid product, building or capacity' });
+  }
+
+  const [result] = await db.query(
+    `INSERT INTO quote_requests (customer_name, phone, email, company, city, product, building, floors, capacity, comment, lang)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [q.name, q.phone, q.email || null, q.company || null, q.city || null, q.product, q.building, q.floors, q.capacity, q.comment || null, q.lang]
+  );
+  const id = result.insertId;
+
+  // The request is already saved; a mail failure must not fail the request.
+  try {
+    await sendQuoteRequestEmail(id, q);
+    await db.query('UPDATE quote_requests SET email_sent = 1 WHERE id = ?', [id]);
+  } catch (err) {
+    console.error(`Quote request #${id} email failed:`, err.message);
+  }
+
+  res.status(201).json({ id });
 });
 
 module.exports = router;

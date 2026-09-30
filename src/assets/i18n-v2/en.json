@@ -16,7 +16,8 @@
     "hoists": "Hoists",
     "documentary": "Documentation",
     "parts": "Parts",
-    "cart": "Cart"
+    "cart": "Cart",
+    "service": "Service"
   },
   "text": {
     "folow": "Follow us on social media",
@@ -148,5 +149,81 @@
     "call": "Call",
     "rights": "All rights reserved",
     "follow": "Follow us"
+  },
+  "service": {
+    "title": "Request service",
+    "lead": "Fill in the form and our technician will contact you. It goes straight to our service team.",
+    "emergencyTitle": "Someone stuck in the elevator?",
+    "emergencyText": "Don't wait for the form, call us now.",
+    "equipment": "What equipment?",
+    "issue": "What happened?",
+    "urgent": "Urgent, the elevator is not working",
+    "address": "Address *",
+    "addressPlaceholder": "City, street, building, entrance",
+    "comment": "More details",
+    "commentPlaceholder": "E.g. which floor it stopped on, what noise you hear",
+    "send": "Send request",
+    "error": "The request could not be sent. Please try again or call us.",
+    "thanks": "Request received",
+    "requestNumber": "Request number",
+    "another": "New request",
+    "cta": "Request service",
+    "eq": {
+      "passenger": "Passenger elevator",
+      "freight": "Freight elevator",
+      "escalator": "Escalator",
+      "other": "Other"
+    },
+    "is": {
+      "stopped": "Elevator stopped",
+      "stuck": "Someone is stuck",
+      "doors": "Door problem",
+      "noise": "Noise or vibration",
+      "maintenance": "Scheduled maintenance",
+      "modernization": "Modernization",
+      "other": "Other"
+    }
+  },
+  "quote": {
+    "title": "New elevator price",
+    "lead": "Tell us about your building and we will prepare a price. Not sure about the details? That's fine, we will help.",
+    "step1": "You fill in the form",
+    "step2": "An engineer calls to confirm the details",
+    "step3": "You get a price and a timeline",
+    "product": "What do you need?",
+    "building": "Building type",
+    "floors": "Number of floors",
+    "capacity": "Load capacity",
+    "email": "Email",
+    "city": "City",
+    "commentPlaceholder": "E.g. is there already a shaft, when do you need it",
+    "send": "Request a price",
+    "thanks": "Request received",
+    "cta": "New elevator price",
+    "pr": {
+      "passenger": "Passenger elevator",
+      "freight": "Freight elevator",
+      "panoramic": "Panoramic elevator",
+      "home": "Home elevator",
+      "escalator": "Escalator",
+      "other": "Other"
+    },
+    "bu": {
+      "residential": "Apartment building",
+      "house": "Private house",
+      "office": "Office or business center",
+      "hotel": "Hotel",
+      "hospital": "Hospital",
+      "mall": "Shopping mall",
+      "industrial": "Factory or warehouse",
+      "other": "Other"
+    },
+    "ca": {
+      "400": "400 kg (5 people)",
+      "630": "630 kg (8 people)",
+      "1000": "1000 kg (13 people)",
+      "1600": "1600 kg or more",
+      "unsure": "Not sure"
+    }
   }
 }

@@ -66,6 +66,8 @@
   border: none;
 }
 .geta {
+  display: inline-block;
+  text-decoration: none;
   color: #fff !important;
   font-size: 15px !important;
 }

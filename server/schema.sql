@@ -66,3 +66,36 @@ CREATE TABLE IF NOT EXISTS order_items (
   CONSTRAINT fk_items_order FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
   CONSTRAINT fk_items_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS service_requests (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  customer_name VARCHAR(190) NOT NULL,
+  phone VARCHAR(50) NOT NULL,
+  address VARCHAR(255) NOT NULL,
+  equipment VARCHAR(30) NOT NULL,
+  issue VARCHAR(30) NOT NULL,
+  urgent TINYINT(1) NOT NULL DEFAULT 0,
+  comment TEXT NULL,
+  lang VARCHAR(5) NULL,
+  status ENUM('new','in_progress','done','cancelled') NOT NULL DEFAULT 'new',
+  email_sent TINYINT(1) NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS quote_requests (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  customer_name VARCHAR(190) NOT NULL,
+  phone VARCHAR(50) NOT NULL,
+  email VARCHAR(190) NULL,
+  company VARCHAR(190) NULL,
+  city VARCHAR(190) NULL,
+  product VARCHAR(30) NOT NULL,
+  building VARCHAR(30) NOT NULL,
+  floors SMALLINT UNSIGNED NULL,
+  capacity VARCHAR(20) NOT NULL,
+  comment TEXT NULL,
+  lang VARCHAR(5) NULL,
+  status ENUM('new','in_progress','done','cancelled') NOT NULL DEFAULT 'new',
+  email_sent TINYINT(1) NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
