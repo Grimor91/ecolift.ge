@@ -37,6 +37,11 @@ export class AdminpanelComponent implements OnInit, OnDestroy {
   newsLink = '';
   newsError = '';
 
+  showPassword = false;
+  passwordForm = { current: '', next: '', repeat: '' };
+  passwordMessage = '';
+  passwordError = '';
+
   form = emptyForm();
   editing: Product | null = null;
   newFiles: { file: File; preview: string }[] = [];
@@ -115,6 +120,28 @@ export class AdminpanelComponent implements OnInit, OnDestroy {
   logout(): void {
     this.auth.logout();
     this.router.navigate(['/admin/login']);
+  }
+
+  // ---- Password ----
+
+  changePassword(): void {
+    const f = this.passwordForm;
+    this.passwordMessage = this.passwordError = '';
+    if (f.next !== f.repeat) {
+      this.passwordError = 'ახალი პაროლები ერთმანეთს არ ემთხვევა';
+      return;
+    }
+    if (f.next.length < 10) {
+      this.passwordError = 'ახალი პაროლი მინიმუმ 10 სიმბოლო უნდა იყოს';
+      return;
+    }
+    this.api.changePassword(f.current, f.next).subscribe({
+      next: () => {
+        this.passwordForm = { current: '', next: '', repeat: '' };
+        this.passwordMessage = 'პაროლი შეიცვალა. შემდეგ ჯერზე შედით ახალი პაროლით.';
+      },
+      error: (err) => (this.passwordError = err.error?.error || 'პაროლი ვერ შეიცვალა'),
+    });
   }
 
   // ---- Products ----

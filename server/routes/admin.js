@@ -29,6 +29,21 @@ router.post('/login', loginLimiter, async (req, res) => {
 
 router.use(requireAdmin);
 
+router.post('/password', loginLimiter, async (req, res) => {
+  const { current, next } = req.body || {};
+  if (typeof current !== 'string' || typeof next !== 'string') {
+    return res.status(400).json({ error: 'შეავსეთ ორივე ველი' });
+  }
+  if (next.length < 10) return res.status(400).json({ error: 'ახალი პაროლი მინიმუმ 10 სიმბოლო უნდა იყოს' });
+  const [rows] = await db.query('SELECT * FROM admins WHERE id = ?', [req.admin.id]);
+  const admin = rows[0];
+  if (!admin || !(await bcrypt.compare(current, admin.password_hash))) {
+    return res.status(400).json({ error: 'ძველი პაროლი არასწორია' });
+  }
+  await db.query('UPDATE admins SET password_hash = ? WHERE id = ?', [await bcrypt.hash(next, 12), admin.id]);
+  res.status(204).end();
+});
+
 // ---- Products ----
 
 const nullable = (v) => (v === undefined || v === null || String(v).trim() === '' ? null : String(v).trim());

@@ -1,8 +1,20 @@
 <div class="admin-panel container">
   <div class="topbar">
     <h1>ადმინ პანელი</h1>
-    <button class="btn btn-outline-secondary btn-sm" (click)="logout()">გასვლა</button>
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-secondary btn-sm" (click)="showPassword = !showPassword">პაროლის შეცვლა</button>
+      <button class="btn btn-outline-secondary btn-sm" (click)="logout()">გასვლა</button>
+    </div>
   </div>
+
+  <form *ngIf="showPassword" class="password-form row g-2 mb-4" (ngSubmit)="changePassword()">
+    <div class="col-md-3"><input class="form-control" type="password" name="pwCurrent" autocomplete="current-password" [(ngModel)]="passwordForm.current" placeholder="ძველი პაროლი" required /></div>
+    <div class="col-md-3"><input class="form-control" type="password" name="pwNext" autocomplete="new-password" [(ngModel)]="passwordForm.next" placeholder="ახალი (მინ. 10 სიმბოლო)" required /></div>
+    <div class="col-md-3"><input class="form-control" type="password" name="pwRepeat" autocomplete="new-password" [(ngModel)]="passwordForm.repeat" placeholder="გაიმეორეთ ახალი პაროლი" required /></div>
+    <div class="col-md-3"><button class="btn btn-success w-100">შენახვა</button></div>
+    <p *ngIf="passwordMessage" class="text-success mb-0">{{ passwordMessage }}</p>
+    <p *ngIf="passwordError" class="text-danger mb-0">{{ passwordError }}</p>
+  </form>
 
   <ul class="nav nav-tabs mb-4">
     <li class="nav-item"><button class="nav-link" [class.active]="tab === 'products'" (click)="tab = 'products'">ნაწილები</button></li>

@@ -60,6 +60,10 @@ export class ApiService {
     return this.http.post<{ token: string }>(`${this.base}/admin/login`, { email, password });
   }
 
+  changePassword(current: string, next: string): Observable<void> {
+    return this.http.post<void>(`${this.base}/admin/password`, { current, next });
+  }
+
   adminProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(`${this.base}/admin/products`);
   }
