@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Category, Order, OrderRequest, Product, ProductPage, QuoteRequest, QuoteRequestInput, ServiceRequest, ServiceRequestInput } from './models';
+import { Category, NewsPost, Order, OrderRequest, Product, ProductPage, QuoteRequest, QuoteRequestInput, ServiceRequest, ServiceRequestInput } from './models';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -40,6 +40,12 @@ export class ApiService {
 
   sendQuoteRequest(request: QuoteRequestInput): Observable<{ id: number }> {
     return this.http.post<{ id: number }>(`${this.base}/quote-requests`, request);
+  }
+
+  getNews(limit?: number): Observable<NewsPost[]> {
+    let params = new HttpParams();
+    if (limit) params = params.set('limit', limit);
+    return this.http.get<NewsPost[]>(`${this.base}/news`, { params });
   }
 
   // ---- Admin ----
@@ -96,5 +102,17 @@ export class ApiService {
 
   setQuoteRequestStatus(id: number, status: QuoteRequest['status']): Observable<void> {
     return this.http.patch<void>(`${this.base}/admin/quote-requests/${id}`, { status });
+  }
+
+  adminNews(): Observable<NewsPost[]> {
+    return this.http.get<NewsPost[]>(`${this.base}/admin/news`);
+  }
+
+  addNews(link: string): Observable<NewsPost> {
+    return this.http.post<NewsPost>(`${this.base}/admin/news`, { link });
+  }
+
+  deleteNews(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.base}/admin/news/${id}`);
   }
 }

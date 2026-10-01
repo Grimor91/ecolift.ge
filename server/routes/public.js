@@ -50,6 +50,12 @@ router.get('/products/:id', async (req, res) => {
   res.json((await withImages(rows))[0]);
 });
 
+router.get('/news', async (req, res) => {
+  const limit = Math.min(Number(req.query.limit) || 50, 50);
+  const [rows] = await db.query('SELECT id, urn, height, created_at FROM news_posts ORDER BY created_at DESC, id DESC LIMIT ?', [limit]);
+  res.json(rows);
+});
+
 const orderLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 10, standardHeaders: true, legacyHeaders: false });
 
 const str = (v, max) => (typeof v === 'string' ? v.trim().slice(0, max) : '');

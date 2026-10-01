@@ -206,4 +206,48 @@ router.patch('/quote-requests/:id', async (req, res) => {
   res.status(204).end();
 });
 
+// ---- News (LinkedIn posts) ----
+
+// Accepts a LinkedIn post link (".../posts/...-activity-123...", ".../feed/update/urn:li:activity:123")
+// or the code from the post's "Embed this post" menu, and keeps only the post id.
+function parseLinkedInPost(input) {
+  const text = String(input || '');
+  let match = text.match(/urn(?::|%3A)li(?::|%3A)(share|activity|ugcPost)(?::|%3A)(\d{10,25})/i);
+  let urn = null;
+  if (match) {
+    const kind = match[1].toLowerCase() === 'ugcpost' ? 'ugcPost' : match[1].toLowerCase();
+    urn = `urn:li:${kind}:${match[2]}`;
+  } else if ((match = text.match(/linkedin\.com\/posts\/[^\s"]*?-(?:activity|share|ugcPost)-(\d{10,25})/i))) {
+    urn = `urn:li:activity:${match[1]}`;
+  }
+  if (!urn) return null;
+  const h = Number((text.match(/height=["']?(\d{3,4})/i) || [])[1]);
+  const height = h >= 300 && h <= 1500 ? h : 600;
+  return { urn, height };
+}
+
+router.get('/news', async (req, res) => {
+  const [rows] = await db.query('SELECT * FROM news_posts ORDER BY created_at DESC, id DESC');
+  res.json(rows);
+});
+
+router.post('/news', async (req, res) => {
+  const post = parseLinkedInPost(req.body?.link);
+  if (!post) return res.status(400).json({ error: 'LinkedIn-ის პოსტის ბმული ვერ ამოვიცანი' });
+  try {
+    const [result] = await db.query('INSERT INTO news_posts (urn, height) VALUES (?, ?)', [post.urn, post.height]);
+    res.status(201).json({ id: result.insertId, ...post });
+  } catch (err) {
+    if (err.code === 'ER_DUP_ENTRY') return res.status(409).json({ error: 'ეს პოსტი უკვე დამატებულია' });
+    throw err;
+  }
+});
+
+router.delete('/news/:id', async (req, res) => {
+  const [result] = await db.query('DELETE FROM news_posts WHERE id = ?', [Number(req.params.id)]);
+  if (!result.affectedRows) return res.status(404).json({ error: 'Not found' });
+  res.status(204).end();
+});
+
 module.exports = router;
+module.exports.parseLinkedInPost = parseLinkedInPost;

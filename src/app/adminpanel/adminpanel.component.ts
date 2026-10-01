@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../shop/api.service';
 import { AuthService } from '../shop/auth.service';
-import { Category, Order, Product, QuoteRequest, ServiceRequest } from '../shop/models';
+import { Category, NewsPost, Order, Product, QuoteRequest, ServiceRequest } from '../shop/models';
 
-type Tab = 'products' | 'orders' | 'service' | 'quotes' | 'categories';
+type Tab = 'products' | 'orders' | 'service' | 'quotes' | 'news' | 'categories';
 
 const emptyForm = () => ({
   code: '',
@@ -33,6 +33,9 @@ export class AdminpanelComponent implements OnInit, OnDestroy {
   orders: Order[] = [];
   serviceRequests: ServiceRequest[] = [];
   quoteRequests: QuoteRequest[] = [];
+  news: NewsPost[] = [];
+  newsLink = '';
+  newsError = '';
 
   form = emptyForm();
   editing: Product | null = null;
@@ -267,5 +270,32 @@ export class AdminpanelComponent implements OnInit, OnDestroy {
 
   setQuoteStatus(request: QuoteRequest, status: QuoteRequest['status']): void {
     this.api.setQuoteRequestStatus(request.id, status).subscribe(() => (request.status = status));
+  }
+
+  // ---- News (LinkedIn posts) ----
+
+  loadNews(): void {
+    this.api.adminNews().subscribe((n) => (this.news = n));
+  }
+
+  addNews(): void {
+    if (!this.newsLink.trim()) return;
+    this.newsError = '';
+    this.api.addNews(this.newsLink).subscribe({
+      next: () => {
+        this.newsLink = '';
+        this.loadNews();
+      },
+      error: (err) => (this.newsError = err.error?.error || 'დამატება ვერ მოხერხდა'),
+    });
+  }
+
+  deleteNews(post: NewsPost): void {
+    if (!confirm('წავშალო ეს სიახლე საიტიდან? LinkedIn-ზე პოსტი დარჩება.')) return;
+    this.api.deleteNews(post.id).subscribe(() => this.loadNews());
+  }
+
+  linkedInUrl(post: NewsPost): string {
+    return `https://www.linkedin.com/feed/update/${post.urn}/`;
   }
 }

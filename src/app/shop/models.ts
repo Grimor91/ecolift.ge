@@ -125,3 +125,10 @@ export interface QuoteRequest {
   email_sent: boolean;
   created_at: string;
 }
+
+export interface NewsPost {
+  id: number;
+  urn: string;
+  height: number;
+  created_at: string;
+}

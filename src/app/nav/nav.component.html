@@ -109,6 +109,11 @@
           </a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" routerLink="/news" routerLinkActive="active" (click)="closeDropdown()">
+            {{ "navbar.news" | translate }}
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" routerLink="/resources" routerLinkActive="active">
             {{ "navbar.documentary" | translate }}
           </a>

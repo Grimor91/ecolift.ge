@@ -4,7 +4,7 @@ const db = require('./db');
 
 // Tables added after the first deploy are created here on startup, so an
 // update needs no manual SQL step in phpMyAdmin.
-const TABLES = ['service_requests', 'quote_requests'];
+const TABLES = ['service_requests', 'quote_requests', 'news_posts'];
 
 async function migrate() {
   const sql = fs.readFileSync(path.join(__dirname, '..', 'schema.sql'), 'utf8');

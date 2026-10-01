@@ -21,6 +21,7 @@
         ფასის მოთხოვნები <span *ngIf="newQuoteCount" class="badge bg-danger">{{ newQuoteCount }}</span>
       </button>
     </li>
+    <li class="nav-item"><button class="nav-link" [class.active]="tab === 'news'" (click)="tab = 'news'; loadNews()">სიახლეები</button></li>
     <li class="nav-item"><button class="nav-link" [class.active]="tab === 'categories'" (click)="tab = 'categories'">კატეგორიები</button></li>
   </ul>
 
@@ -200,6 +201,26 @@
       </div>
       <p *ngIf="r.comment" class="comment mb-0">{{ r.comment }}</p>
     </div>
+  </ng-container>
+
+  <!-- News (LinkedIn posts) -->
+  <ng-container *ngIf="tab === 'news'">
+    <p class="text-muted">
+      LinkedIn-ზე პოსტის ქვეშ დააჭირეთ <strong>···</strong> → <strong>Copy link to post</strong> (ან <strong>Embed this post</strong> → Copy code),
+      ჩასვით აქ და დააჭირეთ „დამატება“. პოსტი გამოჩნდება მთავარ გვერდზე და „სიახლეების“ გვერდზე.
+    </p>
+    <form class="row g-2 mb-2" (ngSubmit)="addNews()">
+      <div class="col-md-9"><input class="form-control" name="newsLink" [(ngModel)]="newsLink" placeholder="https://www.linkedin.com/posts/..." /></div>
+      <div class="col-md-3"><button class="btn btn-success w-100" [disabled]="!newsLink.trim()">დამატება</button></div>
+    </form>
+    <p *ngIf="newsError" class="text-danger">{{ newsError }}</p>
+    <p *ngIf="!news.length" class="text-muted mt-3">სიახლეები ჯერ არ არის დამატებული.</p>
+    <ul class="list-group mt-3">
+      <li class="list-group-item d-flex justify-content-between align-items-center gap-2" *ngFor="let n of news">
+        <span>{{ n.created_at | date: "dd.MM.yyyy HH:mm" }} · <a [href]="linkedInUrl(n)" target="_blank" rel="noopener">LinkedIn-ზე ნახვა</a></span>
+        <button class="btn btn-sm btn-outline-danger" (click)="deleteNews(n)">წაშლა</button>
+      </li>
+    </ul>
   </ng-container>
 
   <!-- Categories -->

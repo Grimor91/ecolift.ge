@@ -17,7 +17,8 @@
     "documentary": "Documentation",
     "parts": "Parts",
     "cart": "Cart",
-    "service": "Service"
+    "service": "Service",
+    "news": "News"
   },
   "text": {
     "folow": "Follow us on social media",
@@ -225,5 +226,11 @@
       "1600": "1600 kg or more",
       "unsure": "Not sure"
     }
+  },
+  "news": {
+    "title": "News",
+    "followLinkedIn": "Follow us on LinkedIn →",
+    "empty": "News is coming soon.",
+    "all": "All news"
   }
 }
