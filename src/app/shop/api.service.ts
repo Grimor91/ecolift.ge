@@ -48,7 +48,8 @@ export class ApiService {
   }
 
   getNews(limit?: number): Observable<NewsPost[]> {
-    let params = new HttpParams();
+    // The time stamp skips any copy the host cached before the API sent no-store.
+    let params = new HttpParams().set('t', Date.now());
     if (limit) params = params.set('limit', limit);
     return this.http.get<NewsPost[]>(`${this.base}/news`, { params });
   }
@@ -114,7 +115,7 @@ export class ApiService {
   }
 
   adminNews(): Observable<NewsPost[]> {
-    return this.http.get<NewsPost[]>(`${this.base}/admin/news`);
+    return this.http.get<NewsPost[]>(`${this.base}/admin/news`, { params: { t: Date.now() } });
   }
 
   addNews(link: string): Observable<NewsPost> {

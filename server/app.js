@@ -20,6 +20,13 @@ app.use(express.json({ limit: '100kb' }));
 
 const api = express.Router();
 api.use('/uploads', express.static(UPLOAD_DIR, { maxAge: '30d' }));
+// API answers change with every edit in the admin panel, so neither the browser
+// nor the host's LiteSpeed cache may keep them (it kept serving stale lists).
+api.use((req, res, next) => {
+  res.set('Cache-Control', 'no-store');
+  res.set('X-LiteSpeed-Cache-Control', 'no-cache');
+  next();
+});
 api.get('/health', (req, res) => res.json({ ok: true }));
 api.use('/', require('./routes/public'));
 api.use('/admin', require('./routes/admin'));
