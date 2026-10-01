@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../shop/api.service';
 import { AuthService } from '../shop/auth.service';
-import { Category, NewsPost, Order, Product, QuoteRequest, ServiceRequest } from '../shop/models';
+import { Capacity, Category, NewsPost, Order, Product, QuoteRequest, ServiceRequest } from '../shop/models';
 
 type Tab = 'products' | 'orders' | 'service' | 'quotes' | 'news' | 'categories';
 
@@ -90,7 +90,7 @@ export class AdminpanelComponent implements OnInit, OnDestroy {
     other: 'სხვა',
   };
 
-  readonly capacityLabels: Record<QuoteRequest['capacity'], string> = {
+  readonly capacityLabels: Record<Capacity, string> = {
     '400': '400 კგ',
     '630': '630 კგ',
     '1000': '1000 კგ',
@@ -266,6 +266,25 @@ export class AdminpanelComponent implements OnInit, OnDestroy {
 
   get newQuoteCount(): number {
     return this.quoteRequests.filter((r) => r.status === 'new').length;
+  }
+
+  hasSizes(r: QuoteRequest): boolean {
+    return !!(r.shaft_width || r.shaft_depth || r.pit_depth || r.last_floor_height || r.floor_height);
+  }
+
+  mm(value: number | null): string {
+    return value ? `${value} მმ` : '-';
+  }
+
+  downloadDrawing(r: QuoteRequest): void {
+    this.api.quoteDrawing(r.id).subscribe((blob) => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = r.drawing_name || 'drawing';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
   }
 
   setQuoteStatus(request: QuoteRequest, status: QuoteRequest['status']): void {

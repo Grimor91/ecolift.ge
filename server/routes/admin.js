@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const rateLimit = require('express-rate-limit');
 const db = require('../config/db');
 const { requireAdmin } = require('../middleware/auth');
-const { upload, UPLOAD_DIR } = require('../middleware/upload');
+const { upload, UPLOAD_DIR, DRAWING_DIR } = require('../middleware/upload');
 const { withImages } = require('../services/products');
 
 const router = express.Router();
@@ -204,6 +204,13 @@ router.patch('/quote-requests/:id', async (req, res) => {
   const [result] = await db.query('UPDATE quote_requests SET status = ? WHERE id = ?', [status, Number(req.params.id)]);
   if (!result.affectedRows) return res.status(404).json({ error: 'Not found' });
   res.status(204).end();
+});
+
+router.get('/quote-requests/:id/drawing', async (req, res) => {
+  const [rows] = await db.query('SELECT drawing_file, drawing_name FROM quote_requests WHERE id = ?', [Number(req.params.id)]);
+  const row = rows[0];
+  if (!row?.drawing_file) return res.status(404).json({ error: 'Not found' });
+  res.download(path.join(DRAWING_DIR, path.basename(row.drawing_file)), row.drawing_name || row.drawing_file);
 });
 
 // ---- News (LinkedIn posts) ----

@@ -40,10 +40,30 @@
           </div>
         </div>
 
-        <label for="qr-capacity">{{ "quote.capacity" | translate }}</label>
-        <select id="qr-capacity" class="form-select" name="capacity" [(ngModel)]="form.capacity">
-          <option *ngFor="let c of capacities" [value]="c">{{ "quote.ca." + c | translate }}</option>
-        </select>
+        <label>{{ "quote.sizes" | translate }}</label>
+        <div class="row g-2 sizes">
+          <div class="col-sm-6" *ngFor="let s of sizes">
+            <label [for]="'qr-' + s">{{ "quote.sz." + s | translate }}</label>
+            <div class="input-group">
+              <input [id]="'qr-' + s" class="form-control" [name]="s" type="number" min="1" max="30000" inputmode="numeric" [(ngModel)]="form[s]" />
+              <span class="input-group-text">{{ "quote.mm" | translate }}</span>
+            </div>
+          </div>
+        </div>
+
+        <label>{{ "quote.drawing" | translate }}</label>
+        <input #drawingInput type="file" class="d-none" [accept]="accept" (change)="onDrawing($event)" />
+        <div class="drawing">
+          <button type="button" class="btn-upload" (click)="drawingInput.click()">
+            <i class="fa-solid fa-file-arrow-up"></i> {{ "quote.uploadDrawing" | translate }}
+          </button>
+          <span *ngIf="drawing" class="file-name">
+            {{ drawing.name }}
+            <button type="button" class="btn-remove" (click)="removeDrawing(drawingInput)" [attr.aria-label]="'quote.removeDrawing' | translate">✕</button>
+          </span>
+        </div>
+        <small class="hint">{{ "quote.drawingHint" | translate }}</small>
+        <p *ngIf="drawingError" class="text-danger mb-0">{{ drawingError | translate }}</p>
 
         <div class="row g-2">
           <div class="col-sm-6">

@@ -32,7 +32,7 @@ app.use((req, res) => res.status(404).json({ error: 'Not found' }));
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
-    return res.status(400).json({ error: err.code === 'LIMIT_FILE_SIZE' ? 'image too large (max 5MB)' : 'invalid upload' });
+    return res.status(400).json({ error: err.code === 'LIMIT_FILE_SIZE' ? 'file too large' : 'invalid upload' });
   }
   console.error(err);
   res.status(500).json({ error: 'Server error' });

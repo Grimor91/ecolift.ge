@@ -192,8 +192,15 @@
       <div class="mt-2">
         <strong>{{ productLabels[r.product] }}</strong> · {{ buildingLabels[r.building] }}
         <ng-container *ngIf="r.floors"> · {{ r.floors }} სართული</ng-container>
-        · {{ capacityLabels[r.capacity] }}
+        <ng-container *ngIf="r.capacity"> · {{ capacityLabels[r.capacity] }}</ng-container>
       </div>
+      <div *ngIf="hasSizes(r)" class="sizes">
+        შახტა: {{ mm(r.shaft_width) }} × {{ mm(r.shaft_depth) }} · ორმო: {{ mm(r.pit_depth) }}
+        · ბოლო სართული: {{ mm(r.last_floor_height) }} · ტიპიური სართული: {{ mm(r.floor_height) }}
+      </div>
+      <button *ngIf="r.drawing_name" class="btn btn-sm btn-outline-success mt-1" (click)="downloadDrawing(r)">
+        ნახაზი: {{ r.drawing_name }}
+      </button>
       <div>
         {{ r.customer_name }} · <a [href]="'tel:' + r.phone">{{ r.phone }}</a>
         <ng-container *ngIf="r.email"> · <a [href]="'mailto:' + r.email">{{ r.email }}</a></ng-container>

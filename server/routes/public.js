@@ -1,7 +1,10 @@
+const fs = require('fs/promises');
+const path = require('path');
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const db = require('../config/db');
 const { withImages } = require('../services/products');
+const { drawingUpload } = require('../middleware/upload');
 const {
   sendOrderEmails,
   sendServiceRequestEmail,
@@ -10,7 +13,6 @@ const {
   ISSUES,
   PRODUCTS,
   BUILDINGS,
-  CAPACITIES,
 } = require('../services/mailer');
 
 const router = express.Router();
@@ -162,9 +164,16 @@ router.post('/service-requests', orderLimiter, async (req, res) => {
   res.status(201).json({ id });
 });
 
-router.post('/quote-requests', orderLimiter, async (req, res) => {
+// Shaft and floor sizes are entered in millimetres.
+const mm = (v) => {
+  const n = Math.round(Number(v));
+  return n > 0 && n <= 30000 ? n : null;
+};
+
+router.post('/quote-requests', orderLimiter, drawingUpload.single('drawing'), async (req, res) => {
   const body = req.body || {};
   const floors = Math.floor(Number(body.floors));
+  const drawing = req.file;
   const q = {
     name: str(body.name, 190),
     phone: str(body.phone, 50),
@@ -174,20 +183,32 @@ router.post('/quote-requests', orderLimiter, async (req, res) => {
     product: str(body.product, 30),
     building: str(body.building, 30),
     floors: floors > 0 && floors <= 200 ? floors : null,
-    capacity: str(String(body.capacity ?? ''), 20),
+    shaft_width: mm(body.shaft_width),
+    shaft_depth: mm(body.shaft_depth),
+    pit_depth: mm(body.pit_depth),
+    last_floor_height: mm(body.last_floor_height),
+    floor_height: mm(body.floor_height),
+    drawing_file: drawing ? drawing.filename : null,
+    drawing_name: drawing ? Buffer.from(drawing.originalname, 'latin1').toString('utf8').slice(0, 255) : null,
+    drawing_path: drawing ? drawing.path : null,
     comment: str(body.comment, 2000),
     lang: ['ka', 'en', 'ru'].includes(body.lang) ? body.lang : null,
   };
-  if (!q.name || !q.phone) return res.status(400).json({ error: 'name and phone are required' });
-  if (q.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(q.email)) return res.status(400).json({ error: 'invalid email' });
-  if (!(q.product in PRODUCTS) || !(q.building in BUILDINGS) || !(q.capacity in CAPACITIES)) {
-    return res.status(400).json({ error: 'invalid product, building or capacity' });
-  }
+  const reject = async (error) => {
+    if (drawing) await fs.unlink(drawing.path).catch(() => {});
+    res.status(400).json({ error });
+  };
+  if (!q.name || !q.phone) return reject('name and phone are required');
+  if (q.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(q.email)) return reject('invalid email');
+  if (!(q.product in PRODUCTS) || !(q.building in BUILDINGS)) return reject('invalid product or building');
 
   const [result] = await db.query(
-    `INSERT INTO quote_requests (customer_name, phone, email, company, city, product, building, floors, capacity, comment, lang)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [q.name, q.phone, q.email || null, q.company || null, q.city || null, q.product, q.building, q.floors, q.capacity, q.comment || null, q.lang]
+    `INSERT INTO quote_requests (customer_name, phone, email, company, city, product, building, floors,
+       shaft_width, shaft_depth, pit_depth, last_floor_height, floor_height, drawing_file, drawing_name, comment, lang)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [q.name, q.phone, q.email || null, q.company || null, q.city || null, q.product, q.building, q.floors,
+      q.shaft_width, q.shaft_depth, q.pit_depth, q.last_floor_height, q.floor_height, q.drawing_file, q.drawing_name,
+      q.comment || null, q.lang]
   );
   const id = result.insertId;
 

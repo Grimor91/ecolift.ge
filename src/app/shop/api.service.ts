@@ -38,8 +38,13 @@ export class ApiService {
     return this.http.post<{ id: number }>(`${this.base}/service-requests`, request);
   }
 
-  sendQuoteRequest(request: QuoteRequestInput): Observable<{ id: number }> {
-    return this.http.post<{ id: number }>(`${this.base}/quote-requests`, request);
+  sendQuoteRequest(request: QuoteRequestInput, drawing: File | null): Observable<{ id: number }> {
+    const data = new FormData();
+    for (const [key, value] of Object.entries(request)) {
+      if (value !== null && value !== undefined) data.append(key, String(value));
+    }
+    if (drawing) data.append('drawing', drawing);
+    return this.http.post<{ id: number }>(`${this.base}/quote-requests`, data);
   }
 
   getNews(limit?: number): Observable<NewsPost[]> {
@@ -98,6 +103,10 @@ export class ApiService {
 
   adminQuoteRequests(): Observable<QuoteRequest[]> {
     return this.http.get<QuoteRequest[]>(`${this.base}/admin/quote-requests`);
+  }
+
+  quoteDrawing(id: number): Observable<Blob> {
+    return this.http.get(`${this.base}/admin/quote-requests/${id}/drawing`, { responseType: 'blob' });
   }
 
   setQuoteRequestStatus(id: number, status: QuoteRequest['status']): Observable<void> {

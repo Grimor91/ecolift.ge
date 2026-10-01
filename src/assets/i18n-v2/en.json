@@ -225,7 +225,21 @@
       "1000": "1000 kg (13 people)",
       "1600": "1600 kg or more",
       "unsure": "Not sure"
-    }
+    },
+    "sizes": "Shaft and floor dimensions (if known)",
+    "mm": "mm",
+    "sz": {
+      "shaft_width": "Shaft width",
+      "shaft_depth": "Shaft depth",
+      "pit_depth": "Pit depth",
+      "last_floor_height": "Last floor height (headroom)",
+      "floor_height": "Typical floor height"
+    },
+    "drawing": "Drawing",
+    "uploadDrawing": "Upload drawing",
+    "removeDrawing": "Remove drawing",
+    "drawingHint": "PDF, JPG, PNG, DWG or DXF, up to 15 MB",
+    "drawingTooBig": "File is too large (max 15 MB)"
   },
   "news": {
     "title": "News",
