@@ -250,11 +250,14 @@ router.post('/news', async (req, res) => {
   }
 });
 
-router.delete('/news/:id', async (req, res) => {
+// Also reachable as POST, because some hosting setups block the DELETE method.
+async function deleteNews(req, res) {
   const [result] = await db.query('DELETE FROM news_posts WHERE id = ?', [Number(req.params.id)]);
   if (!result.affectedRows) return res.status(404).json({ error: 'Not found' });
   res.status(204).end();
-});
+}
+router.delete('/news/:id', deleteNews);
+router.post('/news/:id/delete', deleteNews);
 
 module.exports = router;
 module.exports.parseLinkedInPost = parseLinkedInPost;

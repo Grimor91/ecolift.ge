@@ -122,6 +122,6 @@ export class ApiService {
   }
 
   deleteNews(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.base}/admin/news/${id}`);
+    return this.http.post<void>(`${this.base}/admin/news/${id}/delete`, {});
   }
 }

@@ -311,7 +311,11 @@ export class AdminpanelComponent implements OnInit, OnDestroy {
 
   deleteNews(post: NewsPost): void {
     if (!confirm('წავშალო ეს სიახლე საიტიდან? LinkedIn-ზე პოსტი დარჩება.')) return;
-    this.api.deleteNews(post.id).subscribe(() => this.loadNews());
+    this.newsError = '';
+    this.api.deleteNews(post.id).subscribe({
+      next: () => this.loadNews(),
+      error: (err) => (this.newsError = `წაშლა ვერ მოხერხდა (${err.status || 'კავშირი'}). სცადეთ გასვლა და თავიდან შესვლა.`),
+    });
   }
 
   linkedInUrl(post: NewsPost): string {
