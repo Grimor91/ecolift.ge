@@ -17,7 +17,8 @@
     "documentary": "Documentation",
     "parts": "Parts",
     "cart": "Cart",
-    "service": "Service"
+    "service": "Service",
+    "news": "News"
   },
   "text": {
     "folow": "Follow us on social media",
@@ -224,6 +225,84 @@
       "1000": "1000 kg (13 people)",
       "1600": "1600 kg or more",
       "unsure": "Not sure"
+    },
+    "sizes": "Shaft and floor dimensions (if known)",
+    "mm": "mm",
+    "sz": {
+      "shaft_width": "Shaft width",
+      "shaft_depth": "Shaft depth",
+      "pit_depth": "Pit depth",
+      "last_floor_height": "Last floor height (headroom)",
+      "floor_height": "Typical floor height"
+    },
+    "drawing": "Drawing",
+    "uploadDrawing": "Upload drawing",
+    "removeDrawing": "Remove drawing",
+    "drawingHint": "PDF, JPG, PNG, DWG or DXF, up to 15 MB",
+    "drawingTooBig": "File is too large (max 15 MB)"
+  },
+  "news": {
+    "title": "News",
+    "followLinkedIn": "Follow us on LinkedIn →",
+    "empty": "News is coming soon.",
+    "all": "All news"
+  },
+  "seo": {
+    "home": {
+      "title": "Ecolift | Elevators, escalators and lift parts in Batumi, Georgia",
+      "description": "Supply, installation, service and spare parts for elevators and escalators in Batumi and across Georgia. Ecolift Plus."
+    },
+    "lifts": {
+      "title": "Elevators: passenger, panoramic, freight | Ecolift",
+      "description": "Passenger, panoramic, freight and tailor-made elevators for residential and commercial buildings. Installation and service in Georgia."
+    },
+    "passenger": {
+      "title": "Passenger elevators | Ecolift",
+      "description": "Passenger elevators for apartment buildings, offices and hotels. Design, installation and service in Georgia."
+    },
+    "panoramic": {
+      "title": "Panoramic elevators | Ecolift",
+      "description": "Panoramic glass elevators for malls, hotels and private houses."
+    },
+    "dumbwaiters": {
+      "title": "Freight elevators and dumbwaiters | Ecolift",
+      "description": "Freight elevators and dumbwaiters for restaurants, warehouses and factories."
+    },
+    "tailormade": {
+      "title": "Tailor-made elevators | Ecolift",
+      "description": "Elevators designed for non-standard shafts and buildings."
+    },
+    "escalators": {
+      "title": "Escalators and moving walks | Ecolift",
+      "description": "Supply, installation and service of escalators for malls and public buildings."
+    },
+    "parts": {
+      "title": "Elevator spare parts | Ecolift",
+      "description": "Elevator and escalator spare parts: controllers, motors, door operators, buttons, sensors and more. Order online."
+    },
+    "cart": {
+      "title": "Cart | Ecolift",
+      "description": "Your order."
+    },
+    "service": {
+      "title": "Elevator repair and maintenance | Ecolift",
+      "description": "Elevator out of order? Request repair, scheduled maintenance or modernization in Batumi and Georgia."
+    },
+    "quote": {
+      "title": "New elevator price | Ecolift",
+      "description": "Request a price for a new elevator or escalator: enter the shaft sizes and upload a drawing."
+    },
+    "news": {
+      "title": "News | Ecolift",
+      "description": "Ecolift news and completed projects."
+    },
+    "about": {
+      "title": "About us | Ecolift",
+      "description": "Ecolift Plus: elevator and escalator company in Batumi, Georgia."
+    },
+    "resources": {
+      "title": "Documents and brochures | Ecolift",
+      "description": "Elevator and escalator catalogues, brochures and technical documents."
     }
   }
 }

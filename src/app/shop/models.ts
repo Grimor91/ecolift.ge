@@ -104,7 +104,11 @@ export interface QuoteRequestInput {
   product: QuoteProduct;
   building: Building;
   floors: number | null;
-  capacity: Capacity;
+  shaft_width: number | null;
+  shaft_depth: number | null;
+  pit_depth: number | null;
+  last_floor_height: number | null;
+  floor_height: number | null;
   comment?: string;
   lang?: string;
 }
@@ -119,9 +123,23 @@ export interface QuoteRequest {
   product: QuoteProduct;
   building: Building;
   floors: number | null;
-  capacity: Capacity;
+  /** Only on requests sent before the form asked for shaft sizes instead. */
+  capacity: Capacity | null;
+  shaft_width: number | null;
+  shaft_depth: number | null;
+  pit_depth: number | null;
+  last_floor_height: number | null;
+  floor_height: number | null;
+  drawing_name: string | null;
   comment: string | null;
   status: Order['status'];
   email_sent: boolean;
+  created_at: string;
+}
+
+export interface NewsPost {
+  id: number;
+  urn: string;
+  height: number;
   created_at: string;
 }

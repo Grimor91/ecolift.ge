@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../shop/api.service';
 import { AuthService } from '../shop/auth.service';
-import { Category, Order, Product, QuoteRequest, ServiceRequest } from '../shop/models';
+import { Capacity, Category, NewsPost, Order, Product, QuoteRequest, ServiceRequest } from '../shop/models';
 
-type Tab = 'products' | 'orders' | 'service' | 'quotes' | 'categories';
+type Tab = 'products' | 'orders' | 'service' | 'quotes' | 'news' | 'categories';
 
 const emptyForm = () => ({
   code: '',
@@ -33,6 +33,14 @@ export class AdminpanelComponent implements OnInit, OnDestroy {
   orders: Order[] = [];
   serviceRequests: ServiceRequest[] = [];
   quoteRequests: QuoteRequest[] = [];
+  news: NewsPost[] = [];
+  newsLink = '';
+  newsError = '';
+
+  showPassword = false;
+  passwordForm = { current: '', next: '', repeat: '' };
+  passwordMessage = '';
+  passwordError = '';
 
   form = emptyForm();
   editing: Product | null = null;
@@ -87,7 +95,7 @@ export class AdminpanelComponent implements OnInit, OnDestroy {
     other: 'სხვა',
   };
 
-  readonly capacityLabels: Record<QuoteRequest['capacity'], string> = {
+  readonly capacityLabels: Record<Capacity, string> = {
     '400': '400 კგ',
     '630': '630 კგ',
     '1000': '1000 კგ',
@@ -112,6 +120,28 @@ export class AdminpanelComponent implements OnInit, OnDestroy {
   logout(): void {
     this.auth.logout();
     this.router.navigate(['/admin/login']);
+  }
+
+  // ---- Password ----
+
+  changePassword(): void {
+    const f = this.passwordForm;
+    this.passwordMessage = this.passwordError = '';
+    if (f.next !== f.repeat) {
+      this.passwordError = 'ახალი პაროლები ერთმანეთს არ ემთხვევა';
+      return;
+    }
+    if (f.next.length < 10) {
+      this.passwordError = 'ახალი პაროლი მინიმუმ 10 სიმბოლო უნდა იყოს';
+      return;
+    }
+    this.api.changePassword(f.current, f.next).subscribe({
+      next: () => {
+        this.passwordForm = { current: '', next: '', repeat: '' };
+        this.passwordMessage = 'პაროლი შეიცვალა. შემდეგ ჯერზე შედით ახალი პაროლით.';
+      },
+      error: (err) => (this.passwordError = err.error?.error || 'პაროლი ვერ შეიცვალა'),
+    });
   }
 
   // ---- Products ----
@@ -265,7 +295,57 @@ export class AdminpanelComponent implements OnInit, OnDestroy {
     return this.quoteRequests.filter((r) => r.status === 'new').length;
   }
 
+  hasSizes(r: QuoteRequest): boolean {
+    return !!(r.shaft_width || r.shaft_depth || r.pit_depth || r.last_floor_height || r.floor_height);
+  }
+
+  mm(value: number | null): string {
+    return value ? `${value} მმ` : '-';
+  }
+
+  downloadDrawing(r: QuoteRequest): void {
+    this.api.quoteDrawing(r.id).subscribe((blob) => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = r.drawing_name || 'drawing';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+  }
+
   setQuoteStatus(request: QuoteRequest, status: QuoteRequest['status']): void {
     this.api.setQuoteRequestStatus(request.id, status).subscribe(() => (request.status = status));
+  }
+
+  // ---- News (LinkedIn posts) ----
+
+  loadNews(): void {
+    this.api.adminNews().subscribe((n) => (this.news = n));
+  }
+
+  addNews(): void {
+    if (!this.newsLink.trim()) return;
+    this.newsError = '';
+    this.api.addNews(this.newsLink).subscribe({
+      next: () => {
+        this.newsLink = '';
+        this.loadNews();
+      },
+      error: (err) => (this.newsError = err.error?.error || 'დამატება ვერ მოხერხდა'),
+    });
+  }
+
+  deleteNews(post: NewsPost): void {
+    if (!confirm('წავშალო ეს სიახლე საიტიდან? LinkedIn-ზე პოსტი დარჩება.')) return;
+    this.newsError = '';
+    this.api.deleteNews(post.id).subscribe({
+      next: () => this.loadNews(),
+      error: (err) => (this.newsError = `წაშლა ვერ მოხერხდა (${err.status || 'კავშირი'}). სცადეთ გასვლა და თავიდან შესვლა.`),
+    });
+  }
+
+  linkedInUrl(post: NewsPost): string {
+    return `https://www.linkedin.com/feed/update/${post.urn}/`;
   }
 }

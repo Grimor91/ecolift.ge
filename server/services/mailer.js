@@ -93,13 +93,14 @@ const BUILDINGS = {
   industrial: 'საწარმო ან საწყობი',
   other: 'სხვა',
 };
-const CAPACITIES = { 400: '400 კგ (5 კაცი)', 630: '630 კგ (8 კაცი)', 1000: '1000 კგ (13 კაცი)', 1600: '1600 კგ და მეტი', unsure: 'არ ვიცი' };
+const size = (mm) => (mm ? `${mm} მმ` : '-');
 
 async function sendQuoteRequestEmail(id, q) {
   await transporter.sendMail({
     from: process.env.MAIL_FROM,
     to: process.env.OWNER_EMAIL,
     replyTo: q.email || undefined,
+    attachments: q.drawing_path ? [{ filename: q.drawing_name, path: q.drawing_path }] : [],
     subject: `ფასის მოთხოვნა #${id} — ${PRODUCTS[q.product]}, ${q.name}`,
     html: `
       <h2>ფასის მოთხოვნა #${id}</h2>
@@ -110,8 +111,13 @@ async function sendQuoteRequestEmail(id, q) {
          <b>ქალაქი:</b> ${escape(q.city || '-')}</p>
       <p><b>რა სჭირდება:</b> ${escape(PRODUCTS[q.product])}<br>
          <b>შენობა:</b> ${escape(BUILDINGS[q.building])}<br>
-         <b>სართულები:</b> ${q.floors ?? '-'}<br>
-         <b>ტვირთამწეობა:</b> ${escape(CAPACITIES[q.capacity])}</p>
+         <b>სართულები:</b> ${q.floors ?? '-'}</p>
+      <p><b>შახტის სიგანე:</b> ${size(q.shaft_width)}<br>
+         <b>შახტის სიღრმე:</b> ${size(q.shaft_depth)}<br>
+         <b>ორმოს (приямок) სიღრმე:</b> ${size(q.pit_depth)}<br>
+         <b>ბოლო სართულის სიმაღლე:</b> ${size(q.last_floor_height)}<br>
+         <b>ტიპიური სართულის სიმაღლე:</b> ${size(q.floor_height)}<br>
+         <b>ნახაზი:</b> ${q.drawing_name ? escape(q.drawing_name) + ' (თან ერთვის)' : '-'}</p>
       <p><b>კომენტარი:</b><br>${escape(q.comment || '-').replace(/\n/g, '<br>')}</p>`,
   });
 }
@@ -124,5 +130,4 @@ module.exports = {
   ISSUES,
   PRODUCTS,
   BUILDINGS,
-  CAPACITIES,
 };

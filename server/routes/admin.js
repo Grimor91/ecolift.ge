@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const rateLimit = require('express-rate-limit');
 const db = require('../config/db');
 const { requireAdmin } = require('../middleware/auth');
-const { upload, UPLOAD_DIR } = require('../middleware/upload');
+const { upload, UPLOAD_DIR, DRAWING_DIR } = require('../middleware/upload');
 const { withImages } = require('../services/products');
 
 const router = express.Router();
@@ -28,6 +28,21 @@ router.post('/login', loginLimiter, async (req, res) => {
 });
 
 router.use(requireAdmin);
+
+router.post('/password', loginLimiter, async (req, res) => {
+  const { current, next } = req.body || {};
+  if (typeof current !== 'string' || typeof next !== 'string') {
+    return res.status(400).json({ error: 'შეავსეთ ორივე ველი' });
+  }
+  if (next.length < 10) return res.status(400).json({ error: 'ახალი პაროლი მინიმუმ 10 სიმბოლო უნდა იყოს' });
+  const [rows] = await db.query('SELECT * FROM admins WHERE id = ?', [req.admin.id]);
+  const admin = rows[0];
+  if (!admin || !(await bcrypt.compare(current, admin.password_hash))) {
+    return res.status(400).json({ error: 'ძველი პაროლი არასწორია' });
+  }
+  await db.query('UPDATE admins SET password_hash = ? WHERE id = ?', [await bcrypt.hash(next, 12), admin.id]);
+  res.status(204).end();
+});
 
 // ---- Products ----
 
@@ -206,4 +221,58 @@ router.patch('/quote-requests/:id', async (req, res) => {
   res.status(204).end();
 });
 
+router.get('/quote-requests/:id/drawing', async (req, res) => {
+  const [rows] = await db.query('SELECT drawing_file, drawing_name FROM quote_requests WHERE id = ?', [Number(req.params.id)]);
+  const row = rows[0];
+  if (!row?.drawing_file) return res.status(404).json({ error: 'Not found' });
+  res.download(path.join(DRAWING_DIR, path.basename(row.drawing_file)), row.drawing_name || row.drawing_file);
+});
+
+// ---- News (LinkedIn posts) ----
+
+// Accepts a LinkedIn post link (".../posts/...-activity-123...", ".../feed/update/urn:li:activity:123")
+// or the code from the post's "Embed this post" menu, and keeps only the post id.
+function parseLinkedInPost(input) {
+  const text = String(input || '');
+  let match = text.match(/urn(?::|%3A)li(?::|%3A)(share|activity|ugcPost)(?::|%3A)(\d{10,25})/i);
+  let urn = null;
+  if (match) {
+    const kind = match[1].toLowerCase() === 'ugcpost' ? 'ugcPost' : match[1].toLowerCase();
+    urn = `urn:li:${kind}:${match[2]}`;
+  } else if ((match = text.match(/linkedin\.com\/posts\/[^\s"]*?-(?:activity|share|ugcPost)-(\d{10,25})/i))) {
+    urn = `urn:li:activity:${match[1]}`;
+  }
+  if (!urn) return null;
+  const h = Number((text.match(/height=["']?(\d{3,4})/i) || [])[1]);
+  const height = h >= 300 && h <= 1500 ? h : 600;
+  return { urn, height };
+}
+
+router.get('/news', async (req, res) => {
+  const [rows] = await db.query('SELECT * FROM news_posts ORDER BY created_at DESC, id DESC');
+  res.json(rows);
+});
+
+router.post('/news', async (req, res) => {
+  const post = parseLinkedInPost(req.body?.link);
+  if (!post) return res.status(400).json({ error: 'LinkedIn-ის პოსტის ბმული ვერ ამოვიცანი' });
+  try {
+    const [result] = await db.query('INSERT INTO news_posts (urn, height) VALUES (?, ?)', [post.urn, post.height]);
+    res.status(201).json({ id: result.insertId, ...post });
+  } catch (err) {
+    if (err.code === 'ER_DUP_ENTRY') return res.status(409).json({ error: 'ეს პოსტი უკვე დამატებულია' });
+    throw err;
+  }
+});
+
+// Also reachable as POST, because some hosting setups block the DELETE method.
+async function deleteNews(req, res) {
+  const [result] = await db.query('DELETE FROM news_posts WHERE id = ?', [Number(req.params.id)]);
+  if (!result.affectedRows) return res.status(404).json({ error: 'Not found' });
+  res.status(204).end();
+}
+router.delete('/news/:id', deleteNews);
+router.post('/news/:id/delete', deleteNews);
+
 module.exports = router;
+module.exports.parseLinkedInPost = parseLinkedInPost;
