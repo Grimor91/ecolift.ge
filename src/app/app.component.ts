@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SeoService } from './shop/seo.service';
 
 @Component({
   selector: 'app-root',
@@ -8,4 +9,8 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'ecoliftplus';
   year = new Date().getFullYear();
+
+  constructor(seo: SeoService) {
+    seo.init();
+  }
 }

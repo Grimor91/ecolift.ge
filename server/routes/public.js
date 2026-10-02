@@ -52,6 +52,17 @@ router.get('/products/:id', async (req, res) => {
   res.json((await withImages(rows))[0]);
 });
 
+// Every public page, so Google can find the part pages too. robots.txt points here.
+const STATIC_PAGES = ['', 'lifts', 'cardpassenger', 'panoramic', 'Dumbwaiters', 'tailormade', 'escolator', 'parts', 'service', 'quote', 'news', 'aboutus', 'resources'];
+
+router.get('/sitemap.xml', async (req, res) => {
+  const site = (process.env.SITE_URL || 'https://ecolift.ge').replace(/\/$/, '');
+  const [products] = await db.query('SELECT id, updated_at FROM products WHERE is_active = 1 ORDER BY id');
+  const url = (loc, lastmod) => `<url><loc>${site}/${loc}</loc>${lastmod ? `<lastmod>${new Date(lastmod).toISOString().slice(0, 10)}</lastmod>` : ''}</url>`;
+  const body = [...STATIC_PAGES.map((p) => url(p)), ...products.map((p) => url(`parts/${p.id}`, p.updated_at))].join('');
+  res.type('application/xml').send(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${body}</urlset>`);
+});
+
 router.get('/news', async (req, res) => {
   const limit = Math.min(Number(req.query.limit) || 50, 50);
   const [rows] = await db.query('SELECT id, urn, height, created_at FROM news_posts ORDER BY created_at DESC, id DESC LIMIT ?', [limit]);

@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ApiService } from '../shop/api.service';
 import { CartService } from '../shop/cart.service';
 import { Product } from '../shop/models';
+import { SeoService } from '../shop/seo.service';
 
 @Component({
   selector: 'app-part-detail',
@@ -21,13 +22,20 @@ export class PartDetailComponent implements OnInit {
     public api: ApiService,
     private route: ActivatedRoute,
     private cart: CartService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private seo: SeoService
   ) {}
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.api.getProduct(id).subscribe({
-      next: (p) => (this.product = p),
+      next: (p) => {
+        this.product = p;
+        const lang = this.translate.currentLang || 'ka';
+        const name = (p as any)[`name_${lang}`] || p.name_ka;
+        const description = (p as any)[`description_${lang}`] || p.description_ka || '';
+        this.seo.setPage(`${name} (${p.code}) | Ecolift`, `${name}. ${description}`.trim());
+      },
       error: () => (this.notFound = true),
     });
   }
