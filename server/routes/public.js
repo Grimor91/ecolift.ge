@@ -5,6 +5,7 @@ const rateLimit = require('express-rate-limit');
 const db = require('../config/db');
 const { withImages } = require('../services/products');
 const { drawingUpload } = require('../middleware/upload');
+const { recordVisit } = require('../services/visits');
 const {
   sendOrderEmails,
   sendServiceRequestEmail,
@@ -72,6 +73,14 @@ router.get('/news', async (req, res) => {
 const orderLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 10, standardHeaders: true, legacyHeaders: false });
 
 const str = (v, max) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
+
+// The site reports every page a visitor opens (see VisitService in the Angular app).
+const visitLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 300, standardHeaders: true, legacyHeaders: false });
+
+router.post('/visit', visitLimiter, async (req, res) => {
+  await recordVisit(req);
+  res.status(204).end();
+});
 
 router.post('/orders', orderLimiter, async (req, res) => {
   const body = req.body || {};

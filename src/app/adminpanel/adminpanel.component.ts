@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../shop/api.service';
 import { AuthService } from '../shop/auth.service';
-import { Capacity, Category, NewsPost, Order, Product, QuoteRequest, ServiceRequest } from '../shop/models';
+import { Capacity, Category, NewsPost, Order, Product, QuoteRequest, ServiceRequest, VisitStats } from '../shop/models';
 
-type Tab = 'products' | 'orders' | 'service' | 'quotes' | 'news' | 'categories';
+type Tab = 'products' | 'orders' | 'service' | 'quotes' | 'news' | 'visits' | 'categories';
 
 const emptyForm = () => ({
   code: '',
@@ -36,6 +36,8 @@ export class AdminpanelComponent implements OnInit, OnDestroy {
   news: NewsPost[] = [];
   newsLink = '';
   newsError = '';
+  visits: VisitStats | null = null;
+  visitDays = 30;
 
   showPassword = false;
   passwordForm = { current: '', next: '', repeat: '' };
@@ -57,6 +59,8 @@ export class AdminpanelComponent implements OnInit, OnDestroy {
     { value: 'done', label: 'შესრულებული' },
     { value: 'cancelled', label: 'გაუქმებული' },
   ];
+
+  readonly deviceLabels: Record<string, string> = { desktop: 'კომპიუტერი', mobile: 'მობილური', tablet: 'პლანშეტი' };
 
   readonly equipmentLabels: Record<ServiceRequest['equipment'], string> = {
     passenger: 'სამგზავრო ლიფტი',
@@ -347,5 +351,20 @@ export class AdminpanelComponent implements OnInit, OnDestroy {
 
   linkedInUrl(post: NewsPost): string {
     return `https://www.linkedin.com/feed/update/${post.urn}/`;
+  }
+
+  // ---- Visitors ----
+
+  loadVisits(): void {
+    this.api.adminVisits(this.visitDays).subscribe((v) => (this.visits = v));
+  }
+
+  get busiestDay(): number {
+    return Math.max(1, ...(this.visits?.perDay.map((d) => d.views) || []));
+  }
+
+  flag(country: string | null): string {
+    if (!country) return '🏳️';
+    return String.fromCodePoint(...[...country.toUpperCase()].map((c) => 0x1f1a5 + c.charCodeAt(0)));
   }
 }

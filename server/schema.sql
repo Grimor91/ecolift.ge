@@ -113,3 +113,17 @@ CREATE TABLE IF NOT EXISTS news_posts (
   height SMALLINT UNSIGNED NOT NULL DEFAULT 600,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- One row per page a visitor opened (sent by the site itself, so bots that
+-- don't run JavaScript are not counted). Rows older than 180 days are deleted.
+CREATE TABLE IF NOT EXISTS visits (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  ip VARCHAR(45) NOT NULL,
+  country CHAR(2) NULL,
+  path VARCHAR(255) NOT NULL,
+  referrer VARCHAR(255) NULL,
+  device VARCHAR(10) NULL,
+  user_agent VARCHAR(255) NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_visits_created (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

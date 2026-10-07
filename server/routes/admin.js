@@ -8,6 +8,7 @@ const db = require('../config/db');
 const { requireAdmin } = require('../middleware/auth');
 const { upload, UPLOAD_DIR, DRAWING_DIR } = require('../middleware/upload');
 const { withImages } = require('../services/products');
+const { visitStats } = require('../services/visits');
 
 const router = express.Router();
 
@@ -273,6 +274,11 @@ async function deleteNews(req, res) {
 }
 router.delete('/news/:id', deleteNews);
 router.post('/news/:id/delete', deleteNews);
+
+router.get('/visits', async (req, res) => {
+  const days = Math.min(Math.max(Number(req.query.days) || 30, 1), 180);
+  res.json(await visitStats(days));
+});
 
 module.exports = router;
 module.exports.parseLinkedInPost = parseLinkedInPost;
