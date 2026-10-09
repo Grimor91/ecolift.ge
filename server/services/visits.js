@@ -14,14 +14,19 @@ const GEORGIA_OFFSET = 4 * 3600; // days in the admin panel run on Tbilisi time
 
 const BOT = /bot|crawl|spider|slurp|preview|facebookexternalhit|headless|lighthouse|pingdom|monitor/i;
 
+const PRIVATE_IP = /^(::1$|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|169\.254\.|fc|fd|fe80:|unknown$)/i;
+
 function clientIp(req) {
-  let ip = req.ip || '';
-  // Behind the host's proxy req.ip can be the proxy itself; then the real
-  // address is in the headers it adds.
-  if (/^(::1|127\.|::ffff:127\.)/.test(ip)) {
-    ip = req.get('x-real-ip') || (req.get('x-forwarded-for') || '').split(',')[0].trim() || ip;
-  }
-  return ip.replace(/^::ffff:/, '').slice(0, 45);
+  // Behind the host's proxy req.ip can be the proxy itself (a local or
+  // internal address); the visitor's address is then in the headers the proxy
+  // adds. Reading X-Forwarded-For from the right takes the entry our own
+  // proxy appended, not one a visitor could have typed in.
+  const forwarded = (req.get('x-forwarded-for') || '').split(',').map((s) => s.trim()).reverse();
+  const candidates = [req.ip, req.get('x-real-ip'), ...forwarded]
+    .filter(Boolean)
+    .map((ip) => ip.replace(/^::ffff:/, ''));
+  const ip = candidates.find((ip) => !PRIVATE_IP.test(ip)) || candidates[0] || '';
+  return ip.slice(0, 45);
 }
 
 function deviceOf(ua) {
@@ -64,9 +69,20 @@ function countryName(code) {
   }
 }
 
+/** Visits saved before the country database was installed get their country now. */
+async function fillMissingCountries() {
+  if (!geoip) return;
+  const [rows] = await db.query('SELECT DISTINCT ip FROM visits WHERE country IS NULL LIMIT 1000');
+  for (const { ip } of rows) {
+    const country = geoip.lookup(ip)?.country;
+    if (country) await db.query('UPDATE visits SET country = ? WHERE ip = ? AND country IS NULL', [country, ip]);
+  }
+}
+
 /** Numbers for the admin "visitors" tab, for the last `days` days. */
 async function visitStats(days) {
   await db.query('DELETE FROM visits WHERE created_at < NOW() - INTERVAL ? DAY', [KEEP_DAYS]);
+  await fillMissingCountries();
 
   const now = Math.floor(Date.now() / 1000);
   const todayStart = Math.floor((now + GEORGIA_OFFSET) / 86400) * 86400 - GEORGIA_OFFSET;
@@ -116,6 +132,7 @@ async function visitStats(days) {
 
   return {
     days,
+    countryLookup: !!geoip,
     today: await summary(todayStart),
     week: await summary(todayStart - 6 * 86400),
     period: await summary(since),

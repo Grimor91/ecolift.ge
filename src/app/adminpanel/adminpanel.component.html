@@ -257,6 +257,10 @@
     </div>
     <p *ngIf="!visits" class="text-muted">იტვირთება...</p>
     <ng-container *ngIf="visits as v">
+      <div *ngIf="!v.countryLookup" class="alert alert-warning">
+        ქვეყნების ბაზა სერვერზე ჯერ არ არის დაყენებული, ამიტომ ქვეყანა არ ჩანს.
+        cPanel → <strong>Setup Node.js App</strong> → ecolift-server → <strong>Run NPM Install</strong>, შემდეგ <strong>Restart</strong>.
+      </div>
       <div class="row g-3 mb-4">
         <div class="col-md-4" *ngFor="let s of [
           { label: 'დღეს', value: v.today },
@@ -285,7 +289,7 @@
           <table class="table table-sm" *ngIf="v.countries.length">
             <thead><tr><th>ქვეყანა</th><th class="text-end">ვიზიტორი</th><th class="text-end">ნახვა</th></tr></thead>
             <tbody>
-              <tr *ngFor="let c of v.countries"><td>{{ flag(c.country) }} {{ c.name }}</td><td class="text-end">{{ c.visitors }}</td><td class="text-end">{{ c.views }}</td></tr>
+              <tr *ngFor="let c of v.countries"><td><img *ngIf="c.country" class="flag" [src]="flag(c.country)" alt="" /> {{ c.name }}</td><td class="text-end">{{ c.visitors }}</td><td class="text-end">{{ c.views }}</td></tr>
             </tbody>
           </table>
         </div>
@@ -315,7 +319,7 @@
             <tr *ngFor="let r of v.recent">
               <td class="text-nowrap">{{ r.created_at | date: "dd.MM HH:mm" }}</td>
               <td>{{ r.ip }}</td>
-              <td class="text-nowrap">{{ flag(r.country) }} {{ r.country_name || '-' }}</td>
+              <td class="text-nowrap"><img *ngIf="r.country" class="flag" [src]="flag(r.country)" alt="" /> {{ r.country_name || '-' }}</td>
               <td>{{ r.path }}</td>
               <td>{{ r.device ? deviceLabels[r.device] : '-' }}</td>
               <td class="text-break">{{ r.referrer || '' }}</td>

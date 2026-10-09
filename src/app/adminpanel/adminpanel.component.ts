@@ -363,8 +363,8 @@ export class AdminpanelComponent implements OnInit, OnDestroy {
     return Math.max(1, ...(this.visits?.perDay.map((d) => d.views) || []));
   }
 
-  flag(country: string | null): string {
-    if (!country) return '🏳️';
-    return String.fromCodePoint(...[...country.toUpperCase()].map((c) => 0x1f1a5 + c.charCodeAt(0)));
+  /** Flag picture (Windows does not draw flag emoji). */
+  flag(country: string): string {
+    return `https://flagcdn.com/20x15/${country.toLowerCase()}.png`;
   }
 }

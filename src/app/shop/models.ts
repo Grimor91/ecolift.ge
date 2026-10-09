@@ -151,6 +151,8 @@ export interface VisitSummary {
 
 export interface VisitStats {
   days: number;
+  /** False when the server has no country database installed yet. */
+  countryLookup: boolean;
   today: VisitSummary;
   week: VisitSummary;
   period: VisitSummary;

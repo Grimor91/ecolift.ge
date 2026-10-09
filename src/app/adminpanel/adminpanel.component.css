@@ -115,3 +115,8 @@ h2 {
   background: #198754;
   border-radius: 2px 2px 0 0;
 }
+.flag {
+  width: 20px;
+  height: 15px;
+  vertical-align: -2px;
+}
