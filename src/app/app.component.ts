@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { SeoService } from './shop/seo.service';
+import { VisitService } from './shop/visit.service';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,8 @@ export class AppComponent {
   title = 'ecoliftplus';
   year = new Date().getFullYear();
 
-  constructor(seo: SeoService) {
+  constructor(seo: SeoService, visits: VisitService) {
     seo.init();
+    visits.init();
   }
 }

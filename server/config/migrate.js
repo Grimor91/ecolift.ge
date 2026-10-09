@@ -4,7 +4,7 @@ const db = require('./db');
 
 // Tables added after the first deploy are created here on startup, so an
 // update needs no manual SQL step in phpMyAdmin.
-const TABLES = ['service_requests', 'quote_requests', 'news_posts'];
+const TABLES = ['service_requests', 'quote_requests', 'news_posts', 'visits'];
 
 // Columns added to tables that may already exist on the live database.
 const COLUMNS = {

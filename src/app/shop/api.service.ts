@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Category, NewsPost, Order, OrderRequest, Product, ProductPage, QuoteRequest, QuoteRequestInput, ServiceRequest, ServiceRequestInput } from './models';
+import { Category, NewsPost, Order, OrderRequest, Product, ProductPage, QuoteRequest, QuoteRequestInput, ServiceRequest, ServiceRequestInput, VisitStats } from './models';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -52,6 +52,10 @@ export class ApiService {
     let params = new HttpParams().set('t', Date.now());
     if (limit) params = params.set('limit', limit);
     return this.http.get<NewsPost[]>(`${this.base}/news`, { params });
+  }
+
+  recordVisit(path: string, referrer: string): Observable<void> {
+    return this.http.post<void>(`${this.base}/visit`, { path, referrer });
   }
 
   // ---- Admin ----
@@ -128,5 +132,9 @@ export class ApiService {
 
   deleteNews(id: number): Observable<void> {
     return this.http.post<void>(`${this.base}/admin/news/${id}/delete`, {});
+  }
+
+  adminVisits(days: number): Observable<VisitStats> {
+    return this.http.get<VisitStats>(`${this.base}/admin/visits`, { params: { days, t: Date.now() } });
   }
 }

@@ -143,3 +143,31 @@ export interface NewsPost {
   height: number;
   created_at: string;
 }
+
+export interface VisitSummary {
+  views: number;
+  visitors: number;
+}
+
+export interface VisitStats {
+  days: number;
+  /** False when the server has no country database installed yet. */
+  countryLookup: boolean;
+  today: VisitSummary;
+  week: VisitSummary;
+  period: VisitSummary;
+  perDay: ({ date: string } & VisitSummary)[];
+  countries: ({ country: string | null; name: string } & VisitSummary)[];
+  pages: ({ path: string } & VisitSummary)[];
+  referrers: { referrer: string; visitors: number }[];
+  recent: {
+    id: number;
+    ip: string;
+    country: string | null;
+    country_name: string | null;
+    path: string;
+    referrer: string | null;
+    device: 'desktop' | 'mobile' | 'tablet' | null;
+    created_at: string;
+  }[];
+}

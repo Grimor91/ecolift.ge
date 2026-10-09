@@ -5,17 +5,24 @@
   RewriteEngine On
   RewriteBase /
   RewriteRule ^api(/|$) - [L]
+  # Ready-made copies of the public pages (made by scripts/prerender.mjs), so
+  # Google reads their text without running Angular. Angular starts on top.
+  # If a copy is missing, the normal index.html below still serves the page.
+  RewriteCond %{DOCUMENT_ROOT}/prerender/index.html -f
+  RewriteRule ^$ prerender/index.html [L]
+  RewriteCond %{DOCUMENT_ROOT}/prerender/$1.html -f
+  RewriteRule ^([A-Za-z0-9_-]+)/?$ prerender/$1.html [L]
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
   RewriteRule ^ index.html [L]
 </IfModule>
 
-# index.html and the translation files have fixed names, so browsers must
+# The HTML pages and the translation files have fixed names, so browsers must
 # re-check them on every visit; otherwise a new deploy stays invisible.
 # The hashed .js/.css bundles change name on every build and can be cached.
 <IfModule mod_headers.c>
-  <FilesMatch "(^index\.html|\.json)$">
+  <FilesMatch "\.(html|json)$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
 </IfModule>

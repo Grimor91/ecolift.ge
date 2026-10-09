@@ -34,6 +34,7 @@
       </button>
     </li>
     <li class="nav-item"><button class="nav-link" [class.active]="tab === 'news'" (click)="tab = 'news'; loadNews()">სიახლეები</button></li>
+    <li class="nav-item"><button class="nav-link" [class.active]="tab === 'visits'" (click)="tab = 'visits'; loadVisits()">ვიზიტორები</button></li>
     <li class="nav-item"><button class="nav-link" [class.active]="tab === 'categories'" (click)="tab = 'categories'">კატეგორიები</button></li>
   </ul>
 
@@ -240,6 +241,96 @@
         <button class="btn btn-sm btn-outline-danger" (click)="deleteNews(n)">წაშლა</button>
       </li>
     </ul>
+  </ng-container>
+
+  <!-- Visitors -->
+  <ng-container *ngIf="tab === 'visits'">
+    <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+      <span>პერიოდი:</span>
+      <select class="form-select form-select-sm status" [(ngModel)]="visitDays" (ngModelChange)="loadVisits()">
+        <option [ngValue]="7">ბოლო 7 დღე</option>
+        <option [ngValue]="30">ბოლო 30 დღე</option>
+        <option [ngValue]="90">ბოლო 90 დღე</option>
+        <option [ngValue]="180">ბოლო 180 დღე</option>
+      </select>
+      <button class="btn btn-sm btn-outline-secondary" (click)="loadVisits()">განახლება</button>
+    </div>
+    <p *ngIf="!visits" class="text-muted">იტვირთება...</p>
+    <ng-container *ngIf="visits as v">
+      <div *ngIf="!v.countryLookup" class="alert alert-warning">
+        ქვეყნების ბაზა სერვერზე ჯერ არ არის დაყენებული, ამიტომ ქვეყანა არ ჩანს.
+        cPanel → <strong>Setup Node.js App</strong> → ecolift-server → <strong>Run NPM Install</strong>, შემდეგ <strong>Restart</strong>.
+      </div>
+      <div class="row g-3 mb-4">
+        <div class="col-md-4" *ngFor="let s of [
+          { label: 'დღეს', value: v.today },
+          { label: 'ბოლო 7 დღე', value: v.week },
+          { label: 'ბოლო ' + v.days + ' დღე', value: v.period }
+        ]">
+          <div class="visit-stat">
+            <div class="text-muted">{{ s.label }}</div>
+            <div class="visit-number">{{ s.value.visitors }}</div>
+            <div>ვიზიტორი · {{ s.value.views }} გვერდის ნახვა</div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="h5">დღეების მიხედვით</h3>
+      <div class="visit-days mb-4">
+        <div class="visit-day" *ngFor="let d of v.perDay" [title]="d.date + ': ' + d.visitors + ' ვიზიტორი, ' + d.views + ' ნახვა'">
+          <div class="visit-bar" [style.height.%]="(d.views / busiestDay) * 100"></div>
+        </div>
+      </div>
+
+      <div class="row g-4 mb-4">
+        <div class="col-md-6">
+          <h3 class="h5">ქვეყნები</h3>
+          <p *ngIf="!v.countries.length" class="text-muted">მონაცემები ჯერ არ არის.</p>
+          <table class="table table-sm" *ngIf="v.countries.length">
+            <thead><tr><th>ქვეყანა</th><th class="text-end">ვიზიტორი</th><th class="text-end">ნახვა</th></tr></thead>
+            <tbody>
+              <tr *ngFor="let c of v.countries"><td><img *ngIf="c.country" class="flag" [src]="flag(c.country)" alt="" /> {{ c.name }}</td><td class="text-end">{{ c.visitors }}</td><td class="text-end">{{ c.views }}</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-6">
+          <h3 class="h5">გვერდები</h3>
+          <table class="table table-sm" *ngIf="v.pages.length">
+            <thead><tr><th>გვერდი</th><th class="text-end">ნახვა</th></tr></thead>
+            <tbody>
+              <tr *ngFor="let p of v.pages"><td>{{ p.path === '/' ? 'მთავარი' : p.path }}</td><td class="text-end">{{ p.views }}</td></tr>
+            </tbody>
+          </table>
+          <h3 class="h5 mt-3">საიდან მოვიდნენ</h3>
+          <p *ngIf="!v.referrers.length" class="text-muted">პირდაპირ შემოსულები (ბმულის აკრეფით ან სანიშნიდან).</p>
+          <table class="table table-sm" *ngIf="v.referrers.length">
+            <tbody>
+              <tr *ngFor="let r of v.referrers"><td class="text-break">{{ r.referrer }}</td><td class="text-end">{{ r.visitors }}</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <h3 class="h5">ბოლო 200 ნახვა</h3>
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead><tr><th>დრო</th><th>IP</th><th>ქვეყანა</th><th>გვერდი</th><th>მოწყობილობა</th><th>საიდან</th></tr></thead>
+          <tbody>
+            <tr *ngFor="let r of v.recent">
+              <td class="text-nowrap">{{ r.created_at | date: "dd.MM HH:mm" }}</td>
+              <td>{{ r.ip }}</td>
+              <td class="text-nowrap"><img *ngIf="r.country" class="flag" [src]="flag(r.country)" alt="" /> {{ r.country_name || '-' }}</td>
+              <td>{{ r.path }}</td>
+              <td>{{ r.device ? deviceLabels[r.device] : '-' }}</td>
+              <td class="text-break">{{ r.referrer || '' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-muted small">
+        ჩანაწერები 180 დღის შემდეგ ავტომატურად იშლება. თქვენი საკუთარი ნახვები (როცა ადმინში შესული ხართ) არ ითვლება.
+      </p>
+    </ng-container>
   </ng-container>
 
   <!-- Categories -->
