@@ -27,6 +27,7 @@
     "bootstrap": "^5.2.3",
     "flag-icons": "^6.7.0",
     "jquery": "^3.7.0",
+    "marked": "^12.0.2",
     "ngx-owl-carousel-o": "^16.0.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.6.0",

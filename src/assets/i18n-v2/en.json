@@ -18,7 +18,8 @@
     "parts": "Parts",
     "cart": "Cart",
     "service": "Service",
-    "news": "News"
+    "news": "News",
+    "articles": "Articles"
   },
   "text": {
     "folow": "Follow us on social media",
@@ -303,6 +304,23 @@
     "resources": {
       "title": "Documents and brochures | Ecolift",
       "description": "Elevator and escalator catalogues, brochures and technical documents."
+    },
+    "articles": {
+      "title": "Technical articles on elevators and escalators | Ecolift",
+      "description": "Design, loads, wear, maintenance and diagnostics of escalators and elevators. Articles by Ecolift."
     }
+  },
+  "articles": {
+    "title": "Technical articles",
+    "lead": "Design, maintenance and diagnostics of elevators and escalators: articles for engineers and building managers.",
+    "empty": "Articles are coming soon.",
+    "read": "Read",
+    "all": "All articles",
+    "author": "Author",
+    "notFound": "Article not found.",
+    "cta": "Need an escalator or elevator inspected or serviced?",
+    "ctaService": "Request service",
+    "ctaQuote": "Get a quote",
+    "escalatorBanner": "Escalator design, wear and diagnostics: read our technical articles."
   }
 }

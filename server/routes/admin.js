@@ -275,6 +275,86 @@ async function deleteNews(req, res) {
 router.delete('/news/:id', deleteNews);
 router.post('/news/:id/delete', deleteNews);
 
+// ---- Articles ----
+
+const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const IMAGE_NAME = /^[A-Za-z0-9-]+\.(jpg|png|webp)$/;
+
+// Latin letters for the address; Georgian titles are spelled out.
+const GEO = 'აბგდევზთიკლმნოპჟრსტუფქღყშჩცძწჭხჯჰ';
+const GEO_LAT = ['a', 'b', 'g', 'd', 'e', 'v', 'z', 't', 'i', 'k', 'l', 'm', 'n', 'o', 'p', 'zh', 'r', 's', 't', 'u', 'p', 'k', 'gh', 'q', 'sh', 'ch', 'ts', 'dz', 'ts', 'ch', 'kh', 'j', 'h'];
+function slugify(text) {
+  return String(text || '')
+    .toLowerCase()
+    .replace(/./g, (c) => (GEO.includes(c) ? GEO_LAT[GEO.indexOf(c)] : c))
+    .normalize('NFKD')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 100)
+    .replace(/-+$/, '');
+}
+
+function articleFields(body) {
+  const f = {
+    slug: slugify(body.slug || body.title_en || body.title_ka),
+    author: nullable(body.author),
+    cover_image: nullable(body.cover_image),
+    is_published: [false, 0, '0', 'false'].includes(body.is_published) ? 0 : 1,
+  };
+  for (const lang of ['ka', 'en', 'ru']) {
+    f[`title_${lang}`] = nullable(body[`title_${lang}`]);
+    f[`summary_${lang}`] = nullable(body[`summary_${lang}`]);
+    f[`body_${lang}`] = nullable(body[`body_${lang}`]);
+  }
+  return f;
+}
+
+function validateArticle(f) {
+  if (!f.title_ka) return 'შეავსეთ სათაური ქართულად';
+  if (!f.slug || !SLUG.test(f.slug)) return 'მისამართი (slug) არასწორია: მხოლოდ ლათინური ასოები, ციფრები და ტირე';
+  if (f.cover_image && !IMAGE_NAME.test(f.cover_image)) return 'გარეკანის სურათი არასწორია';
+  return null;
+}
+
+router.get('/articles', async (req, res) => {
+  const [rows] = await db.query('SELECT * FROM articles ORDER BY created_at DESC, id DESC');
+  res.json(rows);
+});
+
+async function saveArticle(req, res) {
+  const f = articleFields(req.body || {});
+  const error = validateArticle(f);
+  if (error) return res.status(400).json({ error });
+  const id = req.params.id ? Number(req.params.id) : null;
+  try {
+    if (id) {
+      const [result] = await db.query('UPDATE articles SET ? WHERE id = ?', [f, id]);
+      if (!result.affectedRows) return res.status(404).json({ error: 'Not found' });
+      return res.json({ id, slug: f.slug });
+    }
+    const [result] = await db.query('INSERT INTO articles SET ?', [f]);
+    res.status(201).json({ id: result.insertId, slug: f.slug });
+  } catch (err) {
+    if (err.code === 'ER_DUP_ENTRY') return res.status(409).json({ error: 'ასეთი მისამართით სტატია უკვე არსებობს, შეცვალეთ slug' });
+    throw err;
+  }
+}
+router.post('/articles', saveArticle);
+router.put('/articles/:id', saveArticle);
+router.post('/articles/:id', saveArticle);
+
+router.post('/articles/:id/delete', async (req, res) => {
+  const [result] = await db.query('DELETE FROM articles WHERE id = ?', [Number(req.params.id)]);
+  if (!result.affectedRows) return res.status(404).json({ error: 'Not found' });
+  res.status(204).end();
+});
+
+// A photo for an article: saved in uploads/, and the editor puts its name into the text.
+router.post('/article-images', upload.single('image'), (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'აირჩიეთ სურათი (jpg, png ან webp)' });
+  res.status(201).json({ file: req.file.filename, url: `/uploads/${req.file.filename}` });
+});
+
 router.get('/visits', async (req, res) => {
   const days = Math.min(Math.max(Number(req.query.days) || 30, 1), 180);
   res.json(await visitStats(days));

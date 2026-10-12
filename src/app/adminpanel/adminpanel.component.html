@@ -34,6 +34,7 @@
       </button>
     </li>
     <li class="nav-item"><button class="nav-link" [class.active]="tab === 'news'" (click)="tab = 'news'; loadNews()">სიახლეები</button></li>
+    <li class="nav-item"><button class="nav-link" [class.active]="tab === 'articles'" (click)="tab = 'articles'; loadArticles()">სტატიები</button></li>
     <li class="nav-item"><button class="nav-link" [class.active]="tab === 'visits'" (click)="tab = 'visits'; loadVisits()">ვიზიტორები</button></li>
     <li class="nav-item"><button class="nav-link" [class.active]="tab === 'categories'" (click)="tab = 'categories'">კატეგორიები</button></li>
   </ul>
@@ -239,6 +240,92 @@
       <li class="list-group-item d-flex justify-content-between align-items-center gap-2" *ngFor="let n of news">
         <span>{{ n.created_at | date: "dd.MM.yyyy HH:mm" }} · <a [href]="linkedInUrl(n)" target="_blank" rel="noopener">LinkedIn-ზე ნახვა</a></span>
         <button class="btn btn-sm btn-outline-danger" (click)="deleteNews(n)">წაშლა</button>
+      </li>
+    </ul>
+  </ng-container>
+
+  <!-- Articles -->
+  <ng-container *ngIf="tab === 'articles'">
+    <form class="product-form article-form" (ngSubmit)="saveArticle()">
+      <h2>{{ editingArticle ? "რედაქტირება" : "ახალი სტატია" }}</h2>
+
+      <div class="btn-group mb-3" role="group">
+        <button type="button" class="btn btn-sm" *ngFor="let l of articleLangs"
+          [class.btn-success]="articleLang === l.code" [class.btn-outline-success]="articleLang !== l.code"
+          (click)="articleLang = l.code">{{ l.label }}</button>
+      </div>
+
+      <ng-container *ngFor="let l of articleLangs">
+        <div *ngIf="articleLang === l.code">
+          <label class="form-label">სათაური ({{ l.label }}){{ l.code === "ka" ? " *" : "" }}</label>
+          <input class="form-control mb-2" [name]="'title_' + l.code" [(ngModel)]="articleForm['title_' + l.code]" />
+          <label class="form-label">მოკლე აღწერა ({{ l.label }}): ჩანს სტატიების სიაში და Google-ში</label>
+          <textarea class="form-control mb-2" rows="2" [name]="'summary_' + l.code" [(ngModel)]="articleForm['summary_' + l.code]"></textarea>
+          <label class="form-label">ტექსტი ({{ l.label }})</label>
+          <textarea #bodyArea class="form-control article-text" rows="18" [name]="'body_' + l.code" [(ngModel)]="articleForm['body_' + l.code]"></textarea>
+          <div class="d-flex flex-wrap gap-2 align-items-center mt-2">
+            <label class="btn btn-sm btn-outline-secondary mb-0">
+              ფოტოს ჩასმა ტექსტში
+              <input type="file" accept="image/jpeg,image/png,image/webp" hidden (change)="insertArticleImage($event, bodyArea)" />
+            </label>
+            <small class="text-muted">
+              ფორმატი: <code>## სათაური</code>, <code>### ქვესათაური</code>, <code>- სიის პუნქტი</code>, <code>**მუქი**</code>, ცარიელი ხაზი = ახალი აბზაცი
+            </small>
+          </div>
+        </div>
+      </ng-container>
+
+      <div class="row g-2 mt-3">
+        <div class="col-md-4">
+          <label class="form-label">ავტორი</label>
+          <input class="form-control" name="author" [(ngModel)]="articleForm['author']" />
+        </div>
+        <div class="col-md-5">
+          <label class="form-label">მისამართი (slug): ecolift.ge/articles/…</label>
+          <input class="form-control" name="slug" [(ngModel)]="articleForm['slug']" placeholder="ცარიელი = სათაურიდან" />
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="articlePublished" name="is_published" [(ngModel)]="articleForm['is_published']" />
+            <label class="form-check-label" for="articlePublished">საიტზე ჩანს</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <label class="form-label d-block">გარეკანის ფოტო</label>
+        <div class="d-flex align-items-center gap-3">
+          <img *ngIf="articleForm['cover_image']" class="article-cover" [src]="api.articleImageUrl(articleForm['cover_image'])" alt="" />
+          <label class="btn btn-sm btn-outline-secondary mb-0">
+            {{ articleForm['cover_image'] ? "შეცვლა" : "ატვირთვა" }}
+            <input type="file" accept="image/jpeg,image/png,image/webp" hidden (change)="uploadArticleCover($event)" />
+          </label>
+          <button *ngIf="articleForm['cover_image']" type="button" class="btn btn-sm btn-outline-danger" (click)="articleForm['cover_image'] = ''">მოხსნა</button>
+        </div>
+      </div>
+
+      <div class="d-flex gap-2 mt-4">
+        <button class="btn btn-success" [disabled]="savingArticle || uploadingArticleImage">შენახვა</button>
+        <button type="button" class="btn btn-outline-secondary" *ngIf="editingArticle" (click)="resetArticleForm()">გაუქმება</button>
+      </div>
+      <p *ngIf="uploadingArticleImage" class="text-muted mt-2">ფოტო იტვირთება...</p>
+      <p *ngIf="articleMessage" class="text-success mt-2">{{ articleMessage }}</p>
+      <p *ngIf="articleError" class="text-danger mt-2">{{ articleError }}</p>
+    </form>
+
+    <p *ngIf="!articles.length" class="text-muted mt-3">სტატიები ჯერ არ არის.</p>
+    <ul class="list-group mt-3">
+      <li class="list-group-item d-flex justify-content-between align-items-center gap-2 flex-wrap" *ngFor="let a of articles">
+        <span>
+          <strong>{{ a.title_ka }}</strong>
+          <span *ngIf="!a.is_published" class="badge bg-secondary ms-1">დამალული</span>
+          <br /><small class="text-muted">{{ a.created_at | date: "dd.MM.yyyy" }} · /articles/{{ a.slug }}</small>
+        </span>
+        <span class="d-flex gap-2">
+          <a class="btn btn-sm btn-outline-secondary" [routerLink]="['/articles', a.slug]" target="_blank">ნახვა</a>
+          <button class="btn btn-sm btn-outline-primary" (click)="editArticle(a)">რედაქტირება</button>
+          <button class="btn btn-sm btn-outline-danger" (click)="deleteArticle(a)">წაშლა</button>
+        </span>
       </li>
     </ul>
   </ng-container>

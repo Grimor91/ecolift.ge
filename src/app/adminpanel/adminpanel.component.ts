@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../shop/api.service';
 import { AuthService } from '../shop/auth.service';
-import { Capacity, Category, NewsPost, Order, Product, QuoteRequest, ServiceRequest, VisitStats } from '../shop/models';
+import { Article, Capacity, Category, NewsPost, Order, Product, QuoteRequest, ServiceRequest, VisitStats } from '../shop/models';
 
-type Tab = 'products' | 'orders' | 'service' | 'quotes' | 'news' | 'visits' | 'categories';
+type Tab = 'products' | 'orders' | 'service' | 'quotes' | 'news' | 'articles' | 'visits' | 'categories';
 
 const emptyForm = () => ({
   code: '',
@@ -18,6 +18,13 @@ const emptyForm = () => ({
   price: null as number | null,
   in_stock: true,
   is_active: true,
+});
+
+const emptyArticle = (): Record<string, any> => ({
+  title_ka: '', title_en: '', title_ru: '',
+  summary_ka: '', summary_en: '', summary_ru: '',
+  body_ka: '', body_en: '', body_ru: '',
+  slug: '', author: '', cover_image: '', is_published: true,
 });
 
 @Component({
@@ -36,6 +43,19 @@ export class AdminpanelComponent implements OnInit, OnDestroy {
   news: NewsPost[] = [];
   newsLink = '';
   newsError = '';
+  articles: Article[] = [];
+  articleForm = emptyArticle();
+  editingArticle: Article | null = null;
+  articleLang = 'ka';
+  readonly articleLangs = [
+    { code: 'ka', label: 'ქართული' },
+    { code: 'en', label: 'English' },
+    { code: 'ru', label: 'Русский' },
+  ];
+  savingArticle = false;
+  uploadingArticleImage = false;
+  articleMessage = '';
+  articleError = '';
   visits: VisitStats | null = null;
   visitDays = 30;
 
@@ -351,6 +371,95 @@ export class AdminpanelComponent implements OnInit, OnDestroy {
 
   linkedInUrl(post: NewsPost): string {
     return `https://www.linkedin.com/feed/update/${post.urn}/`;
+  }
+
+  // ---- Articles ----
+
+  loadArticles(): void {
+    this.api.adminArticles().subscribe((a) => (this.articles = a));
+  }
+
+  editArticle(a: Article): void {
+    this.editingArticle = a;
+    const form = emptyArticle();
+    for (const key of Object.keys(form)) {
+      const value = (a as any)[key];
+      form[key] = key === 'is_published' ? !!value : value ?? '';
+    }
+    this.articleForm = form;
+    this.articleLang = 'ka';
+    this.articleMessage = this.articleError = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  resetArticleForm(): void {
+    this.editingArticle = null;
+    this.articleForm = emptyArticle();
+  }
+
+  saveArticle(): void {
+    this.articleMessage = this.articleError = '';
+    if (!this.articleForm['title_ka'].trim()) {
+      this.articleError = 'შეავსეთ სათაური ქართულად';
+      this.articleLang = 'ka';
+      return;
+    }
+    this.savingArticle = true;
+    const wasEditing = !!this.editingArticle;
+    this.api.saveArticle(this.articleForm, this.editingArticle?.id).subscribe({
+      next: () => {
+        this.savingArticle = false;
+        this.articleMessage = wasEditing ? 'სტატია განახლდა' : 'სტატია დაემატა';
+        this.resetArticleForm();
+        this.loadArticles();
+      },
+      error: (err) => {
+        this.savingArticle = false;
+        this.articleError = err.error?.error || 'შენახვა ვერ მოხერხდა';
+      },
+    });
+  }
+
+  deleteArticle(a: Article): void {
+    if (!confirm(`წავშალო სტატია "${a.title_ka}"?`)) return;
+    this.api.deleteArticle(a.id).subscribe(() => {
+      if (this.editingArticle?.id === a.id) this.resetArticleForm();
+      this.loadArticles();
+    });
+  }
+
+  uploadArticleCover(event: Event): void {
+    this.uploadArticleFile(event, (file) => (this.articleForm['cover_image'] = file));
+  }
+
+  /** Uploads a photo and writes it into the text where the cursor is. */
+  insertArticleImage(event: Event, area: HTMLTextAreaElement): void {
+    const key = 'body_' + this.articleLang;
+    const at = area.selectionStart ?? area.value.length;
+    this.uploadArticleFile(event, (file) => {
+      const text: string = this.articleForm[key] || '';
+      const snippet = `\n\n![ფოტოს აღწერა](uploads/${file})\n\n`;
+      this.articleForm[key] = text.slice(0, at) + snippet + text.slice(at);
+    });
+  }
+
+  private uploadArticleFile(event: Event, done: (file: string) => void): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = '';
+    if (!file) return;
+    this.uploadingArticleImage = true;
+    this.articleError = '';
+    this.api.uploadArticleImage(file).subscribe({
+      next: (r) => {
+        this.uploadingArticleImage = false;
+        done(r.file);
+      },
+      error: (err) => {
+        this.uploadingArticleImage = false;
+        this.articleError = err.error?.error === 'file too large' ? 'ფოტო ძალიან დიდია (მაქს. 5 მბ)' : 'ფოტო ვერ აიტვირთა';
+      },
+    });
   }
 
   // ---- Visitors ----

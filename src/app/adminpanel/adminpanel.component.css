@@ -120,3 +120,14 @@ h2 {
   height: 15px;
   vertical-align: -2px;
 }
+
+.article-text {
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 14px;
+}
+.article-cover {
+  width: 160px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+}

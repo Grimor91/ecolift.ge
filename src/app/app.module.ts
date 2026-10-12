@@ -42,9 +42,12 @@ import { AdminLoginComponent } from './admin-login/admin-login.component';
 import { NewsComponent } from './news/news.component';
 import { LocalizedPipe } from './shop/localized.pipe';
 import { AuthInterceptor } from './shop/auth.interceptor';
+import { MarkdownPipe } from './shop/markdown.pipe';
+import { ArticlesComponent } from './articles/articles.component';
+import { ArticleComponent } from './articles/article.component';
 // The query string makes browsers fetch fresh translations after a deploy
 // instead of reusing a cached copy; bump it whenever the JSON files change.
-const TRANSLATIONS_VERSION = '2026-09-30';
+const TRANSLATIONS_VERSION = '2026-10-12';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n-v2/', `.json?v=${TRANSLATIONS_VERSION}`);
@@ -81,6 +84,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     AdminLoginComponent,
     NewsComponent,
     LocalizedPipe,
+    MarkdownPipe,
+    ArticlesComponent,
+    ArticleComponent,
   ],
   imports: [
     BrowserModule,

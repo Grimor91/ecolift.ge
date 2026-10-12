@@ -16,6 +16,8 @@ import { CartComponent } from './cart/cart.component';
 import { ServiceRequestComponent } from './service-request/service-request.component';
 import { QuoteRequestComponent } from './quote-request/quote-request.component';
 import { NewsComponent } from './news/news.component';
+import { ArticlesComponent } from './articles/articles.component';
+import { ArticleComponent } from './articles/article.component';
 import { AdminLoginComponent } from './admin-login/admin-login.component';
 import { adminGuard } from './shop/admin.guard';
 
@@ -37,6 +39,8 @@ const routes: Routes = [
   {path: 'service', component:ServiceRequestComponent, data:{seo:'service'}},
   {path: 'quote', component:QuoteRequestComponent, data:{seo:'quote'}},
   {path: 'news', component:NewsComponent, data:{seo:'news'}},
+  {path: 'articles', component:ArticlesComponent, data:{seo:'articles'}},
+  {path: 'articles/:slug', component:ArticleComponent, data:{seo:'articles'}},
   {path: 'resources', component:ResourcesComponent, data:{seo:'resources'}}
   
 ];
