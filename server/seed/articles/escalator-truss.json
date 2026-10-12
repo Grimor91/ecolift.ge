@@ -1,12 +1,18 @@
 {
   "slug": "escalator-truss",
-  "author": "Kamil",
   "cover_image": "escalator-1.jpg",
-  "images": ["escalator-1.jpg", "escalator-2.jpg", "escalator-3.jpg", "escalator-4.jpg", "escalator-5.jpg", "escalator-6.jpg"],
-  "title_ka": "ესკალატორის ფერმა: მზიდი კონსტრუქცია, დატვირთვების გაანგარიშება და დეფორმაციების დიაგნოსტიკა",
+  "images": [
+    "escalator-1.jpg",
+    "escalator-2.jpg",
+    "escalator-3.jpg",
+    "escalator-4.jpg",
+    "escalator-5.jpg",
+    "escalator-6.jpg"
+  ],
+  "title_ka": "ესკალატორის მზიდი კარკასი: კონსტრუქცია, დატვირთვების გაანგარიშება და დეფორმაციების დიაგნოსტიკა",
   "title_en": "The escalator truss: load-bearing structure, load calculation and deformation diagnostics",
   "title_ru": "Ферма эскалатора: несущая конструкция, расчёт нагрузок и диагностика деформаций",
-  "summary_ka": "რა დატვირთვებს იღებს ესკალატორის მზიდი ფერმა, რატომ შეიძლება მცირე ჩაღუნვას დიდი მნიშვნელობა ჰქონდეს და როგორ ჩავატაროთ ფერმის საინჟინრო გამოკვლევა. სერიის „ესკალატორი, როგორც საინჟინრო სისტემა“ პირველი სტატია.",
+  "summary_ka": "რა დატვირთვებს იღებს ესკალატორის მზიდი კარკასი, რატომ შეიძლება მცირე ჩაღუნვას დიდი მნიშვნელობა ჰქონდეს და როგორ ჩავატაროთ კარკასის საინჟინრო გამოკვლევა. სერიის „ესკალატორი, როგორც საინჟინრო სისტემა“ პირველი სტატია.",
   "summary_en": "What loads an escalator truss carries, why a small deflection can matter a lot, and how to carry out an engineering survey of the truss. Article 1 of the series \"The Escalator as an Engineering System\".",
   "summary_ru": "Какие нагрузки воспринимает несущая ферма эскалатора, почему небольшой прогиб может иметь большое значение и как проводить инженерное обследование фермы. Статья № 1 серии «Эскалатор как инженерная система»."
 }
