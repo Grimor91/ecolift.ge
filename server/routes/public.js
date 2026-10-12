@@ -56,23 +56,29 @@ router.get('/products/:id', async (req, res) => {
 // Every public page, so Google can find the part pages too. robots.txt points here.
 const STATIC_PAGES = ['', 'lifts', 'cardpassenger', 'panoramic', 'Dumbwaiters', 'tailormade', 'escolator', 'parts', 'service', 'quote', 'news', 'articles', 'aboutus', 'resources'];
 
+// Each page is listed in Georgian (plain address) with its English and Russian
+// versions (?lang=en, ?lang=ru) as alternates, so Google shows the right one.
 router.get('/sitemap.xml', async (req, res) => {
   const site = (process.env.SITE_URL || 'https://ecolift.ge').replace(/\/$/, '');
   const [products] = await db.query('SELECT id, updated_at FROM products WHERE is_active = 1 ORDER BY id');
-  const url = (loc, lastmod) => `<url><loc>${site}/${loc}</loc>${lastmod ? `<lastmod>${new Date(lastmod).toISOString().slice(0, 10)}</lastmod>` : ''}</url>`;
   const [articles] = await db.query('SELECT slug, updated_at FROM articles WHERE is_published = 1 ORDER BY id');
+  const href = (loc, lang) => `${site}/${loc}${lang === 'ka' ? '' : `?lang=${lang}`}`;
+  const url = (loc, lastmod) => {
+    const alternates = ['ka', 'en', 'ru']
+      .map((l) => `<xhtml:link rel="alternate" hreflang="${l}" href="${href(loc, l)}"/>`)
+      .join('') + `<xhtml:link rel="alternate" hreflang="x-default" href="${href(loc, 'ka')}"/>`;
+    const mod = lastmod ? `<lastmod>${new Date(lastmod).toISOString().slice(0, 10)}</lastmod>` : '';
+    return ['ka', 'en', 'ru'].map((l) => `<url><loc>${href(loc, l)}</loc>${mod}${alternates}</url>`).join('');
+  };
   const body = [
     ...STATIC_PAGES.map((p) => url(p)),
     ...articles.map((a) => url(`articles/${a.slug}`, a.updated_at)),
     ...products.map((p) => url(`parts/${p.id}`, p.updated_at)),
   ].join('');
-  res.type('application/xml').send(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${body}</urlset>`);
-});
-
-router.get('/news', async (req, res) => {
-  const limit = Math.min(Number(req.query.limit) || 50, 50);
-  const [rows] = await db.query('SELECT id, urn, height, created_at FROM news_posts ORDER BY created_at DESC, id DESC LIMIT ?', [limit]);
-  res.json(rows);
+  res.type('application/xml').send(
+    '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" ' +
+      `xmlns:xhtml="http://www.w3.org/1999/xhtml">${body}</urlset>`
+  );
 });
 
 const ARTICLE_LIST = `id, slug, title_ka, title_en, title_ru, summary_ka, summary_en, summary_ru,

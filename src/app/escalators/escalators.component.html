@@ -1,3 +1,11 @@
+<section class="page-intro">
+  <h1>{{ "intro.escalatorsTitle" | translate }}</h1>
+  <p>{{ "intro.escalatorsText" | translate }}</p>
+  <div class="page-intro-actions">
+    <a class="btn-brand" routerLink="/quote">{{ "intro.quote" | translate }}</a>
+    <a class="btn btn-outline-success" routerLink="/service">{{ "intro.service" | translate }}</a>
+  </div>
+</section>
 <div class="gallery-lightbox-container">
     <div class="gallery">
       <div *ngFor="let a of data; let i = index" class="gallery-img">

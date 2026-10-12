@@ -134,3 +134,34 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   margin-bottom: 16px;
 }
+
+/* Heading and short text at the top of the lifts and escalators pages. */
+.page-intro {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 16px 8px;
+  text-align: center;
+}
+.page-intro h1 {
+  font-size: 34px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.page-intro p {
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.7;
+  margin-bottom: 22px;
+}
+.page-intro-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+@media (max-width: 576px) {
+  .page-intro h1 {
+    font-size: 26px;
+  }
+}

@@ -45,39 +45,48 @@ const origin = `http://127.0.0.1:${server.address().port}`;
 const keptScripts = new Set([...shell.matchAll(/<script\b[^>]*\bsrc="([^"]+)"/g)].map((m) => m[1]));
 
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined });
-// A normal browser name, so the site treats the visit like a real one.
-const context = await browser.newContext({
-  viewport: { width: 1280, height: 900 },
-  userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36 ecolift-prerender',
-});
-// Outside requests (maps, fonts, video) don't change the page text.
-await context.route(/^https?:\/\/(?!127\.0\.0\.1)/, (route) => route.abort());
-
 await rm(outDir, { recursive: true, force: true });
 await mkdir(outDir, { recursive: true });
 
 let failed = 0;
-for (const route of ROUTES) {
-  const page = await context.newPage();
-  try {
-    await page.goto(`${origin}/${route}`, { waitUntil: 'networkidle' });
-    await page.waitForFunction(() => document.querySelector('app-root')?.children.length && document.title, null, { timeout: 15000 });
-    await page.evaluate((kept) => {
-      document.querySelectorAll('script').forEach((s) => {
-        if (!s.src || !kept.includes(s.getAttribute('src'))) s.remove();
-      });
-    }, [...keptScripts]);
-    const html = '<!DOCTYPE html>\n' + (await page.evaluate(() => document.documentElement.outerHTML));
-    const text = await page.evaluate(() => document.querySelector('app-root').innerText.trim().length);
-    if (text < 200) throw new Error(`only ${text} characters of text rendered`);
-    await writeFile(path.join(outDir, `${route || 'index'}.html`), html);
-    console.log(`/${route}: ${Math.round(html.length / 1024)} KB, ${text} characters of text`);
-  } catch (err) {
-    failed++;
-    console.error(`/${route}: FAILED - ${err.message}`);
-  } finally {
-    await page.close();
+// Georgian copies go to prerender/<route>.html, English and Russian ones (the
+// ?lang=en / ?lang=ru addresses) to prerender/en/ and prerender/ru/.
+for (const lang of ['ka', 'en', 'ru']) {
+  // A fresh context per language: the site remembers the chosen language.
+  const context = await browser.newContext({
+    viewport: { width: 1280, height: 900 },
+    userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36 ecolift-prerender',
+  });
+  // Outside requests (maps, fonts, video) don't change the page text.
+  await context.route(/^https?:\/\/(?!127\.0\.0\.1)/, (route) => route.abort());
+  const dir = lang === 'ka' ? outDir : path.join(outDir, lang);
+  await mkdir(dir, { recursive: true });
+
+  for (const route of ROUTES) {
+    const page = await context.newPage();
+    const label = `/${route}${lang === 'ka' ? '' : `?lang=${lang}`}`;
+    try {
+      await page.goto(`${origin}${label}`, { waitUntil: 'networkidle' });
+      await page.waitForFunction(() => document.querySelector('app-root')?.children.length && document.title, null, { timeout: 15000 });
+      await page.waitForFunction((l) => document.documentElement.lang === l, lang, { timeout: 15000 });
+      await page.evaluate((kept) => {
+        document.querySelectorAll('script').forEach((s) => {
+          if (!s.src || !kept.includes(s.getAttribute('src'))) s.remove();
+        });
+      }, [...keptScripts]);
+      const html = '<!DOCTYPE html>\n' + (await page.evaluate(() => document.documentElement.outerHTML));
+      const text = await page.evaluate(() => document.querySelector('app-root').innerText.trim().length);
+      if (text < 200) throw new Error(`only ${text} characters of text rendered`);
+      await writeFile(path.join(dir, `${route || 'index'}.html`), html);
+      console.log(`${label}: ${Math.round(html.length / 1024)} KB, ${text} characters of text`);
+    } catch (err) {
+      failed++;
+      console.error(`${label}: FAILED - ${err.message}`);
+    } finally {
+      await page.close();
+    }
   }
+  await context.close();
 }
 
 await browser.close();

@@ -18,7 +18,10 @@ export class NavComponent implements OnInit {
     private scroller: ViewportScroller,
     public cart: CartService,
   ) {
-    // Get the selected language from local storage
+    // A ?lang=en or ?lang=ru address (the ones Google lists for English and
+    // Russian searches) wins; otherwise the visitor's last choice, else Georgian.
+    const fromUrl = new URLSearchParams(window.location.search).get('lang');
+    if (fromUrl && ['ka', 'en', 'ru'].includes(fromUrl)) localStorage.setItem('selectedLanguage', fromUrl);
     const selectedLanguage = localStorage.getItem('selectedLanguage');
 
     // Set the language to the stored language or use the default language
@@ -37,6 +40,13 @@ export class NavComponent implements OnInit {
 
     // Save the selected language to local storage
     localStorage.setItem('selectedLanguage', languageCode);
+
+    // Drop a ?lang= from the address, or reloading would switch back to it.
+    const url = new URL(window.location.href);
+    if (url.searchParams.has('lang')) {
+      url.searchParams.delete('lang');
+      history.replaceState(history.state, '', url.pathname + url.search + url.hash);
+    }
 
     // Close the dropdown (if needed)
     this.closeDropdown();

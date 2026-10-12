@@ -135,8 +135,8 @@
     "continue": "Browse parts"
   },
   "home": {
-    "heroTitle": "Elevators, escalators and spare parts",
-    "heroText": "From design and installation to maintenance, in Batumi and across Georgia.",
+    "heroTitle": "Elevators and escalators in Batumi",
+    "heroText": "Supply, installation, maintenance and spare parts: in Batumi and across Georgia.",
     "orderParts": "Order parts",
     "contactUs": "Contact us",
     "whatWeDo": "What we do",
@@ -153,8 +153,8 @@
     "follow": "Follow us"
   },
   "service": {
-    "title": "Request service",
-    "lead": "Fill in the form and our technician will contact you. It goes straight to our service team.",
+    "title": "Elevator maintenance and repair in Batumi",
+    "lead": "Elevator and escalator repair, scheduled maintenance and modernization in Batumi and across Georgia. Fill in the form and our technician will contact you.",
     "emergencyTitle": "Someone stuck in the elevator?",
     "emergencyText": "Don't wait for the form, call us now.",
     "equipment": "What equipment?",
@@ -254,12 +254,12 @@
       "description": "Supply, installation, service and spare parts for elevators and escalators in Batumi and across Georgia. Ecolift Plus."
     },
     "lifts": {
-      "title": "Elevators: passenger, panoramic, freight | Ecolift",
-      "description": "Passenger, panoramic, freight and tailor-made elevators for residential and commercial buildings. Installation and service in Georgia."
+      "title": "Elevators in Batumi: passenger, panoramic, freight | Ecolift",
+      "description": "Supply, installation and service of elevators in Batumi and across Georgia: passenger, panoramic, freight and tailor-made elevators."
     },
     "passenger": {
-      "title": "Passenger elevators | Ecolift",
-      "description": "Passenger elevators for apartment buildings, offices and hotels. Design, installation and service in Georgia."
+      "title": "Passenger elevators in Batumi | Ecolift",
+      "description": "Passenger elevators for apartment buildings, offices and hotels. Design, installation and service in Batumi and Georgia."
     },
     "panoramic": {
       "title": "Panoramic elevators | Ecolift",
@@ -274,8 +274,8 @@
       "description": "Elevators designed for non-standard shafts and buildings."
     },
     "escalators": {
-      "title": "Escalators and moving walks | Ecolift",
-      "description": "Supply, installation and service of escalators for malls and public buildings."
+      "title": "Escalators in Batumi: supply, installation, service | Ecolift",
+      "description": "Supply, installation, maintenance and repair of escalators and moving walks in Batumi and across Georgia."
     },
     "parts": {
       "title": "Elevator spare parts | Ecolift",
@@ -286,8 +286,8 @@
       "description": "Your order."
     },
     "service": {
-      "title": "Elevator repair and maintenance | Ecolift",
-      "description": "Elevator out of order? Request repair, scheduled maintenance or modernization in Batumi and Georgia."
+      "title": "Elevator maintenance and repair in Batumi | Ecolift",
+      "description": "Elevator or escalator out of order? Repair, scheduled maintenance and modernization in Batumi and Georgia. Send a request or call us."
     },
     "quote": {
       "title": "New elevator price | Ecolift",
@@ -322,5 +322,13 @@
     "ctaService": "Request service",
     "ctaQuote": "Get a quote",
     "escalatorBanner": "Escalator design, wear and diagnostics: read our technical articles."
+  },
+  "intro": {
+    "liftsTitle": "Elevators in Batumi",
+    "liftsText": "Ecolift Plus supplies, installs and services passenger, panoramic, freight and tailor-made elevators in Batumi, Adjara and across Georgia. We work with apartment buildings, hotels, offices and private houses: from design and installation to scheduled maintenance and repair.",
+    "escalatorsTitle": "Escalators in Batumi",
+    "escalatorsText": "Supply, installation, maintenance and repair of escalators and moving walks in Batumi and across Georgia, for shopping centres, hotels, airports and public buildings.",
+    "quote": "Get a quote",
+    "service": "Request service"
   }
 }
