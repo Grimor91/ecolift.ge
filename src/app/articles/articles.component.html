@@ -1,0 +1,19 @@
+<section class="section">
+  <div class="section-inner">
+    <h1 class="section-title">{{ "articles.title" | translate }}</h1>
+    <p class="section-lead">{{ "articles.lead" | translate }}</p>
+
+    <p *ngIf="loaded && !articles.length" class="text-center text-muted">{{ "articles.empty" | translate }}</p>
+
+    <div class="article-grid">
+      <a class="article-card" *ngFor="let a of articles" [routerLink]="['/articles', a.slug]">
+        <img *ngIf="a.cover_image" [src]="api.articleImageUrl(a.cover_image)" [alt]="a | localized: 'title'" loading="lazy" />
+        <div class="article-card-body">
+          <h2>{{ a | localized: "title" }}</h2>
+          <p>{{ a | localized: "summary" }}</p>
+          <span class="read-more">{{ "articles.read" | translate }} →</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>

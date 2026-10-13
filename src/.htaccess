@@ -8,6 +8,19 @@
   # Ready-made copies of the public pages (made by scripts/prerender.mjs), so
   # Google reads their text without running Angular. Angular starts on top.
   # If a copy is missing, the normal index.html below still serves the page.
+  # English and Russian copies for ?lang=en and ?lang=ru (one block per language).
+  RewriteCond %{QUERY_STRING} (^|&)lang=en(&|$)
+  RewriteCond %{DOCUMENT_ROOT}/prerender/en/index.html -f
+  RewriteRule ^$ prerender/en/index.html [L]
+  RewriteCond %{QUERY_STRING} (^|&)lang=en(&|$)
+  RewriteCond %{DOCUMENT_ROOT}/prerender/en/$1.html -f
+  RewriteRule ^([A-Za-z0-9_-]+)/?$ prerender/en/$1.html [L]
+  RewriteCond %{QUERY_STRING} (^|&)lang=ru(&|$)
+  RewriteCond %{DOCUMENT_ROOT}/prerender/ru/index.html -f
+  RewriteRule ^$ prerender/ru/index.html [L]
+  RewriteCond %{QUERY_STRING} (^|&)lang=ru(&|$)
+  RewriteCond %{DOCUMENT_ROOT}/prerender/ru/$1.html -f
+  RewriteRule ^([A-Za-z0-9_-]+)/?$ prerender/ru/$1.html [L]
   RewriteCond %{DOCUMENT_ROOT}/prerender/index.html -f
   RewriteRule ^$ prerender/index.html [L]
   RewriteCond %{DOCUMENT_ROOT}/prerender/$1.html -f

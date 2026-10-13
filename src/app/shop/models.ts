@@ -171,3 +171,22 @@ export interface VisitStats {
     created_at: string;
   }[];
 }
+
+export interface Article {
+  id: number;
+  slug: string;
+  title_ka: string;
+  title_en: string | null;
+  title_ru: string | null;
+  summary_ka: string | null;
+  summary_en: string | null;
+  summary_ru: string | null;
+  body_ka?: string | null;
+  body_en?: string | null;
+  body_ru?: string | null;
+  cover_image: string | null;
+  author: string | null;
+  is_published?: number | boolean;
+  created_at: string;
+  updated_at: string;
+}

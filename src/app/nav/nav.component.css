@@ -18,7 +18,7 @@
   align-items: center;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 1200px) {
   .navbar-collapse {
     display: flex;
     justify-content: flex-end;
@@ -113,7 +113,7 @@ option {
   margin: 3px;
 }
 
-@media (max-width: 1215px) {
+@media (max-width: 1199px) {
   .ecoliftlogo {
     margin-left: 0px;
     width: 100px;
@@ -153,18 +153,39 @@ option {
   }
 }
 
-/* Tighter spacing so the parts and cart links fit on mid-size screens */
-@media (min-width: 1216px) and (max-width: 1600px) {
+/* Tighter spacing so every link, the quote button and the language menu fit on
+   mid-size screens (they were cut off at the right edge on 1366px laptops). */
+@media (min-width: 1200px) and (max-width: 1600px) {
   .nav-item {
-    padding: 20px 8px;
+    padding: 20px 5px;
+  }
+  .ecoliftlogo {
+    margin-left: 10px;
+  }
+  .nav-link {
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+  }
+}
+@media (min-width: 1200px) and (max-width: 1440px) {
+  .nav-link {
+    font-size: 14px;
   }
 }
 
-@media (min-width: 992px) and (max-width: 1215px) {
+@media (min-width: 992px) and (max-width: 1199px) {
   .nav-item {
     padding: 10px 2px;
   }
   .nav-link {
     font-size: 14px;
+  }
+}
+@media (min-width: 1200px) and (max-width: 1320px) {
+  .nav-item {
+    padding: 20px 2px;
+  }
+  .nav-link {
+    font-size: 13px;
   }
 }

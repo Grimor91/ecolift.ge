@@ -127,3 +127,23 @@ CREATE TABLE IF NOT EXISTS visits (
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   KEY idx_visits_created (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Technical articles (/articles). Texts are Markdown; images live in uploads/.
+CREATE TABLE IF NOT EXISTS articles (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  slug VARCHAR(120) NOT NULL UNIQUE,
+  title_ka VARCHAR(255) NOT NULL,
+  title_en VARCHAR(255) NULL,
+  title_ru VARCHAR(255) NULL,
+  summary_ka TEXT NULL,
+  summary_en TEXT NULL,
+  summary_ru TEXT NULL,
+  body_ka MEDIUMTEXT NULL,
+  body_en MEDIUMTEXT NULL,
+  body_ru MEDIUMTEXT NULL,
+  cover_image VARCHAR(100) NULL,
+  author VARCHAR(190) NULL,
+  is_published TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

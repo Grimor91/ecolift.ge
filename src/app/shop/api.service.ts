@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Category, NewsPost, Order, OrderRequest, Product, ProductPage, QuoteRequest, QuoteRequestInput, ServiceRequest, ServiceRequestInput, VisitStats } from './models';
+import { Article, Category, NewsPost, Order, OrderRequest, Product, ProductPage, QuoteRequest, QuoteRequestInput, ServiceRequest, ServiceRequestInput, VisitStats } from './models';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -52,6 +52,19 @@ export class ApiService {
     let params = new HttpParams().set('t', Date.now());
     if (limit) params = params.set('limit', limit);
     return this.http.get<NewsPost[]>(`${this.base}/news`, { params });
+  }
+
+  getArticles(): Observable<Article[]> {
+    return this.http.get<Article[]>(`${this.base}/articles`, { params: { t: Date.now() } });
+  }
+
+  getArticle(slug: string): Observable<Article> {
+    return this.http.get<Article>(`${this.base}/articles/${encodeURIComponent(slug)}`, { params: { t: Date.now() } });
+  }
+
+  /** Article photos are stored by file name; this gives their address. */
+  articleImageUrl(file: string): string {
+    return `${this.base}/uploads/${file}`;
   }
 
   recordVisit(path: string, referrer: string): Observable<void> {
@@ -132,6 +145,25 @@ export class ApiService {
 
   deleteNews(id: number): Observable<void> {
     return this.http.post<void>(`${this.base}/admin/news/${id}/delete`, {});
+  }
+
+  adminArticles(): Observable<Article[]> {
+    return this.http.get<Article[]>(`${this.base}/admin/articles`, { params: { t: Date.now() } });
+  }
+
+  saveArticle(article: Partial<Article>, id?: number): Observable<{ id: number; slug: string }> {
+    // POST for updates too, because some hosting setups block PUT.
+    return this.http.post<{ id: number; slug: string }>(`${this.base}/admin/articles${id ? '/' + id : ''}`, article);
+  }
+
+  deleteArticle(id: number): Observable<void> {
+    return this.http.post<void>(`${this.base}/admin/articles/${id}/delete`, {});
+  }
+
+  uploadArticleImage(file: File): Observable<{ file: string; url: string }> {
+    const data = new FormData();
+    data.append('image', file);
+    return this.http.post<{ file: string; url: string }>(`${this.base}/admin/article-images`, data);
   }
 
   adminVisits(days: number): Observable<VisitStats> {
