@@ -135,8 +135,8 @@
     "continue": "Browse parts"
   },
   "home": {
-    "heroTitle": "Elevators and escalators in Batumi",
-    "heroText": "Supply, installation, maintenance and spare parts: in Batumi and across Georgia.",
+    "heroTitle": "Elevators and escalators across Georgia",
+    "heroText": "Supply, installation, maintenance and spare parts: in Tbilisi, Batumi and every region of Georgia.",
     "orderParts": "Order parts",
     "contactUs": "Contact us",
     "whatWeDo": "What we do",
@@ -153,8 +153,8 @@
     "follow": "Follow us"
   },
   "service": {
-    "title": "Elevator maintenance and repair in Batumi",
-    "lead": "Elevator and escalator repair, scheduled maintenance and modernization in Batumi and across Georgia. Fill in the form and our technician will contact you.",
+    "title": "Elevator maintenance and repair",
+    "lead": "Elevator and escalator repair, scheduled maintenance and modernization in Tbilisi, Batumi and across Georgia. Fill in the form and our technician will contact you.",
     "emergencyTitle": "Someone stuck in the elevator?",
     "emergencyText": "Don't wait for the form, call us now.",
     "equipment": "What equipment?",
@@ -250,16 +250,16 @@
   },
   "seo": {
     "home": {
-      "title": "Ecolift | Elevators, escalators and lift parts in Batumi, Georgia",
-      "description": "Supply, installation, service and spare parts for elevators and escalators in Batumi and across Georgia. Ecolift Plus."
+      "title": "Ecolift | Elevators and escalators in Tbilisi, Batumi and Georgia",
+      "description": "Supply, installation, service and spare parts for elevators and escalators in Tbilisi, Batumi and across Georgia. Ecolift Plus."
     },
     "lifts": {
-      "title": "Elevators in Batumi: passenger, panoramic, freight | Ecolift",
-      "description": "Supply, installation and service of elevators in Batumi and across Georgia: passenger, panoramic, freight and tailor-made elevators."
+      "title": "Elevators in Tbilisi, Batumi and across Georgia | Ecolift",
+      "description": "Supply, installation and service of passenger, panoramic, freight and tailor-made elevators in Tbilisi, Batumi and every region of Georgia."
     },
     "passenger": {
-      "title": "Passenger elevators in Batumi | Ecolift",
-      "description": "Passenger elevators for apartment buildings, offices and hotels. Design, installation and service in Batumi and Georgia."
+      "title": "Passenger elevators in Tbilisi and Batumi | Ecolift",
+      "description": "Passenger elevators for apartment buildings, offices and hotels. Design, installation and service in Tbilisi, Batumi and across Georgia."
     },
     "panoramic": {
       "title": "Panoramic elevators | Ecolift",
@@ -274,8 +274,8 @@
       "description": "Elevators designed for non-standard shafts and buildings."
     },
     "escalators": {
-      "title": "Escalators in Batumi: supply, installation, service | Ecolift",
-      "description": "Supply, installation, maintenance and repair of escalators and moving walks in Batumi and across Georgia."
+      "title": "Escalators in Tbilisi, Batumi and across Georgia | Ecolift",
+      "description": "Supply, installation, maintenance and repair of escalators and moving walks in Tbilisi, Batumi and across Georgia."
     },
     "parts": {
       "title": "Elevator spare parts | Ecolift",
@@ -286,8 +286,8 @@
       "description": "Your order."
     },
     "service": {
-      "title": "Elevator maintenance and repair in Batumi | Ecolift",
-      "description": "Elevator or escalator out of order? Repair, scheduled maintenance and modernization in Batumi and Georgia. Send a request or call us."
+      "title": "Elevator maintenance and repair in Tbilisi and Batumi | Ecolift",
+      "description": "Elevator or escalator out of order? Repair, scheduled maintenance and modernization in Tbilisi, Batumi and across Georgia."
     },
     "quote": {
       "title": "New elevator price | Ecolift",
@@ -299,7 +299,7 @@
     },
     "about": {
       "title": "About us | Ecolift",
-      "description": "Ecolift Plus: elevator and escalator company in Batumi, Georgia."
+      "description": "Ecolift Plus: elevator and escalator company working in Tbilisi, Batumi and across Georgia."
     },
     "resources": {
       "title": "Documents and brochures | Ecolift",
@@ -324,10 +324,10 @@
     "escalatorBanner": "Escalator design, wear and diagnostics: read our technical articles."
   },
   "intro": {
-    "liftsTitle": "Elevators in Batumi",
-    "liftsText": "Ecolift Plus supplies, installs and services passenger, panoramic, freight and tailor-made elevators in Batumi, Adjara and across Georgia. We work with apartment buildings, hotels, offices and private houses: from design and installation to scheduled maintenance and repair.",
-    "escalatorsTitle": "Escalators in Batumi",
-    "escalatorsText": "Supply, installation, maintenance and repair of escalators and moving walks in Batumi and across Georgia, for shopping centres, hotels, airports and public buildings.",
+    "liftsTitle": "Elevators across Georgia",
+    "liftsText": "Ecolift Plus supplies, installs and services passenger, panoramic, freight and tailor-made elevators in Tbilisi, Batumi and every region of Georgia. We work with apartment buildings, hotels, offices and private houses: from design and installation to scheduled maintenance and repair.",
+    "escalatorsTitle": "Escalators across Georgia",
+    "escalatorsText": "Supply, installation, maintenance and repair of escalators and moving walks in Tbilisi, Batumi and across Georgia, for shopping centres, hotels, airports and public buildings.",
     "quote": "Get a quote",
     "service": "Request service"
   }
