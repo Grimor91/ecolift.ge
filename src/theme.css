@@ -166,7 +166,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* Lift type pages: key points under the intro and gallery heading */
+/* Lift type pages: key points under the intro */
 .page-intro-points {
   list-style: none;
   padding: 0;
@@ -183,11 +183,14 @@ h1, h2, h3, h4, h5, h6 {
   padding: 6px 14px;
   font-size: 15px;
 }
-.page-intro-gallery {
-  font-size: 22px;
-  font-weight: 700;
-  margin: 36px 0 0;
-}
 .gallery-img img {
   object-fit: cover;
+}
+@media (max-width: 650px) {
+  .gallery-lightbox-container {
+    display: block !important;
+  }
+  .gallery-lightbox-container .gallery-img img {
+    width: 100% !important;
+  }
 }
