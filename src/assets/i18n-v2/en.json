@@ -329,6 +329,17 @@
     "escalatorsTitle": "Escalators across Georgia",
     "escalatorsText": "Supply, installation, maintenance and repair of escalators and moving walks in Tbilisi, Batumi and across Georgia, for shopping centres, hotels, airports and public buildings.",
     "quote": "Get a quote",
-    "service": "Request service"
+    "service": "Request service",
+    "passengerTitle": "Passenger elevators",
+    "passengerText": "Passenger elevators for residential buildings, hotels, offices and private homes. We match the cabin design to your interior: stainless steel, gold and copper finish panels, glass, marble floors, LED lighting and touchscreen control panels. We supply, install and service elevators in Tbilisi, Batumi and across Georgia.",
+    "passengerPoint1": "Capacity from 450 to 2000 kg",
+    "passengerPoint2": "Custom cabin design",
+    "passengerPoint3": "Installation and maintenance",
+    "freightTitle": "Freight elevators and dumbwaiters",
+    "freightText": "Dumbwaiters for restaurants, hotels and cafes to move food, dishes and small loads between floors. Freight elevators for warehouses, shops and factories. We adapt the size, capacity and finish to your building and your needs.",
+    "freightPoint1": "Restaurants and hotels",
+    "freightPoint2": "Warehouses and factories",
+    "freightPoint3": "Stainless steel cabins",
+    "gallery": "Our completed projects"
   }
 }

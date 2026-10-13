@@ -165,3 +165,29 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 26px;
   }
 }
+
+/* Lift type pages: key points under the intro and gallery heading */
+.page-intro-points {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto 24px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+.page-intro-points li {
+  background: var(--brand-soft);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 15px;
+}
+.page-intro-gallery {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 36px 0 0;
+}
+.gallery-img img {
+  object-fit: cover;
+}

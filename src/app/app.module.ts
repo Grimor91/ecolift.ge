@@ -47,7 +47,7 @@ import { ArticlesComponent } from './articles/articles.component';
 import { ArticleComponent } from './articles/article.component';
 // The query string makes browsers fetch fresh translations after a deploy
 // instead of reusing a cached copy; bump it whenever the JSON files change.
-const TRANSLATIONS_VERSION = '2026-10-12';
+const TRANSLATIONS_VERSION = '2026-10-13';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n-v2/', `.json?v=${TRANSLATIONS_VERSION}`);

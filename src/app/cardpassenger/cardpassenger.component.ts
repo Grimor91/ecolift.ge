@@ -40,7 +40,18 @@ export class CardpassengerComponent implements OnInit {
   constructor(private actroute: ActivatedRoute) {}
   
   data: item[] = [
-    
+    { imageSrc: 'assets/lifts/passenger/passenger-01.jpg', imageAlt: 'სამგზავრო ლიფტი უჟანგავი ფოლადის კაბინით' },
+    { imageSrc: 'assets/lifts/passenger/passenger-02.jpg', imageAlt: 'ოქროსფერი კაბინა სენსორული ეკრანიანი მართვის პანელით' },
+    { imageSrc: 'assets/lifts/passenger/passenger-03.jpg', imageAlt: 'სპილენძისფერი სამგზავრო ლიფტის კაბინა' },
+    { imageSrc: 'assets/lifts/passenger/passenger-04.jpg', imageAlt: 'სამგზავრო ლიფტი ოფისის ფოიეში' },
+    { imageSrc: 'assets/lifts/passenger/passenger-05.jpg', imageAlt: 'სპილენძისფერი პანელები და LED ჭერი' },
+    { imageSrc: 'assets/lifts/passenger/passenger-06.jpg', imageAlt: 'შუშის კაბინა მარმარილოს იატაკით' },
+    { imageSrc: 'assets/lifts/passenger/passenger-07.jpg', imageAlt: 'ლიფტი კერძო სახლში' },
+    { imageSrc: 'assets/lifts/passenger/passenger-08.jpg', imageAlt: 'უჟანგავი ფოლადის კაბინა' },
+    { imageSrc: 'assets/lifts/passenger/passenger-09.jpg', imageAlt: 'ლიფტი მარმარილოს მოპირკეთებით' },
+    { imageSrc: 'assets/lifts/passenger/passenger-10.jpg', imageAlt: 'ოქროსფერი კაბინა თაღოვანი დეკორით' },
+    { imageSrc: 'assets/lifts/passenger/passenger-11.jpg', imageAlt: 'მართვის პანელი, 1000 კგ, 13 მგზავრი' },
+    { imageSrc: 'assets/lifts/passenger/passenger-12.jpg', imageAlt: 'კაბინის LED ჭერი' },
   ];
   
   previewimage = false;
