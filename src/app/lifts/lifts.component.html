@@ -10,7 +10,6 @@
     <div class="gallery">
       <div *ngFor="let a of data; let i = index" class="gallery-img">
         <img (click)="onPrewieimg(i)" [src]="a.imageSrc" [alt]="a.imageAlt">
-        <button (click)="downloadImage(a.downloadUrl)">Download</button>
       </div>
     </div>
     <div *ngIf="showmask" class="lightbox" @animation2>
