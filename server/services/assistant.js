@@ -61,6 +61,9 @@ const STOP = new Set(
     'и', 'в', 'на', 'у', 'с', 'к', 'по', 'для', 'мне', 'нам', 'вас', 'вы', 'я', 'мы', 'есть', 'нужен', 'нужна',
     'нужно', 'нужны', 'хочу', 'это', 'как', 'что', 'какой', 'какая', 'или', 'а', 'не', 'да', 'нет', 'пожалуйста',
     'подскажите', 'скажите', 'можно', 'ли', 'мой', 'наш', 'ваш',
+    // "what is ...?" questions
+    'რას', 'ნიშნავს', 'ახსენი', 'ამიხსენი', 'mean', 'means', 'meaning', 'define', 'explain',
+    'такое', 'значит', 'означает', 'объясни', 'объясните', 'зачем', 'чего',
   ].map(canonical)
 );
 
@@ -153,6 +156,30 @@ function alternatives(q) {
     });
   }
   return [...forms].map(([form, weight]) => ({ form, weight }));
+}
+
+// Short explanations of lift terms and Georgian lift rules, in our own words.
+// Each term is a phrase; lift words in it ("ლიფტის შახტა") may be left out.
+const GLOSSARY = require('../seed/lift-glossary.json').map((entry) => ({
+  ...entry,
+  phrases: entry.terms.map((t) => tokens(t)).filter((p) => p.length),
+}));
+const DEFINITION = /(что\s+(такое|значит|означает|это)|для\s+чего|зачем|რა\s+არის|რას\s+ნიშნავს|რა\s+ფუნქცია|ახსენი|ამიხსენი|what\s+(is|are|does)|what's|meaning|define|explain|объясни)/i;
+
+/** The glossary entry the message names, or null. */
+function findTerm(qTokens) {
+  let best = null;
+  for (const entry of GLOSSARY) {
+    for (const phrase of entry.phrases) {
+      const hits = phrase.map((w) => bestMatch(w, qTokens));
+      if (!phrase.every((w, i) => hits[i] > 0 || GENERIC.has(w))) continue;
+      if (!phrase.some((w, i) => hits[i] > 0 && !GENERIC.has(w))) continue;
+      const found = hits.filter((h) => h > 0);
+      const score = found.reduce((s, h) => s + h, 0) + (found.length - 1) * 0.5 - (phrase.length - found.length) * 0.1;
+      if (!best || score > best.score) best = { entry, phrase, score };
+    }
+  }
+  return best;
 }
 
 let cache = null;
@@ -393,6 +420,26 @@ async function reply(message, siteLang) {
   const answer = findAnswer(qTokens, data.answers);
   const searchTokens = qTokens.filter((q) => !GENERIC.has(q));
   const products = findProducts(searchTokens, data);
+  const term = findTerm(qTokens);
+
+  // A term that covers everything the answer matched is the more exact fit:
+  // "ферма эскалатора" explains the truss rather than escalators in general.
+  const answerTokens = answer ? searchTokens.filter((q) => answer.answer.phrases.flat().some((w) => wordMatch(q, w))) : [];
+  const termWins = term && (!answer || (term.score > answer.score && answerTokens.every((q) => term.phrase.some((w) => wordMatch(q, w)))));
+  // Rule names with a number ("постановление 289") are not model numbers.
+  const ruleName = term && term.phrase.length >= 2 && term.phrase.some((w) => /\d/.test(w)) && term.score >= term.phrase.length;
+
+  // "что такое ловители?" explains the term, with matching parts under it.
+  if (termWins && (DEFINITION.test(text) || ruleName || answerTokens.length)) {
+    out.text = term.entry[lang] || term.entry.ru;
+    out.answered = true;
+    if (!ruleName && products.length && products[0].matchedAll) {
+      out.extraText = TEXT.productsMore[lang];
+      out.products = products.map((p) => productView(p, lang));
+      out.actions = ['parts'];
+    }
+    return out;
+  }
 
   // Words the answer explained ("ფასი", "შეკვეთა") are not part names; a part
   // search only counts when some other word matched a part too.
@@ -426,6 +473,12 @@ async function reply(message, siteLang) {
     out.products = products.map((p) => productView(p, lang));
     out.searchQuery = catalogSearch(text, data);
     out.actions = ['parts'];
+    return out;
+  }
+
+  if (term) {
+    out.text = term.entry[lang] || term.entry.ru;
+    out.answered = true;
     return out;
   }
 

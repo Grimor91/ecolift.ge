@@ -71,3 +71,9 @@ searches the parts catalog by name, brand or model, and otherwise picks the best
 answer the admin wrote in the "ასისტენტი" tab (keywords in any language). Word
 endings, small typos and Georgian typed in Latin letters still match. The first
 answers come from `seed/assistant-answers.json` when the table is created.
+
+Two files ship with the code and change only with a new upload:
+`seed/lift-terms.json` lists words that name the same part ("частотник",
+"инвертор", "drive"), so a search for one finds the others, and
+`seed/lift-glossary.json` explains lift terms and Georgian lift rules (№41,
+№289, №446) in three languages for questions like "что такое ловители?".
