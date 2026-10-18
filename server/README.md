@@ -76,4 +76,6 @@ Two files ship with the code and change only with a new upload:
 `seed/lift-terms.json` lists words that name the same part ("частотник",
 "инвертор", "drive"), so a search for one finds the others, and
 `seed/lift-glossary.json` explains lift terms and Georgian lift rules (№41,
-№289, №446) in three languages for questions like "что такое ловители?".
+№289, №446) in three languages for questions like "что такое ловители?". `seed/regulation-41.json` answers questions on chapter 17 (lifts) of
+regulation №41 by topic; the chapter's Georgian text is kept in
+`seed/regulations/reg-41-chapter-17.ka.md` for reference.

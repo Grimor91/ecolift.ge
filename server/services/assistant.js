@@ -158,9 +158,10 @@ function alternatives(q) {
   return [...forms].map(([form, weight]) => ({ form, weight }));
 }
 
-// Short explanations of lift terms and Georgian lift rules, in our own words.
+// Short explanations of lift terms and Georgian lift rules, in our own words,
+// and the lift chapter (17) of technical regulation №41 by topic.
 // Each term is a phrase; lift words in it ("ლიფტის შახტა") may be left out.
-const GLOSSARY = require('../seed/lift-glossary.json').map((entry) => ({
+const GLOSSARY = [...require('../seed/lift-glossary.json'), ...require('../seed/regulation-41.json')].map((entry) => ({
   ...entry,
   phrases: entry.terms.map((t) => tokens(t)).filter((p) => p.length),
 }));
@@ -176,7 +177,8 @@ function findTerm(qTokens) {
       if (!phrase.some((w, i) => hits[i] > 0 && !GENERIC.has(w))) continue;
       const found = hits.filter((h) => h > 0);
       const score = found.reduce((s, h) => s + h, 0) + (found.length - 1) * 0.5 - (phrase.length - found.length) * 0.1;
-      if (!best || score > best.score) best = { entry, phrase, score };
+      const strong = phrase.filter((w, i) => hits[i] > 0 && !GENERIC.has(w)).length;
+      if (!best || score > best.score) best = { entry, phrase, score, strong };
     }
   }
   return best;
@@ -308,7 +310,7 @@ function findProducts(qTokens, data, limit = 5) {
   return scored
     .filter((s) => s.matched === top.matched && s.quality === top.quality && s.score >= top.score * 0.6)
     .slice(0, limit)
-    .map((s) => ({ ...s.d.product, score: s.score, matchedAll: s.matched === slots.length }));
+    .map((s) => ({ ...s.d.product, score: s.score, matched: s.matched, matchedAll: s.matched === slots.length }));
 }
 
 /** The language to answer in: the alphabet of the message, else the site's. */
@@ -316,7 +318,7 @@ function replyLang(message, siteLang) {
   if (/[ა-ჰ]/.test(message)) return 'ka';
   if (/[а-яё]/i.test(message)) return 'ru';
   if (/[a-z]/i.test(message)) {
-    const english = /\b(the|i|you|we|need|have|how|what|where|when|which|price|cost|elevator|lift|door|part|parts|hello|hi|do|is|are|can|my|want|repair|broken|phone|address|contact|new|order|delivery|warranty|payment|thanks|thank|and|for|with)\b/i;
+    const english = /\b(the|i|you|we|need|have|how|what|where|when|which|price|cost|elevator|lift|door|part|parts|power|shaft|machine|room|lobby|fire|width|size|hello|hi|do|is|are|can|my|want|repair|broken|phone|address|contact|new|order|delivery|warranty|payment|thanks|thank|and|for|with)\b/i;
     if (english.test(message) || siteLang === 'en') return 'en';
   }
   return LANGS.includes(siteLang) ? siteLang : 'ka';
@@ -429,11 +431,15 @@ async function reply(message, siteLang) {
   // Rule names with a number ("постановление 289") are not model numbers.
   const ruleName = term && term.phrase.length >= 2 && term.phrase.some((w) => /\d/.test(w)) && term.score >= term.phrase.length;
 
+  // A topic of several words ("вентиляция шахты") beats parts that match
+  // fewer of them (a key "для двери шахты").
+  const topic = term && term.strong >= 2 && (!products.length || products[0].matched < term.strong);
+
   // "что такое ловители?" explains the term, with matching parts under it.
-  if (termWins && (DEFINITION.test(text) || ruleName || answerTokens.length)) {
+  if (termWins && (DEFINITION.test(text) || ruleName || topic || answerTokens.length || (answer && answer.score < 1))) {
     out.text = term.entry[lang] || term.entry.ru;
     out.answered = true;
-    if (!ruleName && products.length && products[0].matchedAll) {
+    if (!ruleName && !topic && products.length && products[0].matchedAll) {
       out.extraText = TEXT.productsMore[lang];
       out.products = products.map((p) => productView(p, lang));
       out.actions = ['parts'];
