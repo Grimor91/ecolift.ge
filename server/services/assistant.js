@@ -19,11 +19,18 @@ const GEO = {
   ც: 'ts', ძ: 'dz', წ: 'ts', ჭ: 'ch', ხ: 'kh', ჯ: 'j', ჰ: 'h',
 };
 
+// Russian letters in Latin, so "отис" finds Otis and "мотор" finds "motor".
+const RUS = {
+  а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ж: 'zh', з: 'z', и: 'i', й: 'i', к: 'k', л: 'l', м: 'm',
+  н: 'n', о: 'o', п: 'p', р: 'r', с: 's', т: 't', у: 'u', ф: 'p', х: 'kh', ц: 'ts', ч: 'ch', ш: 'sh', щ: 'sh',
+  ъ: '', ы: 'i', ь: '', э: 'e', ю: 'iu', я: 'ia',
+};
+
 /** One spelling for a word, whichever alphabet or Latin style it was typed in. */
 function canonical(word) {
   let w = word.toLowerCase().replace(/ё/g, 'е');
   if (/[ა-ჰ]/.test(w)) return w.replace(/[ა-ჰ]/g, (c) => GEO[c] || c);
-  if (/[а-я]/.test(w)) return w;
+  if (/[а-я]/.test(w)) return w.replace(/[а-я]/g, (c) => RUS[c] ?? c);
   return w
     .replace(/tch/g, 'ch')
     .replace(/th/g, 't')
@@ -78,6 +85,8 @@ function tokens(text) {
     .toLowerCase()
     .split(/[^0-9a-zа-яёა-ჰ*\/.-]+/i)
     .map((t) => t.replace(/^[-.\/*]+|[-.\/*]+$/g, ''))
+    // "COP/LOP" and "FLA-MCU/KLE-MCU" are also searched by each half.
+    .flatMap((t) => (/^[^\/]+(\/[^\/]+)+$/.test(t) ? [t, ...t.split('/')] : [t]))
     .filter((t) => t.length >= 2)
     .map(canonical)
     .filter((t) => !STOP.has(t));
@@ -114,13 +123,36 @@ function wordMatch(q, w) {
   if (short >= 4) {
     let common = 0;
     while (common < short && q[common] === w[common]) common++;
-    if (common >= Math.max(4, short - 2)) return 0.8;
+    // Longer words may differ only in their last letter or ending, so
+    // "привод" does not pass for "привезти".
+    if (common >= (short <= 5 ? 4 : short - 1)) return 0.8;
   }
-  if (short >= 5) {
+  // A typo keeps the first letter, so "плата" is not taken for "оплата".
+  if (short >= 5 && q[0] === w[0]) {
     const max = short >= 8 ? 2 : 1;
     if (editDistance(q, w, max) <= max) return 0.6;
   }
   return 0;
+}
+
+// The lift fitter's dictionary: words that name the same part ("частотник",
+// "инвертор", "drive", "ინვერტორი"). A message word that matches one of them
+// searches for all of them. The first word of each group is the one the
+// catalog uses, so parts named with it rank first ("частотник" lists
+// inverters before an "escalator drive belt").
+const TERM_GROUPS = require('../seed/lift-terms.json').map((group) => [...new Set(group.flatMap((t) => tokens(t)))]);
+const SYNONYM_WEIGHT = 0.9;
+
+/** The forms a message word can take in a part name, with how fully each one counts. */
+function alternatives(q) {
+  const forms = new Map([[q, 1]]);
+  for (const group of TERM_GROUPS) {
+    if (!group.some((w) => wordMatch(q, w) >= 0.8)) continue;
+    group.forEach((w, i) => {
+      if (!forms.has(w)) forms.set(w, i === 0 ? 1 : SYNONYM_WEIGHT);
+    });
+  }
+  return [...forms].map(([form, weight]) => ({ form, weight }));
 }
 
 let cache = null;
@@ -198,22 +230,39 @@ function findAnswer(qTokens, answers) {
 
 /** Parts whose name, brand or code match the message, best first. */
 function findProducts(qTokens, data, limit = 5) {
-  if (!qTokens.length) return [];
+  // Each message word becomes a slot that any of its synonyms can fill. Words
+  // no part name contains ("называют", "еще") are left out, and synonyms
+  // typed together ("частотник, инвертер") count once.
+  const slots = [];
+  const seen = new Set();
+  for (const q of qTokens) {
+    const forms = alternatives(q).filter((f) => data.vocabulary.some((w) => wordMatch(f.form, w)));
+    const key = forms.map((f) => f.form).sort().join(' ');
+    if (forms.length && !seen.has(key)) {
+      seen.add(key);
+      slots.push(forms);
+    }
+  }
+  if (!slots.length) return [];
+
   const scored = [];
   for (const d of data.docs) {
     let score = 0;
     let quality = 0;
     let matched = 0;
-    for (const q of qTokens) {
+    for (const forms of slots) {
       let best = 0;
       let bestWord = null;
-      for (const w of d.words) {
-        const m = wordMatch(q, w);
-        if (m > best) {
-          best = m;
-          bestWord = w;
-          if (m === 1) break;
+      for (const { form, weight } of forms) {
+        for (const w of d.words) {
+          const m = wordMatch(form, w) * weight;
+          if (m > best) {
+            best = m;
+            bestWord = w;
+            if (m === 1) break;
+          }
         }
+        if (best === 1) break;
       }
       if (best) {
         score += best * data.idf(bestWord);
@@ -232,7 +281,7 @@ function findProducts(qTokens, data, limit = 5) {
   return scored
     .filter((s) => s.matched === top.matched && s.quality === top.quality && s.score >= top.score * 0.6)
     .slice(0, limit)
-    .map((s) => ({ ...s.d.product, score: s.score, matchedAll: s.matched === qTokens.length }));
+    .map((s) => ({ ...s.d.product, score: s.score, matchedAll: s.matched === slots.length }));
 }
 
 /** The language to answer in: the alphabet of the message, else the site's. */
@@ -302,12 +351,18 @@ function productView(p, lang) {
  * The catalog page searches for the typed text as a whole, so a "see all"
  * link only makes sense when the message comes down to one word ("Otis").
  */
-function catalogSearch(text) {
+function catalogSearch(text, data) {
   const words = text.split(/\s+/).filter((w) => {
     const t = tokens(w);
     return t.length && !GENERIC.has(t[0]);
   });
-  return words.length === 1 ? words[0].replace(/[?!.,]+$/, '').slice(0, 100) : null;
+  if (words.length !== 1) return null;
+  // Only when the catalog page will find it too ("Мотор" is "Двигатель" there).
+  const word = words[0].replace(/[?!.,]+$/, '').slice(0, 100).toLowerCase();
+  const found = data.docs.some((d) =>
+    [d.product.code, d.product.name_ka, d.product.name_en, d.product.name_ru].some((n) => n && n.toLowerCase().includes(word))
+  );
+  return found ? word : null;
 }
 
 /**
@@ -349,7 +404,7 @@ async function reply(message, siteLang) {
   if (answer && answer.score < 1 && products.length && products[0].matchedAll) {
     out.text = TEXT.products[lang];
     out.products = products.map((p) => productView(p, lang));
-    out.searchQuery = catalogSearch(text);
+    out.searchQuery = catalogSearch(text, data);
     out.actions = ['parts'];
     return out;
   }
@@ -369,7 +424,7 @@ async function reply(message, siteLang) {
     const exact = products[0].matchedAll;
     out.text = exact ? TEXT.products[lang] : TEXT.productsMaybe[lang];
     out.products = products.map((p) => productView(p, lang));
-    out.searchQuery = catalogSearch(text);
+    out.searchQuery = catalogSearch(text, data);
     out.actions = ['parts'];
     return out;
   }
