@@ -190,3 +190,44 @@ export interface Article {
   created_at: string;
   updated_at: string;
 }
+
+export type AssistantAction = 'service' | 'quote' | 'parts' | 'call' | 'contact' | 'lifts' | 'escalators' | 'articles';
+
+export interface AssistantProduct {
+  id: number;
+  code: string;
+  name: string;
+  image: string | null;
+}
+
+export interface AssistantReply {
+  lang: string;
+  text: string;
+  extraText: string | null;
+  products: AssistantProduct[];
+  actions: AssistantAction[];
+  searchQuery: string | null;
+}
+
+export interface AssistantAnswer {
+  id: number;
+  title: string;
+  keywords: string;
+  answer_ka: string;
+  answer_en: string | null;
+  answer_ru: string | null;
+  action: AssistantAction | null;
+  is_active: boolean;
+  sort_order: number;
+}
+
+export interface AssistantQuestion {
+  id: number;
+  message: string;
+  lang: string | null;
+  answer_id: number | null;
+  answer_title: string | null;
+  products_found: number;
+  answered: boolean;
+  created_at: string;
+}

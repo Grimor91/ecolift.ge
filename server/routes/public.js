@@ -6,6 +6,7 @@ const db = require('../config/db');
 const { withImages } = require('../services/products');
 const { drawingUpload } = require('../middleware/upload');
 const { recordVisit } = require('../services/visits');
+const assistant = require('../services/assistant');
 const {
   sendOrderEmails,
   sendServiceRequestEmail,
@@ -105,6 +106,28 @@ const visitLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 300, standardH
 router.post('/visit', visitLimiter, async (req, res) => {
   await recordVisit(req);
   res.status(204).end();
+});
+
+// The chat window on the site. Answers come from this server only (see services/assistant.js).
+const assistantLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 60, standardHeaders: true, legacyHeaders: false });
+
+router.post('/assistant', assistantLimiter, async (req, res) => {
+  const message = str(req.body?.message, 500);
+  if (!message) return res.status(400).json({ error: 'message is required' });
+  const result = await assistant.reply(message, req.body?.lang);
+  try {
+    await assistant.logQuestion(message, result);
+  } catch (err) {
+    console.error('Assistant log failed:', err.message);
+  }
+  res.json({
+    lang: result.lang,
+    text: result.text,
+    extraText: result.extraText || null,
+    products: result.products,
+    actions: result.actions,
+    searchQuery: result.searchQuery || null,
+  });
 });
 
 router.post('/orders', orderLimiter, async (req, res) => {

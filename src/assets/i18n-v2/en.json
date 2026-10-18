@@ -340,5 +340,32 @@
     "freightPoint1": "Restaurants and hotels",
     "freightPoint2": "Warehouses and factories",
     "freightPoint3": "Stainless steel cabins"
+  },
+  "assistant": {
+    "launcher": "Have a question?",
+    "title": "Ecolift assistant",
+    "subtitle": "Parts, service, prices",
+    "close": "Close",
+    "send": "Send",
+    "welcome": "Hello! Tell me what you need: a part name, brand or code (e.g. \"Otis door motor\" or \"EL-0123\"), or choose below.",
+    "placeholder": "Type your question...",
+    "seeAll": "See all in the catalog",
+    "error": "I could not answer right now. Try again shortly or call us.",
+    "quick": {
+      "findPart": "I need a part",
+      "broken": "My lift is broken",
+      "newLift": "New lift price",
+      "contact": "Phone and address"
+    },
+    "action": {
+      "service": "Service request",
+      "quote": "Request a price",
+      "parts": "Parts catalog",
+      "call": "Call",
+      "contact": "WhatsApp",
+      "lifts": "Lifts",
+      "escalators": "Escalators",
+      "articles": "Articles"
+    }
   }
 }

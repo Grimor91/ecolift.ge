@@ -147,3 +147,33 @@ CREATE TABLE IF NOT EXISTS articles (
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Site assistant (chat window). Answers the admin edits: keywords in any of the
+-- three languages (comma separated), the answer in each language and an
+-- optional button that opens a page (service, quote, parts, contact).
+CREATE TABLE IF NOT EXISTS assistant_answers (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(190) NOT NULL,
+  keywords TEXT NOT NULL,
+  answer_ka TEXT NOT NULL,
+  answer_en TEXT NULL,
+  answer_ru TEXT NULL,
+  action VARCHAR(20) NULL,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  sort_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- What visitors asked the assistant, so the admin sees questions it could not
+-- answer and can add them. Rows older than 180 days are deleted.
+CREATE TABLE IF NOT EXISTS assistant_questions (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  message VARCHAR(500) NOT NULL,
+  lang VARCHAR(5) NULL,
+  answer_id INT UNSIGNED NULL,
+  products_found SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+  answered TINYINT(1) NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_assistant_questions_created (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

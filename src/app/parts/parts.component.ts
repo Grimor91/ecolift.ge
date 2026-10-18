@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ApiService } from '../shop/api.service';
 import { CartService } from '../shop/cart.service';
@@ -21,11 +22,20 @@ export class PartsComponent implements OnInit {
   error = false;
   addedId: number | null = null;
 
-  constructor(public api: ApiService, private cart: CartService, private translate: TranslateService) {}
+  constructor(
+    public api: ApiService,
+    private cart: CartService,
+    private translate: TranslateService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.api.getCategories().subscribe({ next: (c) => (this.categories = c), error: () => {} });
-    this.load();
+    // The assistant's "see all" link opens the catalog with its search filled in.
+    this.route.queryParamMap.subscribe((params) => {
+      this.search = params.get('search') || this.search;
+      this.load();
+    });
   }
 
   get pages(): number {

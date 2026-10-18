@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Article, Category, NewsPost, Order, OrderRequest, Product, ProductPage, QuoteRequest, QuoteRequestInput, ServiceRequest, ServiceRequestInput, VisitStats } from './models';
+import { Article, AssistantAnswer, AssistantQuestion, AssistantReply, Category, NewsPost, Order, OrderRequest, Product, ProductPage, QuoteRequest, QuoteRequestInput, ServiceRequest, ServiceRequestInput, VisitStats } from './models';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -65,6 +65,10 @@ export class ApiService {
   /** Article photos are stored by file name; this gives their address. */
   articleImageUrl(file: string): string {
     return `${this.base}/uploads/${file}`;
+  }
+
+  askAssistant(message: string, lang: string): Observable<AssistantReply> {
+    return this.http.post<AssistantReply>(`${this.base}/assistant`, { message, lang });
   }
 
   recordVisit(path: string, referrer: string): Observable<void> {
@@ -164,6 +168,25 @@ export class ApiService {
     const data = new FormData();
     data.append('image', file);
     return this.http.post<{ file: string; url: string }>(`${this.base}/admin/article-images`, data);
+  }
+
+  adminAssistantAnswers(): Observable<AssistantAnswer[]> {
+    return this.http.get<AssistantAnswer[]>(`${this.base}/admin/assistant/answers`, { params: { t: Date.now() } });
+  }
+
+  saveAssistantAnswer(answer: Partial<AssistantAnswer>, id?: number): Observable<{ id: number }> {
+    // POST for updates too, because some hosting setups block PUT.
+    return this.http.post<{ id: number }>(`${this.base}/admin/assistant/answers${id ? '/' + id : ''}`, answer);
+  }
+
+  deleteAssistantAnswer(id: number): Observable<void> {
+    return this.http.post<void>(`${this.base}/admin/assistant/answers/${id}/delete`, {});
+  }
+
+  adminAssistantQuestions(unanswered: boolean): Observable<AssistantQuestion[]> {
+    return this.http.get<AssistantQuestion[]>(`${this.base}/admin/assistant/questions`, {
+      params: { unanswered: unanswered ? 1 : 0, t: Date.now() },
+    });
   }
 
   adminVisits(days: number): Observable<VisitStats> {

@@ -45,9 +45,10 @@ import { AuthInterceptor } from './shop/auth.interceptor';
 import { MarkdownPipe } from './shop/markdown.pipe';
 import { ArticlesComponent } from './articles/articles.component';
 import { ArticleComponent } from './articles/article.component';
+import { AssistantComponent } from './assistant/assistant.component';
 // The query string makes browsers fetch fresh translations after a deploy
 // instead of reusing a cached copy; bump it whenever the JSON files change.
-const TRANSLATIONS_VERSION = '2026-10-13';
+const TRANSLATIONS_VERSION = '2026-10-18';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n-v2/', `.json?v=${TRANSLATIONS_VERSION}`);
@@ -87,6 +88,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     MarkdownPipe,
     ArticlesComponent,
     ArticleComponent,
+    AssistantComponent,
   ],
   imports: [
     BrowserModule,
