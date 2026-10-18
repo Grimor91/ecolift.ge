@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../shop/api.service';
 import { AuthService } from '../shop/auth.service';
-import { Article, Capacity, Category, NewsPost, Order, Product, QuoteRequest, ServiceRequest, VisitStats } from '../shop/models';
+import { Article, AssistantAction, AssistantAnswer, AssistantQuestion, Capacity, Category, NewsPost, Order, Product, QuoteRequest, ServiceRequest, VisitStats } from '../shop/models';
 
-type Tab = 'products' | 'orders' | 'service' | 'quotes' | 'news' | 'articles' | 'visits' | 'categories';
+type Tab = 'products' | 'orders' | 'service' | 'quotes' | 'news' | 'articles' | 'assistant' | 'visits' | 'categories';
 
 const emptyForm = () => ({
   code: '',
@@ -25,6 +25,16 @@ const emptyArticle = (): Record<string, any> => ({
   summary_ka: '', summary_en: '', summary_ru: '',
   body_ka: '', body_en: '', body_ru: '',
   slug: '', author: '', cover_image: '', is_published: true,
+});
+
+const emptyAnswer = () => ({
+  title: '',
+  keywords: '',
+  answer_ka: '',
+  answer_en: '',
+  answer_ru: '',
+  action: null as AssistantAction | null,
+  is_active: true,
 });
 
 @Component({
@@ -58,6 +68,26 @@ export class AdminpanelComponent implements OnInit, OnDestroy {
   articleError = '';
   visits: VisitStats | null = null;
   visitDays = 30;
+
+  assistantAnswers: AssistantAnswer[] = [];
+  assistantQuestions: AssistantQuestion[] = [];
+  onlyUnanswered = true;
+  answerForm = emptyAnswer();
+  editingAnswer: AssistantAnswer | null = null;
+  savingAnswer = false;
+  answerMessage = '';
+  answerError = '';
+  readonly assistantActions: { value: AssistantAction | null; label: string }[] = [
+    { value: null, label: 'ღილაკის გარეშე' },
+    { value: 'service', label: 'სერვისის განაცხადი' },
+    { value: 'quote', label: 'ფასის მოთხოვნა (ახალი ლიფტი)' },
+    { value: 'parts', label: 'ნაწილების კატალოგი' },
+    { value: 'call', label: 'დარეკვა' },
+    { value: 'contact', label: 'WhatsApp' },
+    { value: 'lifts', label: 'ლიფტების გვერდი' },
+    { value: 'escalators', label: 'ესკალატორების გვერდი' },
+    { value: 'articles', label: 'სტატიები' },
+  ];
 
   showPassword = false;
   passwordForm = { current: '', next: '', repeat: '' };
@@ -417,6 +447,80 @@ export class AdminpanelComponent implements OnInit, OnDestroy {
         this.savingArticle = false;
         this.articleError = err.error?.error || 'შენახვა ვერ მოხერხდა';
       },
+    });
+  }
+
+  // ---- Assistant ----
+
+  loadAssistant(): void {
+    this.api.adminAssistantAnswers().subscribe((a) => (this.assistantAnswers = a));
+    this.loadAssistantQuestions();
+  }
+
+  loadAssistantQuestions(): void {
+    this.api.adminAssistantQuestions(this.onlyUnanswered).subscribe((q) => (this.assistantQuestions = q));
+  }
+
+  actionLabel(action: AssistantAction | null): string {
+    return this.assistantActions.find((a) => a.value === action)?.label || '';
+  }
+
+  editAnswer(a: AssistantAnswer): void {
+    this.editingAnswer = a;
+    this.answerMessage = this.answerError = '';
+    this.answerForm = {
+      title: a.title,
+      keywords: a.keywords,
+      answer_ka: a.answer_ka,
+      answer_en: a.answer_en || '',
+      answer_ru: a.answer_ru || '',
+      action: a.action,
+      is_active: a.is_active,
+    };
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /** Starts a new answer from a question the assistant could not answer. */
+  answerQuestion(q: AssistantQuestion): void {
+    this.resetAnswerForm();
+    this.answerForm.title = q.message.slice(0, 190);
+    this.answerForm.keywords = q.message;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  resetAnswerForm(): void {
+    this.editingAnswer = null;
+    this.answerForm = emptyAnswer();
+  }
+
+  saveAnswer(): void {
+    this.answerMessage = this.answerError = '';
+    const f = this.answerForm;
+    if (!f.title.trim() || !f.keywords.trim() || !f.answer_ka.trim()) {
+      this.answerError = 'შეავსეთ სათაური, საკვანძო სიტყვები და ქართული პასუხი';
+      return;
+    }
+    this.savingAnswer = true;
+    const wasEditing = !!this.editingAnswer;
+    this.api.saveAssistantAnswer(f, this.editingAnswer?.id).subscribe({
+      next: () => {
+        this.savingAnswer = false;
+        this.answerMessage = wasEditing ? 'პასუხი განახლდა' : 'პასუხი დაემატა';
+        this.resetAnswerForm();
+        this.loadAssistant();
+      },
+      error: (err) => {
+        this.savingAnswer = false;
+        this.answerError = err.error?.error || 'შენახვა ვერ მოხერხდა';
+      },
+    });
+  }
+
+  deleteAnswer(a: AssistantAnswer): void {
+    if (!confirm(`წავშალო პასუხი "${a.title}"?`)) return;
+    this.api.deleteAssistantAnswer(a.id).subscribe(() => {
+      if (this.editingAnswer?.id === a.id) this.resetAnswerForm();
+      this.loadAssistant();
     });
   }
 

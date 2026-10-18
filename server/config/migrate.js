@@ -5,7 +5,7 @@ const { UPLOAD_DIR } = require('../middleware/upload');
 
 // Tables added after the first deploy are created here on startup, so an
 // update needs no manual SQL step in phpMyAdmin.
-const TABLES = ['service_requests', 'quote_requests', 'news_posts', 'visits', 'articles'];
+const TABLES = ['service_requests', 'quote_requests', 'news_posts', 'visits', 'articles', 'assistant_answers', 'assistant_questions'];
 
 // Columns added to tables that may already exist on the live database.
 const COLUMNS = {
@@ -26,6 +26,7 @@ async function migrate() {
     'SELECT TABLE_NAME AS name FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE()'
   );
   const hadArticles = present.some((t) => t.name === 'articles');
+  const hadAnswers = present.some((t) => t.name === 'assistant_answers');
   for (const table of TABLES) {
     const match = sql.match(new RegExp(`CREATE TABLE IF NOT EXISTS ${table} \\([\\s\\S]*?\\) ENGINE=[^;]+;`));
     if (match) await db.query(match[0]);
@@ -48,6 +49,21 @@ async function migrate() {
   // The first articles arrive with the update itself, only when the table is new,
   // so an article deleted in the admin panel does not come back.
   if (!hadArticles) await seedArticles();
+  // Same for the assistant's first answers.
+  if (!hadAnswers) await seedAssistantAnswers();
+}
+
+async function seedAssistantAnswers() {
+  const file = path.join(__dirname, '..', 'seed', 'assistant-answers.json');
+  if (!fs.existsSync(file)) return;
+  const answers = JSON.parse(fs.readFileSync(file, 'utf8'));
+  for (const [i, a] of answers.entries()) {
+    await db.query(
+      `INSERT INTO assistant_answers (title, keywords, answer_ka, answer_en, answer_ru, action, sort_order)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [a.title, a.keywords, a.answer_ka, a.answer_en, a.answer_ru, a.action || null, i + 1]
+    );
+  }
 }
 
 async function seedArticles() {

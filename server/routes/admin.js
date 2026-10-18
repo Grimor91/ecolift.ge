@@ -9,6 +9,7 @@ const { requireAdmin } = require('../middleware/auth');
 const { upload, UPLOAD_DIR, DRAWING_DIR } = require('../middleware/upload');
 const { withImages } = require('../services/products');
 const { visitStats } = require('../services/visits');
+const assistant = require('../services/assistant');
 
 const router = express.Router();
 
@@ -358,6 +359,62 @@ router.post('/article-images', upload.single('image'), (req, res) => {
 router.get('/visits', async (req, res) => {
   const days = Math.min(Math.max(Number(req.query.days) || 30, 1), 180);
   res.json(await visitStats(days));
+});
+
+// ---- Assistant (chat window) ----
+
+const ASSISTANT_ACTIONS = ['service', 'quote', 'parts', 'call', 'contact', 'lifts', 'escalators', 'articles'];
+
+router.get('/assistant/answers', async (req, res) => {
+  const [rows] = await db.query('SELECT * FROM assistant_answers ORDER BY sort_order, id');
+  res.json(rows.map((r) => ({ ...r, is_active: !!r.is_active })));
+});
+
+// POST for updates too, because some hosting setups block PUT.
+async function saveAnswer(req, res) {
+  const b = req.body || {};
+  const a = {
+    title: nullable(b.title),
+    keywords: nullable(b.keywords),
+    answer_ka: nullable(b.answer_ka),
+    answer_en: nullable(b.answer_en),
+    answer_ru: nullable(b.answer_ru),
+    action: ASSISTANT_ACTIONS.includes(b.action) ? b.action : null,
+    is_active: b.is_active === false || b.is_active === 0 ? 0 : 1,
+  };
+  if (!a.title || !a.keywords || !a.answer_ka) {
+    return res.status(400).json({ error: 'შეავსეთ სათაური, საკვანძო სიტყვები და ქართული პასუხი' });
+  }
+  const id = Number(req.params.id) || null;
+  if (id) {
+    const [result] = await db.query('UPDATE assistant_answers SET ? WHERE id = ?', [a, id]);
+    if (!result.affectedRows) return res.status(404).json({ error: 'Not found' });
+  } else {
+    const [[{ next }]] = await db.query('SELECT COALESCE(MAX(sort_order), 0) + 1 AS next FROM assistant_answers');
+    const [result] = await db.query('INSERT INTO assistant_answers SET ?', [{ ...a, sort_order: next }]);
+    req.params.id = result.insertId;
+  }
+  assistant.clearCache();
+  res.status(id ? 200 : 201).json({ id: Number(req.params.id) });
+}
+router.post('/assistant/answers', saveAnswer);
+router.post('/assistant/answers/:id', saveAnswer);
+
+router.post('/assistant/answers/:id/delete', async (req, res) => {
+  const [result] = await db.query('DELETE FROM assistant_answers WHERE id = ?', [Number(req.params.id)]);
+  if (!result.affectedRows) return res.status(404).json({ error: 'Not found' });
+  assistant.clearCache();
+  res.status(204).end();
+});
+
+router.get('/assistant/questions', async (req, res) => {
+  const where = req.query.unanswered === '1' ? 'WHERE q.answered = 0' : '';
+  const [rows] = await db.query(
+    `SELECT q.*, a.title AS answer_title FROM assistant_questions q
+     LEFT JOIN assistant_answers a ON a.id = q.answer_id ${where}
+     ORDER BY q.created_at DESC, q.id DESC LIMIT 200`
+  );
+  res.json(rows.map((r) => ({ ...r, answered: !!r.answered })));
 });
 
 module.exports = router;

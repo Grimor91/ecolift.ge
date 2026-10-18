@@ -45,6 +45,7 @@ Public:
 | GET | `/api/products/:id` | one product with images |
 | GET | `/api/categories` | categories |
 | POST | `/api/orders` | `{ name, phone, email?, company?, comment?, items: [{ productId, quantity }] }` |
+| POST | `/api/assistant` | `{ message, lang }` → `{ lang, text, extraText, products, actions, searchQuery }` |
 
 Admin (header `Authorization: Bearer <token>`):
 
@@ -58,3 +59,15 @@ Admin (header `Authorization: Bearer <token>`):
 | POST / DELETE | `/api/admin/categories[/:id]` | |
 | GET | `/api/admin/orders` | latest 200 orders with items |
 | PATCH | `/api/admin/orders/:id` | `{ status: new \| in_progress \| done \| cancelled }` |
+| GET / POST | `/api/admin/assistant/answers[/:id]` | assistant answers: list, add, edit |
+| POST | `/api/admin/assistant/answers/:id/delete` | |
+| GET | `/api/admin/assistant/questions?unanswered=1` | latest 200 visitor questions |
+
+## Site assistant
+
+The chat window on the site (`/api/assistant`) runs on this server only, with no
+outside AI service (`services/assistant.js`). It answers part codes (`EL-0123`),
+searches the parts catalog by name, brand or model, and otherwise picks the best
+answer the admin wrote in the "ასისტენტი" tab (keywords in any language). Word
+endings, small typos and Georgian typed in Latin letters still match. The first
+answers come from `seed/assistant-answers.json` when the table is created.

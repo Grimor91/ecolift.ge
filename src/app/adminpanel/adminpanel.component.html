@@ -35,6 +35,7 @@
     </li>
     <li class="nav-item"><button class="nav-link" [class.active]="tab === 'news'" (click)="tab = 'news'; loadNews()">სიახლეები</button></li>
     <li class="nav-item"><button class="nav-link" [class.active]="tab === 'articles'" (click)="tab = 'articles'; loadArticles()">სტატიები</button></li>
+    <li class="nav-item"><button class="nav-link" [class.active]="tab === 'assistant'" (click)="tab = 'assistant'; loadAssistant()">ასისტენტი</button></li>
     <li class="nav-item"><button class="nav-link" [class.active]="tab === 'visits'" (click)="tab = 'visits'; loadVisits()">ვიზიტორები</button></li>
     <li class="nav-item"><button class="nav-link" [class.active]="tab === 'categories'" (click)="tab = 'categories'">კატეგორიები</button></li>
   </ul>
@@ -321,6 +322,98 @@
           <a class="btn btn-sm btn-outline-secondary" [routerLink]="['/articles', a.slug]" target="_blank">ნახვა</a>
           <button class="btn btn-sm btn-outline-primary" (click)="editArticle(a)">რედაქტირება</button>
           <button class="btn btn-sm btn-outline-danger" (click)="deleteArticle(a)">წაშლა</button>
+        </span>
+      </li>
+    </ul>
+  </ng-container>
+
+  <!-- Assistant (chat window) -->
+  <ng-container *ngIf="tab === 'assistant'">
+    <p class="text-muted">
+      საიტის ჩატი ნაწილებს თავად ეძებს კატალოგში. აქ წერთ პასუხებს სხვა კითხვებზე: როცა სტუმრის შეკითხვაში
+      რომელიმე საკვანძო სიტყვაა, ჩატი ამ პასუხს აჩვენებს. შენახვისთანავე მუშაობს.
+    </p>
+
+    <form class="product-form" (ngSubmit)="saveAnswer()">
+      <h2>{{ editingAnswer ? "პასუხის რედაქტირება" : "ახალი პასუხი" }}</h2>
+      <label class="form-label">სათაური (მხოლოდ თქვენთვის, სიაში ჩანს) *</label>
+      <input class="form-control mb-2" name="title" [(ngModel)]="answerForm.title" maxlength="190" />
+
+      <label class="form-label">საკვანძო სიტყვები *</label>
+      <textarea class="form-control mb-1" rows="3" name="keywords" [(ngModel)]="answerForm.keywords"
+        placeholder="მიწოდება, მიტანა, delivery, доставка"></textarea>
+      <small class="text-muted d-block mb-2">
+        გამოყავით მძიმით. ჩაწერეთ სამივე ენაზე. რამდენიმე სიტყვა ერთად (მაგ. "ახალი ლიფტი") ნიშნავს, რომ ორივე უნდა იყოს შეკითხვაში.
+        დაბოლოებები და პატარა შეცდომები ავტომატურად ემთხვევა.
+      </small>
+
+      <label class="form-label">პასუხი ქართულად *</label>
+      <textarea class="form-control mb-2" rows="3" name="answer_ka" [(ngModel)]="answerForm.answer_ka"></textarea>
+      <label class="form-label">პასუხი ინგლისურად</label>
+      <textarea class="form-control mb-2" rows="3" name="answer_en" [(ngModel)]="answerForm.answer_en"></textarea>
+      <label class="form-label">პასუხი რუსულად</label>
+      <textarea class="form-control mb-2" rows="3" name="answer_ru" [(ngModel)]="answerForm.answer_ru"></textarea>
+
+      <div class="row g-2">
+        <div class="col-md-8">
+          <label class="form-label">ღილაკი პასუხის ქვეშ</label>
+          <select class="form-select" name="action" [(ngModel)]="answerForm.action">
+            <option *ngFor="let a of assistantActions" [ngValue]="a.value">{{ a.label }}</option>
+          </select>
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="answerActive" name="is_active" [(ngModel)]="answerForm.is_active" />
+            <label class="form-check-label" for="answerActive">ჩართულია</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex gap-2 mt-3">
+        <button class="btn btn-success" [disabled]="savingAnswer">შენახვა</button>
+        <button type="button" class="btn btn-outline-secondary" *ngIf="editingAnswer" (click)="resetAnswerForm()">გაუქმება</button>
+      </div>
+      <p *ngIf="answerMessage" class="text-success mt-2">{{ answerMessage }}</p>
+      <p *ngIf="answerError" class="text-danger mt-2">{{ answerError }}</p>
+    </form>
+
+    <h3 class="h5 mt-4">რას ეკითხებიან ჩატს</h3>
+    <div class="d-flex flex-wrap gap-3 align-items-center mb-2">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="onlyUnanswered" [(ngModel)]="onlyUnanswered" (ngModelChange)="loadAssistantQuestions()" />
+        <label class="form-check-label" for="onlyUnanswered">მხოლოდ უპასუხოდ დარჩენილი</label>
+      </div>
+      <button class="btn btn-sm btn-outline-secondary" (click)="loadAssistantQuestions()">განახლება</button>
+    </div>
+    <p *ngIf="!assistantQuestions.length" class="text-muted">კითხვები ჯერ არ არის.</p>
+    <ul class="list-group mb-4" *ngIf="assistantQuestions.length">
+      <li class="list-group-item d-flex justify-content-between align-items-center gap-2 flex-wrap" *ngFor="let q of assistantQuestions">
+        <span>
+          {{ q.message }}
+          <br />
+          <small class="text-muted">
+            {{ q.created_at | date: "dd.MM.yyyy HH:mm" }} · {{ q.lang }}
+            <ng-container *ngIf="q.answer_title"> · პასუხი: {{ q.answer_title }}</ng-container>
+            <ng-container *ngIf="q.products_found"> · ნაწილები: {{ q.products_found }}</ng-container>
+            <span *ngIf="!q.answered" class="badge bg-warning text-dark ms-1">უპასუხო</span>
+          </small>
+        </span>
+        <button *ngIf="!q.answered" class="btn btn-sm btn-outline-primary" (click)="answerQuestion(q)">პასუხის დამატება</button>
+      </li>
+    </ul>
+
+    <h3 class="h5">პასუხები ({{ assistantAnswers.length }})</h3>
+    <ul class="list-group">
+      <li class="list-group-item d-flex justify-content-between align-items-center gap-2 flex-wrap" *ngFor="let a of assistantAnswers">
+        <span>
+          <strong>{{ a.title }}</strong>
+          <span *ngIf="!a.is_active" class="badge bg-secondary ms-1">გამორთული</span>
+          <span *ngIf="a.action" class="badge bg-light text-dark ms-1">{{ actionLabel(a.action) }}</span>
+          <br /><small class="text-muted">{{ a.keywords | slice: 0 : 140 }}{{ a.keywords.length > 140 ? "…" : "" }}</small>
+        </span>
+        <span class="d-flex gap-2">
+          <button class="btn btn-sm btn-outline-primary" (click)="editAnswer(a)">რედაქტირება</button>
+          <button class="btn btn-sm btn-outline-danger" (click)="deleteAnswer(a)">წაშლა</button>
         </span>
       </li>
     </ul>
