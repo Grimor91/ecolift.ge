@@ -20,7 +20,7 @@ const langUrl = (url: string, lang: string) => (lang === 'ka' ? url : `${url}?la
 @Injectable({ providedIn: 'root' })
 export class SeoService {
   private key = 'home';
-  private custom: { title: string; description: string } | null = null;
+  private custom: { title: string; description: string; langs: string[] } | null = null;
 
   constructor(
     private router: Router,
@@ -43,19 +43,37 @@ export class SeoService {
     this.translate.onLangChange.subscribe(() => this.apply());
   }
 
-  /** Used by pages whose text comes from the database, such as a part. */
-  setPage(title: string, description: string): void {
-    this.custom = { title, description };
+  /**
+   * Used by pages whose text comes from the database, such as a part.
+   * `langs` are the languages the text exists in: an untranslated page shown
+   * in Georgian points Google to the Georgian address, like the server's copy
+   * of it does (server/services/pages.js); otherwise Google sees two
+   * addresses with the same text and picks its own canonical.
+   */
+  setPage(title: string, description: string, langs: string[] = LANGS): void {
+    this.custom = { title, description, langs: langs.length ? langs : ['ka'] };
     this.apply();
   }
 
+  /** A part or article that doesn't exist must not be indexed. */
+  setNotFound(): void {
+    this.meta.updateTag({ name: 'robots', content: 'noindex' });
+  }
+
   private apply(): void {
-    const lang = this.translate.currentLang || 'ka';
+    const langs = this.custom?.langs || LANGS;
+    const current = this.translate.currentLang || 'ka';
+    const lang = langs.includes(current) ? current : 'ka';
     this.doc.documentElement.lang = lang;
     const path = SITE + this.router.url.split(/[?#]/)[0];
     this.setLink('canonical', null, langUrl(path, lang));
-    for (const l of LANGS) this.setLink('alternate', l, langUrl(path, l));
-    this.setLink('alternate', 'x-default', path);
+    for (const l of [...LANGS, 'x-default']) {
+      if (langs.length > 1 && (langs.includes(l) || l === 'x-default')) {
+        this.setLink('alternate', l, l === 'x-default' ? path : langUrl(path, l));
+      } else {
+        this.doc.head.querySelector(`link[rel="alternate"][hreflang="${l}"]`)?.remove();
+      }
+    }
     if (this.custom) {
       this.set(this.custom.title, this.custom.description);
       return;

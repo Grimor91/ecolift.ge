@@ -33,7 +33,10 @@ export class ArticleComponent implements OnInit, OnDestroy {
             this.article = a;
             this.setSeo();
           },
-          error: () => (this.notFound = true),
+          error: () => {
+            this.notFound = true;
+            this.seo.setNotFound();
+          },
         });
       })
     );
@@ -49,6 +52,8 @@ export class ArticleComponent implements OnInit, OnDestroy {
     if (!a) return;
     const lang = this.translate.currentLang || 'ka';
     const title = a[`title_${lang}`] || a.title_ka;
-    this.seo.setPage(`${title} | Ecolift`, a[`summary_${lang}`] || a.summary_ka || title);
+    // Translated only when the text is, not just the title (as in server/services/pages.js).
+    const langs = ['ka', 'en', 'ru'].filter((l) => l === 'ka' || ((a[`title_${l}`] || '').trim() && (a[`body_${l}`] || '').trim()));
+    this.seo.setPage(`${title} | Ecolift`, a[`summary_${lang}`] || a.summary_ka || title, langs);
   }
 }

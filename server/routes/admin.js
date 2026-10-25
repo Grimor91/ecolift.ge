@@ -10,6 +10,7 @@ const { upload, UPLOAD_DIR, DRAWING_DIR } = require('../middleware/upload');
 const { withImages } = require('../services/products');
 const { visitStats } = require('../services/visits');
 const assistant = require('../services/assistant');
+const pages = require('../services/pages');
 
 const router = express.Router();
 
@@ -30,6 +31,12 @@ router.post('/login', loginLimiter, async (req, res) => {
 });
 
 router.use(requireAdmin);
+
+// Parts, categories and articles also live as page copies for Google (services/pages.js).
+router.use(/^\/(products|categories|articles)/, (req, res, next) => {
+  if (req.method !== 'GET') res.on('finish', () => res.statusCode < 400 && pages.schedule());
+  next();
+});
 
 router.post('/password', loginLimiter, async (req, res) => {
   const { current, next } = req.body || {};
