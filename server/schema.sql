@@ -177,3 +177,9 @@ CREATE TABLE IF NOT EXISTS assistant_questions (
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   KEY idx_assistant_questions_created (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- One-time data updates shipped with the server (see config/migrate.js).
+CREATE TABLE IF NOT EXISTS seed_runs (
+  name VARCHAR(100) PRIMARY KEY,
+  applied_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
