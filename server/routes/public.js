@@ -61,25 +61,37 @@ const STATIC_PAGES = ['', 'lifts', 'cardpassenger', 'panoramic', 'Dumbwaiters', 
 // versions (?lang=en, ?lang=ru) as alternates, so Google shows the right one.
 router.get('/sitemap.xml', async (req, res) => {
   const site = (process.env.SITE_URL || 'https://ecolift.ge').replace(/\/$/, '');
-  const [products] = await db.query('SELECT id, updated_at FROM products WHERE is_active = 1 ORDER BY id');
-  const [articles] = await db.query('SELECT slug, updated_at FROM articles WHERE is_published = 1 ORDER BY id');
+  const [products] = await db.query('SELECT id, name_en, name_ru, updated_at FROM products WHERE is_active = 1 ORDER BY id');
+  const [articles] = await db.query(
+    'SELECT slug, title_en, title_ru, body_en, body_ru, updated_at FROM articles WHERE is_published = 1 ORDER BY id'
+  );
   const href = (loc, lang) => `${site}/${loc}${lang === 'ka' ? '' : `?lang=${lang}`}`;
-  const url = (loc, lastmod) => {
-    const alternates = ['ka', 'en', 'ru']
+  // Only the languages a part or article is translated into; an untranslated
+  // one shows Georgian text, and its ?lang= address points Google to the Georgian one.
+  const url = (loc, lastmod, langs = ['ka', 'en', 'ru']) => {
+    const alternates = langs.length < 2 ? '' : langs
       .map((l) => `<xhtml:link rel="alternate" hreflang="${l}" href="${href(loc, l)}"/>`)
       .join('') + `<xhtml:link rel="alternate" hreflang="x-default" href="${href(loc, 'ka')}"/>`;
     const mod = lastmod ? `<lastmod>${new Date(lastmod).toISOString().slice(0, 10)}</lastmod>` : '';
-    return ['ka', 'en', 'ru'].map((l) => `<url><loc>${href(loc, l)}</loc>${mod}${alternates}</url>`).join('');
+    return langs.map((l) => `<url><loc>${href(loc, l)}</loc>${mod}${alternates}</url>`).join('');
   };
+  const has = (row, ...fields) => (l) => l === 'ka' || fields.every((f) => (row[`${f}_${l}`] || '').trim());
   const body = [
     ...STATIC_PAGES.map((p) => url(p)),
-    ...articles.map((a) => url(`articles/${a.slug}`, a.updated_at)),
-    ...products.map((p) => url(`parts/${p.id}`, p.updated_at)),
+    ...articles.map((a) => url(`articles/${a.slug}`, a.updated_at, ['ka', 'en', 'ru'].filter(has(a, 'title', 'body')))),
+    ...products.map((p) => url(`parts/${p.id}`, p.updated_at, ['ka', 'en', 'ru'].filter(has(p, 'name')))),
   ].join('');
   res.type('application/xml').send(
     '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" ' +
       `xmlns:xhtml="http://www.w3.org/1999/xhtml">${body}</urlset>`
   );
+});
+
+// LinkedIn posts added in the admin "სიახლეები" tab, newest first (home page and /news).
+router.get('/news', async (req, res) => {
+  const limit = Math.min(Number(req.query.limit) || 50, 50);
+  const [rows] = await db.query('SELECT id, urn, height, created_at FROM news_posts ORDER BY created_at DESC, id DESC LIMIT ?', [limit]);
+  res.json(rows);
 });
 
 const ARTICLE_LIST = `id, slug, title_ka, title_en, title_ru, summary_ka, summary_en, summary_ru,

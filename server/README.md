@@ -35,6 +35,8 @@ In another terminal run the Angular site with `npm start` from the repo root; in
 
 Uploaded images are stored in `server/uploads/` and served from `/api/uploads/...`. Include that folder in backups.
 
+The server also writes an HTML copy of every part and article page (and of the `/parts` and `/articles` lists) into `public_html/pages/<lang>/`, which `.htaccess` serves, so Google sees each page's own text and canonical address instead of the same empty `index.html` (`services/pages.js`). They are rebuilt on start, after admin edits, within a minute of a new `index.html` upload, and every 6 hours. If `public_html` is not `~/public_html`, set `PUBLIC_HTML_DIR`.
+
 ## API
 
 Public:

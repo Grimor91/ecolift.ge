@@ -4,7 +4,39 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+
+  # One address per page, so Google doesn't pick its own canonical among copies:
+  # http -> https and www.ecolift.ge -> ecolift.ge. The SSL certificate's
+  # renewal checks under .well-known/ are left alone.
+  RewriteRule ^\.well-known/ - [L]
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteRule ^ https://ecolift.ge%{REQUEST_URI} [R=301,L]
+  RewriteCond %{HTTP_HOST} ^www\. [NC]
+  RewriteRule ^ https://ecolift.ge%{REQUEST_URI} [R=301,L]
+
   RewriteRule ^api(/|$) - [L]
+
+  # /index.html -> /, /lifts/ -> /lifts, ?lang=ka -> plain address (Georgian is the default).
+  RewriteCond %{THE_REQUEST} \s/index\.html[\s?]
+  RewriteRule ^index\.html$ https://ecolift.ge/ [R=301,L]
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.+)/$ https://ecolift.ge/$1 [R=301,L]
+  RewriteCond %{QUERY_STRING} ^lang=ka$
+  RewriteRule ^(.*)$ https://ecolift.ge/$1? [R=301,L]
+
+  # Parts and articles come from the database; the API server keeps a copy of each
+  # of their pages in pages/<language>/ (server/services/pages.js).
+  RewriteCond %{QUERY_STRING} (^|&)lang=en(&|$)
+  RewriteCond %{DOCUMENT_ROOT}/pages/en/$1.html -f
+  RewriteRule ^((parts|articles)(/[A-Za-z0-9_-]+)?)$ pages/en/$1.html [L]
+  RewriteCond %{QUERY_STRING} (^|&)lang=ru(&|$)
+  RewriteCond %{DOCUMENT_ROOT}/pages/ru/$1.html -f
+  RewriteRule ^((parts|articles)(/[A-Za-z0-9_-]+)?)$ pages/ru/$1.html [L]
+  RewriteCond %{QUERY_STRING} !(^|&)lang=(en|ru)(&|$)
+  RewriteCond %{DOCUMENT_ROOT}/pages/ka/$1.html -f
+  RewriteRule ^((parts|articles)(/[A-Za-z0-9_-]+)?)$ pages/ka/$1.html [L]
+
   # Ready-made copies of the public pages (made by scripts/prerender.mjs), so
   # Google reads their text without running Angular. Angular starts on top.
   # If a copy is missing, the normal index.html below still serves the page.

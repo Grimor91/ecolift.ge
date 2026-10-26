@@ -34,9 +34,13 @@ export class PartDetailComponent implements OnInit {
         const lang = this.translate.currentLang || 'ka';
         const name = (p as any)[`name_${lang}`] || p.name_ka;
         const description = (p as any)[`description_${lang}`] || p.description_ka || '';
-        this.seo.setPage(`${name} (${p.code}) | Ecolift`, `${name}. ${description}`.trim());
+        const langs = ['ka', 'en', 'ru'].filter((l) => l === 'ka' || ((p as any)[`name_${l}`] || '').trim());
+        this.seo.setPage(`${name} (${p.code}) | Ecolift`, `${name}. ${description}`.trim(), langs);
       },
-      error: () => (this.notFound = true),
+      error: () => {
+        this.notFound = true;
+        this.seo.setNotFound();
+      },
     });
   }
 

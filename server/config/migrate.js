@@ -5,7 +5,7 @@ const { UPLOAD_DIR } = require('../middleware/upload');
 
 // Tables added after the first deploy are created here on startup, so an
 // update needs no manual SQL step in phpMyAdmin.
-const TABLES = ['service_requests', 'quote_requests', 'news_posts', 'visits', 'articles', 'assistant_answers', 'assistant_questions'];
+const TABLES = ['service_requests', 'quote_requests', 'news_posts', 'visits', 'articles', 'assistant_answers', 'assistant_questions', 'seed_runs'];
 
 // Columns added to tables that may already exist on the live database.
 const COLUMNS = {
@@ -51,6 +51,34 @@ async function migrate() {
   if (!hadArticles) await seedArticles();
   // Same for the assistant's first answers.
   if (!hadAnswers) await seedAssistantAnswers();
+  await once('part-descriptions-2026-10', seedPartDescriptions);
+}
+
+/** Runs a data update a single time, so later edits in the admin panel stay as they are. */
+async function once(name, fn) {
+  const [done] = await db.query('SELECT 1 FROM seed_runs WHERE name = ?', [name]);
+  if (done.length) return;
+  await fn();
+  await db.query('INSERT INTO seed_runs (name) VALUES (?)', [name]);
+}
+
+// Descriptions for the imported parts (codes EL-0001...). Only parts with no
+// description, or the import's general "available for all models" line, get one.
+const GENERIC_KA = 'ხელმისაწვდომია ყველა მოდელისთვის. მოდელი მიუთითეთ შეკვეთის კომენტარში.';
+
+async function seedPartDescriptions() {
+  const file = path.join(__dirname, '..', 'seed', 'part-descriptions.json');
+  if (!fs.existsSync(file)) return;
+  let count = 0;
+  for (const p of JSON.parse(fs.readFileSync(file, 'utf8'))) {
+    const [result] = await db.query(
+      `UPDATE products SET description_ka = ?, description_en = ?, description_ru = ?
+       WHERE code = ? AND (description_ka IS NULL OR TRIM(description_ka) = '' OR description_ka = ?)`,
+      [p.description_ka, p.description_en, p.description_ru, p.code, GENERIC_KA]
+    );
+    count += result.affectedRows;
+  }
+  console.log(`Part descriptions: ${count} parts updated`);
 }
 
 async function seedAssistantAnswers() {

@@ -339,7 +339,22 @@
     "freightText": "Dumbwaiters for restaurants, hotels and cafes to move food, dishes and small loads between floors. Freight elevators for warehouses, shops and factories. We adapt the size, capacity and finish to your building and your needs.",
     "freightPoint1": "Restaurants and hotels",
     "freightPoint2": "Warehouses and factories",
-    "freightPoint3": "Stainless steel cabins"
+    "freightPoint3": "Stainless steel cabins",
+    "panoramicTitle": "Panoramic elevators",
+    "panoramicText": "Panoramic glass elevators for shopping centres, hotels, offices and private houses. A glass cabin and shaft bring space and light into the building and make the elevator part of the interior. We adapt the design, size and finish to your building, and supply, install and service elevators in Tbilisi, Batumi and across Georgia.",
+    "panoramicPoint1": "Glass cabin and shaft",
+    "panoramicPoint2": "Inside the building or on the facade",
+    "panoramicPoint3": "Installation and maintenance",
+    "tailormadeTitle": "Tailor-made elevators",
+    "tailormadeText": "Elevators for non-standard shafts and buildings: old buildings, small or irregular shafts, a shallow pit or low top floor, private houses. We design the size, capacity and cabin around your building. Send us the shaft dimensions or a drawing and we will prepare an offer.",
+    "tailormadePoint1": "Non-standard shaft sizes",
+    "tailormadePoint2": "Custom cabin design",
+    "tailormadePoint3": "From design to installation",
+    "aboutTitle": "About Ecolift Plus",
+    "aboutText": "Ecolift Plus is an elevator and escalator company. We supply, install, maintain and repair passenger, panoramic, freight and tailor-made elevators, escalators and moving walks, and offer elevator and escalator spare parts. We work in Tbilisi, Batumi and across Georgia.",
+    "aboutPoint1": "Elevators and escalators",
+    "aboutPoint2": "Installation, maintenance and repair",
+    "aboutPoint3": "Spare parts"
   },
   "assistant": {
     "launcher": "Have a question?",
