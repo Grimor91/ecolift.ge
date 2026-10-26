@@ -87,6 +87,13 @@ router.get('/sitemap.xml', async (req, res) => {
   );
 });
 
+// LinkedIn posts added in the admin "სიახლეები" tab, newest first (home page and /news).
+router.get('/news', async (req, res) => {
+  const limit = Math.min(Number(req.query.limit) || 50, 50);
+  const [rows] = await db.query('SELECT id, urn, height, created_at FROM news_posts ORDER BY created_at DESC, id DESC LIMIT ?', [limit]);
+  res.json(rows);
+});
+
 const ARTICLE_LIST = `id, slug, title_ka, title_en, title_ru, summary_ka, summary_en, summary_ru,
   cover_image, author, created_at, updated_at`;
 
