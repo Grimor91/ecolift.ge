@@ -1,0 +1,266 @@
+/* Site animations. Everything that hides content is under html.motion, which
+   MotionService adds only in real visitors' browsers (never for robots or the
+   saved page copies), so the text is always readable without scripts. */
+
+/* ---------- Appear on scroll ---------- */
+html.motion .reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+html.motion .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+html.motion .stat.reveal {
+  transform: scale(0.85);
+}
+html.motion .stat.reveal.is-visible {
+  transform: none;
+}
+html.motion .gallery-img.reveal,
+html.motion .product-card.reveal {
+  transform: translateY(28px) scale(0.96);
+}
+html.motion .gallery-img.reveal.is-visible,
+html.motion .product-card.reveal.is-visible {
+  transform: none;
+}
+html.motion .service-list li.reveal {
+  transform: translateX(-24px);
+}
+html.motion .service-list li.reveal.is-visible {
+  transform: none;
+}
+/* After appearing, hover effects should react quickly again. */
+html.motion .reveal.is-visible:hover {
+  transition-delay: 0ms;
+}
+
+/* Line under section titles that grows when the title appears */
+.section-title::after {
+  content: '';
+  display: block;
+  width: 56px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--brand);
+  margin: 14px auto 0;
+}
+html.motion .section-title.reveal::after {
+  width: 0;
+  transition: width 0.8s 0.3s ease;
+}
+html.motion .section-title.reveal.is-visible::after {
+  width: 56px;
+}
+
+/* ---------- Home page hero ---------- */
+html.motion .hero-content > * {
+  animation: hero-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+html.motion .hero-content > :nth-child(2) {
+  animation-delay: 0.2s;
+}
+html.motion .hero-content > :nth-child(3) {
+  animation-delay: 0.4s;
+}
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+}
+/* Slow zoom on the background photos */
+html.motion .hero .carousel-item.active {
+  animation: hero-zoom 9s ease-out both;
+}
+@keyframes hero-zoom {
+  from {
+    transform: scale(1.12);
+  }
+}
+
+/* ---------- Page change ---------- */
+html.motion main.page-in {
+  animation: page-in 0.45s ease both;
+}
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+/* ---------- Hover effects (no hiding, safe everywhere) ---------- */
+.tile,
+.value,
+.product-card,
+.article-card,
+.news-item {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, opacity 0.7s ease;
+}
+.tile:hover,
+.value:hover,
+.product-card:hover,
+.article-card:hover,
+.news-item:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 14px 30px rgba(18, 149, 136, 0.16);
+  border-color: var(--brand);
+}
+.tile-icon,
+.value > i {
+  transition: transform 0.4s cubic-bezier(0.3, 1.6, 0.5, 1), background 0.3s, color 0.3s;
+}
+.tile:hover .tile-icon {
+  transform: scale(1.12) rotate(-8deg);
+  background: var(--brand);
+  color: #fff;
+}
+.value:hover > i {
+  transform: scale(1.2);
+}
+
+/* Photos zoom inside their frame */
+.gallery-img,
+.product-card .img-wrap {
+  overflow: hidden;
+}
+.gallery-img img,
+.product-card .img-wrap img,
+.article-card img {
+  transition: transform 0.6s ease;
+}
+.gallery-img:hover img,
+.product-card:hover .img-wrap img,
+.article-card:hover img {
+  transform: scale(1.08);
+}
+
+/* Light sweep across buttons */
+.btn-brand,
+.btn-ghost {
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s, color 0.3s, transform 0.2s, box-shadow 0.3s;
+}
+.btn-brand::before,
+.btn-ghost::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  transform: skewX(-20deg);
+  pointer-events: none;
+}
+.btn-brand:hover::before,
+.btn-ghost:hover::before {
+  animation: btn-shine 0.8s ease;
+}
+.btn-brand:hover,
+.btn-ghost:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(18, 149, 136, 0.3);
+}
+@keyframes btn-shine {
+  to {
+    left: 125%;
+  }
+}
+
+/* Menu links: line grows under the link */
+.navbar .nav-link {
+  position: relative;
+}
+.navbar .nav-link::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  right: 50%;
+  bottom: 4px;
+  height: 2px;
+  background: var(--brand);
+  transition: left 0.3s ease, right 0.3s ease;
+}
+.navbar .nav-link:hover::after,
+.navbar .nav-link.active::after {
+  left: 12px;
+  right: 12px;
+}
+app-nav .navbar {
+  transition: box-shadow 0.3s ease;
+}
+html.scrolled app-nav .navbar {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+/* Footer social icons hop */
+.footer-social a {
+  display: inline-flex;
+  transition: transform 0.3s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.footer-social a:hover {
+  transform: translateY(-4px) scale(1.1);
+}
+
+/* ---------- Progress line and "up" button ---------- */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--brand), #3fd1c0);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  z-index: 2000;
+  pointer-events: none;
+}
+.to-top {
+  position: fixed;
+  left: 20px;
+  bottom: 24px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 2px solid var(--brand);
+  background: #fff;
+  color: var(--brand);
+  font-size: 18px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  z-index: 999;
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s, background 0.3s, color 0.3s;
+}
+.to-top.show {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.to-top:hover {
+  background: var(--brand);
+  color: #fff;
+}
+@media (max-width: 767px) {
+  .to-top {
+    bottom: 84px;
+    left: 14px;
+  }
+}
+
+/* People who asked their device for less motion get a still site. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
