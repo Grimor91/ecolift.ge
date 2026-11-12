@@ -5,8 +5,44 @@
 .item1 {
   background-image: url(/assets/img/aurelien-thomas-NgNAa1fNUb8-unsplash-scaled.jpg);
 }
+/* Same photo with the two cabins cut out; the cabins sit on top as their own
+   layers, sized exactly like the photo, so with no motion it looks unchanged. */
 .item2 {
-  background-image: url(/assets/img/sung-jin-cho-S87hxapFvU-unsplash-scaled.jpg);
+  background-image: url(/assets/img/hero/lifts-bg.jpg);
+  position: relative;
+  overflow: hidden;
+}
+.cabin {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  will-change: transform;
+}
+.cabin-left {
+  background-image: url(/assets/img/hero/cabin-left.webp);
+}
+.cabin-right {
+  background-image: url(/assets/img/hero/cabin-right.webp);
+}
+/* Each cabin rides between floors, stops for a moment, and goes on. */
+:host-context(html.motion) .cabin-left {
+  animation: cabin-left 16s ease-in-out infinite;
+}
+:host-context(html.motion) .cabin-right {
+  animation: cabin-right 16s ease-in-out infinite;
+}
+@keyframes cabin-left {
+  0%, 8% { transform: translateY(0); }
+  30%, 40% { transform: translateY(-24%); }
+  70%, 80% { transform: translateY(16%); }
+  100% { transform: translateY(0); }
+}
+@keyframes cabin-right {
+  0%, 14% { transform: translateY(0); }
+  38%, 50% { transform: translateY(24%); }
+  76%, 86% { transform: translateY(-10%); }
+  100% { transform: translateY(0); }
 }
 .item3 {
   background-image: url(/assets/img/mihaly-koles-8tkBGAKDeN0-unsplash-scaled.jpg);
