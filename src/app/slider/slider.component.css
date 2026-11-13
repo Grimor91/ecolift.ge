@@ -5,8 +5,44 @@
 .item1 {
   background-image: url(/assets/img/aurelien-thomas-NgNAa1fNUb8-unsplash-scaled.jpg);
 }
+/* Same photo with the two cabins cut out; the cabins sit on top as their own
+   layers, sized exactly like the photo, so with no motion it looks unchanged. */
 .item2 {
-  background-image: url(/assets/img/sung-jin-cho-S87hxapFvU-unsplash-scaled.jpg);
+  background-image: url(/assets/img/hero/lifts-bg.jpg);
+  position: relative;
+  overflow: hidden;
+}
+.cabin {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  will-change: transform;
+}
+.cabin-left {
+  background-image: url(/assets/img/hero/cabin-left.webp);
+}
+.cabin-right {
+  background-image: url(/assets/img/hero/cabin-right.webp);
+}
+/* Each cabin rides between floors, stops for a moment, and goes on. */
+:host-context(html.motion) .cabin-left {
+  animation: cabin-left 16s ease-in-out infinite;
+}
+:host-context(html.motion) .cabin-right {
+  animation: cabin-right 16s ease-in-out infinite;
+}
+@keyframes cabin-left {
+  0%, 8% { transform: translateY(0); }
+  30%, 40% { transform: translateY(-24%); }
+  70%, 80% { transform: translateY(16%); }
+  100% { transform: translateY(0); }
+}
+@keyframes cabin-right {
+  0%, 14% { transform: translateY(0); }
+  38%, 50% { transform: translateY(24%); }
+  76%, 86% { transform: translateY(-10%); }
+  100% { transform: translateY(0); }
 }
 .item3 {
   background-image: url(/assets/img/mihaly-koles-8tkBGAKDeN0-unsplash-scaled.jpg);
@@ -75,5 +111,99 @@
   .hero-actions a {
     flex: 1 1 100%;
     text-align: center;
+  }
+}
+
+/* ---------- Photos brought to life (atrium lifts, escalator) ----------
+   .stage is a box exactly the size of the photo as "background-size: cover"
+   draws it, so layers placed in % of the photo line up with it. It needs
+   container units; older browsers just keep the still photo. */
+.stage {
+  display: none;
+}
+@supports (width: 1cqw) {
+  .item1,
+  .item3 {
+    container-type: size;
+    overflow: hidden;
+  }
+  .stage {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    --s: max(calc(100cqw / var(--iw)), calc(100cqh / var(--ih)));
+    width: calc(var(--iw) * var(--s));
+    height: calc(var(--ih) * var(--s));
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  .stage-atrium {
+    --iw: 2560;
+    --ih: 1707;
+  }
+  .stage-escalator {
+    --iw: 1853;
+    --ih: 2560;
+  }
+  .item1 {
+    background-image: url(/assets/img/hero/atrium-bg.jpg);
+  }
+}
+
+.atrium-cabin {
+  position: absolute;
+  background-size: 100% 100%;
+  will-change: transform;
+}
+/* transform-origin is the point the shafts run to (where vertical lines meet
+   in this upward photo), so scaling around it moves a cabin along its shaft
+   and makes it smaller as it goes up, like in real perspective. */
+.atrium-left {
+  left: 23.555%;
+  top: 13.064%;
+  width: 15.742%;
+  height: 22.144%;
+  transform-origin: 210.17% 3.44%;
+  background-image: url(/assets/img/hero/atrium-cabin-left.webp);
+}
+.atrium-right {
+  left: 59.688%;
+  top: 40.363%;
+  width: 11.953%;
+  height: 26.714%;
+  transform-origin: -25.49% -99.34%;
+  background-image: url(/assets/img/hero/atrium-cabin-right.webp);
+}
+:host-context(html.motion) .atrium-left {
+  animation: atrium-left 14s ease-in-out infinite;
+}
+:host-context(html.motion) .atrium-right {
+  animation: atrium-right 14s ease-in-out infinite;
+}
+@keyframes atrium-left {
+  0%, 6% { transform: scale(1); }
+  32%, 44% { transform: scale(0.8); }
+  72%, 82% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+@keyframes atrium-right {
+  0%, 10% { transform: scale(1); }
+  38%, 50% { transform: scale(1.14); }
+  78%, 88% { transform: scale(0.72); }
+  100% { transform: scale(1); }
+}
+
+.escalator-steps {
+  position: absolute;
+  left: 22.666%;
+  top: 48.4375%;
+  width: 55.046%;
+  height: 51.5625%;
+  object-fit: fill;
+}
+@media (prefers-reduced-motion: reduce) {
+  .escalator-steps {
+    display: none;
   }
 }

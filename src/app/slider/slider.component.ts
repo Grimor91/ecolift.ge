@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 @Component({
   selector: 'app-slider',
@@ -13,11 +13,26 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
     ]),
   ],
 })
-export class SliderComponent implements OnInit {
+export class SliderComponent implements OnInit, AfterViewInit {
+  @ViewChild('esc') esc?: ElementRef<HTMLVideoElement>;
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  // Browsers only autoplay muted clips; Angular doesn't always set the
+  // muted property from the attribute, so set it and start the clip here.
+  ngAfterViewInit(): void {
+    const video = this.esc?.nativeElement;
+    if (!video) return;
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      video.removeAttribute('autoplay');
+      video.pause();
+      return;
+    }
+    video.muted = true;
+    video.play?.()?.catch(() => {});
   }
 
 }

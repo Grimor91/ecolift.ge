@@ -27,6 +27,25 @@ h1 {
   margin-bottom: 24px;
 }
 
+/* With 25+ categories the wrapped chips fill a whole phone screen,
+   so on small screens they become one row that scrolls sideways. */
+@media (max-width: 767.98px) {
+  .categories {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    margin-inline: -16px;
+    padding-inline: 16px;
+    scrollbar-width: thin;
+  }
+
+  .categories .btn {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+}
+
 .state {
   text-align: center;
   font-size: 18px;

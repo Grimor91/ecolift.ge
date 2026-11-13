@@ -47,6 +47,24 @@ a.product:hover {
   top: 14px;
   color: var(--brand);
 }
+.services-cta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 32px;
+}
+.btn-outline {
+  border: 2px solid var(--brand);
+  color: var(--brand-dark);
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.btn-outline:hover {
+  background: var(--brand-soft);
+}
 .service-list a {
   color: var(--brand-dark);
   font-weight: 600;

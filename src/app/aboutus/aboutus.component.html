@@ -1,3 +1,16 @@
+<section class="page-intro">
+  <h1>{{ "intro.aboutTitle" | translate }}</h1>
+  <p>{{ "intro.aboutText" | translate }}</p>
+  <ul class="page-intro-points">
+    <li>{{ "intro.aboutPoint1" | translate }}</li>
+    <li>{{ "intro.aboutPoint2" | translate }}</li>
+    <li>{{ "intro.aboutPoint3" | translate }}</li>
+  </ul>
+  <div class="page-intro-actions">
+    <a class="btn-brand" routerLink="/quote">{{ "intro.quote" | translate }}</a>
+    <a class="btn btn-outline-success" routerLink="/service">{{ "intro.service" | translate }}</a>
+  </div>
+</section>
 <google-map height="400px"
             width="750px"
             [center]="center"

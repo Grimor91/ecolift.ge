@@ -6,8 +6,11 @@ const jwt = require('jsonwebtoken');
 const rateLimit = require('express-rate-limit');
 const db = require('../config/db');
 const { requireAdmin } = require('../middleware/auth');
-const { upload, UPLOAD_DIR } = require('../middleware/upload');
+const { upload, UPLOAD_DIR, DRAWING_DIR } = require('../middleware/upload');
 const { withImages } = require('../services/products');
+const { visitStats } = require('../services/visits');
+const assistant = require('../services/assistant');
+const pages = require('../services/pages');
 
 const router = express.Router();
 
@@ -28,6 +31,27 @@ router.post('/login', loginLimiter, async (req, res) => {
 });
 
 router.use(requireAdmin);
+
+// Parts, categories and articles also live as page copies for Google (services/pages.js).
+router.use(/^\/(products|categories|articles)/, (req, res, next) => {
+  if (req.method !== 'GET') res.on('finish', () => res.statusCode < 400 && pages.schedule());
+  next();
+});
+
+router.post('/password', loginLimiter, async (req, res) => {
+  const { current, next } = req.body || {};
+  if (typeof current !== 'string' || typeof next !== 'string') {
+    return res.status(400).json({ error: 'შეავსეთ ორივე ველი' });
+  }
+  if (next.length < 10) return res.status(400).json({ error: 'ახალი პაროლი მინიმუმ 10 სიმბოლო უნდა იყოს' });
+  const [rows] = await db.query('SELECT * FROM admins WHERE id = ?', [req.admin.id]);
+  const admin = rows[0];
+  if (!admin || !(await bcrypt.compare(current, admin.password_hash))) {
+    return res.status(400).json({ error: 'ძველი პაროლი არასწორია' });
+  }
+  await db.query('UPDATE admins SET password_hash = ? WHERE id = ?', [await bcrypt.hash(next, 12), admin.id]);
+  res.status(204).end();
+});
 
 // ---- Products ----
 
@@ -176,4 +200,229 @@ router.patch('/orders/:id', async (req, res) => {
   res.status(204).end();
 });
 
+// ---- Service requests ----
+
+router.get('/service-requests', async (req, res) => {
+  const [rows] = await db.query('SELECT * FROM service_requests ORDER BY created_at DESC, id DESC LIMIT 200');
+  res.json(rows.map((r) => ({ ...r, urgent: !!r.urgent, email_sent: !!r.email_sent })));
+});
+
+router.patch('/service-requests/:id', async (req, res) => {
+  const status = req.body?.status;
+  if (!STATUSES.includes(status)) return res.status(400).json({ error: 'invalid status' });
+  const [result] = await db.query('UPDATE service_requests SET status = ? WHERE id = ?', [status, Number(req.params.id)]);
+  if (!result.affectedRows) return res.status(404).json({ error: 'Not found' });
+  res.status(204).end();
+});
+
+// ---- Quote requests ----
+
+router.get('/quote-requests', async (req, res) => {
+  const [rows] = await db.query('SELECT * FROM quote_requests ORDER BY created_at DESC, id DESC LIMIT 200');
+  res.json(rows.map((r) => ({ ...r, email_sent: !!r.email_sent })));
+});
+
+router.patch('/quote-requests/:id', async (req, res) => {
+  const status = req.body?.status;
+  if (!STATUSES.includes(status)) return res.status(400).json({ error: 'invalid status' });
+  const [result] = await db.query('UPDATE quote_requests SET status = ? WHERE id = ?', [status, Number(req.params.id)]);
+  if (!result.affectedRows) return res.status(404).json({ error: 'Not found' });
+  res.status(204).end();
+});
+
+router.get('/quote-requests/:id/drawing', async (req, res) => {
+  const [rows] = await db.query('SELECT drawing_file, drawing_name FROM quote_requests WHERE id = ?', [Number(req.params.id)]);
+  const row = rows[0];
+  if (!row?.drawing_file) return res.status(404).json({ error: 'Not found' });
+  res.download(path.join(DRAWING_DIR, path.basename(row.drawing_file)), row.drawing_name || row.drawing_file);
+});
+
+// ---- News (LinkedIn posts) ----
+
+// Accepts a LinkedIn post link (".../posts/...-activity-123...", ".../feed/update/urn:li:activity:123")
+// or the code from the post's "Embed this post" menu, and keeps only the post id.
+function parseLinkedInPost(input) {
+  const text = String(input || '');
+  let match = text.match(/urn(?::|%3A)li(?::|%3A)(share|activity|ugcPost)(?::|%3A)(\d{10,25})/i);
+  let urn = null;
+  if (match) {
+    const kind = match[1].toLowerCase() === 'ugcpost' ? 'ugcPost' : match[1].toLowerCase();
+    urn = `urn:li:${kind}:${match[2]}`;
+  } else if ((match = text.match(/linkedin\.com\/posts\/[^\s"]*?-(?:activity|share|ugcPost)-(\d{10,25})/i))) {
+    urn = `urn:li:activity:${match[1]}`;
+  }
+  if (!urn) return null;
+  const h = Number((text.match(/height=["']?(\d{3,4})/i) || [])[1]);
+  const height = h >= 300 && h <= 1500 ? h : 600;
+  return { urn, height };
+}
+
+router.get('/news', async (req, res) => {
+  const [rows] = await db.query('SELECT * FROM news_posts ORDER BY created_at DESC, id DESC');
+  res.json(rows);
+});
+
+router.post('/news', async (req, res) => {
+  const post = parseLinkedInPost(req.body?.link);
+  if (!post) return res.status(400).json({ error: 'LinkedIn-ის პოსტის ბმული ვერ ამოვიცანი' });
+  try {
+    const [result] = await db.query('INSERT INTO news_posts (urn, height) VALUES (?, ?)', [post.urn, post.height]);
+    res.status(201).json({ id: result.insertId, ...post });
+  } catch (err) {
+    if (err.code === 'ER_DUP_ENTRY') return res.status(409).json({ error: 'ეს პოსტი უკვე დამატებულია' });
+    throw err;
+  }
+});
+
+// Also reachable as POST, because some hosting setups block the DELETE method.
+async function deleteNews(req, res) {
+  const [result] = await db.query('DELETE FROM news_posts WHERE id = ?', [Number(req.params.id)]);
+  if (!result.affectedRows) return res.status(404).json({ error: 'Not found' });
+  res.status(204).end();
+}
+router.delete('/news/:id', deleteNews);
+router.post('/news/:id/delete', deleteNews);
+
+// ---- Articles ----
+
+const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const IMAGE_NAME = /^[A-Za-z0-9-]+\.(jpg|png|webp)$/;
+
+// Latin letters for the address; Georgian titles are spelled out.
+const GEO = 'აბგდევზთიკლმნოპჟრსტუფქღყშჩცძწჭხჯჰ';
+const GEO_LAT = ['a', 'b', 'g', 'd', 'e', 'v', 'z', 't', 'i', 'k', 'l', 'm', 'n', 'o', 'p', 'zh', 'r', 's', 't', 'u', 'p', 'k', 'gh', 'q', 'sh', 'ch', 'ts', 'dz', 'ts', 'ch', 'kh', 'j', 'h'];
+function slugify(text) {
+  return String(text || '')
+    .toLowerCase()
+    .replace(/./g, (c) => (GEO.includes(c) ? GEO_LAT[GEO.indexOf(c)] : c))
+    .normalize('NFKD')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 100)
+    .replace(/-+$/, '');
+}
+
+function articleFields(body) {
+  const f = {
+    slug: slugify(body.slug || body.title_en || body.title_ka),
+    author: nullable(body.author),
+    cover_image: nullable(body.cover_image),
+    is_published: [false, 0, '0', 'false'].includes(body.is_published) ? 0 : 1,
+  };
+  for (const lang of ['ka', 'en', 'ru']) {
+    f[`title_${lang}`] = nullable(body[`title_${lang}`]);
+    f[`summary_${lang}`] = nullable(body[`summary_${lang}`]);
+    f[`body_${lang}`] = nullable(body[`body_${lang}`]);
+  }
+  return f;
+}
+
+function validateArticle(f) {
+  if (!f.title_ka) return 'შეავსეთ სათაური ქართულად';
+  if (!f.slug || !SLUG.test(f.slug)) return 'მისამართი (slug) არასწორია: მხოლოდ ლათინური ასოები, ციფრები და ტირე';
+  if (f.cover_image && !IMAGE_NAME.test(f.cover_image)) return 'გარეკანის სურათი არასწორია';
+  return null;
+}
+
+router.get('/articles', async (req, res) => {
+  const [rows] = await db.query('SELECT * FROM articles ORDER BY created_at DESC, id DESC');
+  res.json(rows);
+});
+
+async function saveArticle(req, res) {
+  const f = articleFields(req.body || {});
+  const error = validateArticle(f);
+  if (error) return res.status(400).json({ error });
+  const id = req.params.id ? Number(req.params.id) : null;
+  try {
+    if (id) {
+      const [result] = await db.query('UPDATE articles SET ? WHERE id = ?', [f, id]);
+      if (!result.affectedRows) return res.status(404).json({ error: 'Not found' });
+      return res.json({ id, slug: f.slug });
+    }
+    const [result] = await db.query('INSERT INTO articles SET ?', [f]);
+    res.status(201).json({ id: result.insertId, slug: f.slug });
+  } catch (err) {
+    if (err.code === 'ER_DUP_ENTRY') return res.status(409).json({ error: 'ასეთი მისამართით სტატია უკვე არსებობს, შეცვალეთ slug' });
+    throw err;
+  }
+}
+router.post('/articles', saveArticle);
+router.put('/articles/:id', saveArticle);
+router.post('/articles/:id', saveArticle);
+
+router.post('/articles/:id/delete', async (req, res) => {
+  const [result] = await db.query('DELETE FROM articles WHERE id = ?', [Number(req.params.id)]);
+  if (!result.affectedRows) return res.status(404).json({ error: 'Not found' });
+  res.status(204).end();
+});
+
+// A photo for an article: saved in uploads/, and the editor puts its name into the text.
+router.post('/article-images', upload.single('image'), (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'აირჩიეთ სურათი (jpg, png ან webp)' });
+  res.status(201).json({ file: req.file.filename, url: `/uploads/${req.file.filename}` });
+});
+
+router.get('/visits', async (req, res) => {
+  const days = Math.min(Math.max(Number(req.query.days) || 30, 1), 180);
+  res.json(await visitStats(days));
+});
+
+// ---- Assistant (chat window) ----
+
+const ASSISTANT_ACTIONS = ['service', 'quote', 'parts', 'call', 'contact', 'lifts', 'escalators', 'articles'];
+
+router.get('/assistant/answers', async (req, res) => {
+  const [rows] = await db.query('SELECT * FROM assistant_answers ORDER BY sort_order, id');
+  res.json(rows.map((r) => ({ ...r, is_active: !!r.is_active })));
+});
+
+// POST for updates too, because some hosting setups block PUT.
+async function saveAnswer(req, res) {
+  const b = req.body || {};
+  const a = {
+    title: nullable(b.title),
+    keywords: nullable(b.keywords),
+    answer_ka: nullable(b.answer_ka),
+    answer_en: nullable(b.answer_en),
+    answer_ru: nullable(b.answer_ru),
+    action: ASSISTANT_ACTIONS.includes(b.action) ? b.action : null,
+    is_active: b.is_active === false || b.is_active === 0 ? 0 : 1,
+  };
+  if (!a.title || !a.keywords || !a.answer_ka) {
+    return res.status(400).json({ error: 'შეავსეთ სათაური, საკვანძო სიტყვები და ქართული პასუხი' });
+  }
+  const id = Number(req.params.id) || null;
+  if (id) {
+    const [result] = await db.query('UPDATE assistant_answers SET ? WHERE id = ?', [a, id]);
+    if (!result.affectedRows) return res.status(404).json({ error: 'Not found' });
+  } else {
+    const [[{ next }]] = await db.query('SELECT COALESCE(MAX(sort_order), 0) + 1 AS next FROM assistant_answers');
+    const [result] = await db.query('INSERT INTO assistant_answers SET ?', [{ ...a, sort_order: next }]);
+    req.params.id = result.insertId;
+  }
+  assistant.clearCache();
+  res.status(id ? 200 : 201).json({ id: Number(req.params.id) });
+}
+router.post('/assistant/answers', saveAnswer);
+router.post('/assistant/answers/:id', saveAnswer);
+
+router.post('/assistant/answers/:id/delete', async (req, res) => {
+  const [result] = await db.query('DELETE FROM assistant_answers WHERE id = ?', [Number(req.params.id)]);
+  if (!result.affectedRows) return res.status(404).json({ error: 'Not found' });
+  assistant.clearCache();
+  res.status(204).end();
+});
+
+router.get('/assistant/questions', async (req, res) => {
+  const where = req.query.unanswered === '1' ? 'WHERE q.answered = 0' : '';
+  const [rows] = await db.query(
+    `SELECT q.*, a.title AS answer_title FROM assistant_questions q
+     LEFT JOIN assistant_answers a ON a.id = q.answer_id ${where}
+     ORDER BY q.created_at DESC, q.id DESC LIMIT 200`
+  );
+  res.json(rows.map((r) => ({ ...r, answered: !!r.answered })));
+});
+
 module.exports = router;
+module.exports.parseLinkedInPost = parseLinkedInPost;

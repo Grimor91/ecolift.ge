@@ -1,0 +1,22 @@
+<section class="section news" *ngIf="!limit || posts.length">
+  <div class="section-inner">
+    <div class="news-head">
+      <h2 class="section-title">{{ "news.title" | translate }}</h2>
+      <a class="linkedin-link" href="https://www.linkedin.com/company/ecolift-plus-llc/" target="_blank" rel="noopener">
+        {{ "news.followLinkedIn" | translate }}
+      </a>
+    </div>
+
+    <p *ngIf="loaded && !posts.length" class="text-muted">{{ "news.empty" | translate }}</p>
+
+    <div class="news-grid">
+      <div class="news-item" *ngFor="let p of posts">
+        <iframe [src]="p.src" [height]="p.post.height" frameborder="0" allowfullscreen loading="lazy" title="LinkedIn"></iframe>
+      </div>
+    </div>
+
+    <div class="text-center mt-3" *ngIf="limit && posts.length >= limit">
+      <a class="btn btn-outline-success" routerLink="/news">{{ "news.all" | translate }}</a>
+    </div>
+  </div>
+</section>

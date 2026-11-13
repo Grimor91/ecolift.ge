@@ -20,6 +20,13 @@ app.use(express.json({ limit: '100kb' }));
 
 const api = express.Router();
 api.use('/uploads', express.static(UPLOAD_DIR, { maxAge: '30d' }));
+// API answers change with every edit in the admin panel, so neither the browser
+// nor the host's LiteSpeed cache may keep them (it kept serving stale lists).
+api.use((req, res, next) => {
+  res.set('Cache-Control', 'no-store');
+  res.set('X-LiteSpeed-Cache-Control', 'no-cache');
+  next();
+});
 api.get('/health', (req, res) => res.json({ ok: true }));
 api.use('/', require('./routes/public'));
 api.use('/admin', require('./routes/admin'));
@@ -32,11 +39,16 @@ app.use((req, res) => res.status(404).json({ error: 'Not found' }));
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
-    return res.status(400).json({ error: err.code === 'LIMIT_FILE_SIZE' ? 'image too large (max 5MB)' : 'invalid upload' });
+    return res.status(400).json({ error: err.code === 'LIMIT_FILE_SIZE' ? 'file too large' : 'invalid upload' });
   }
   console.error(err);
   res.status(500).json({ error: 'Server error' });
 });
 
 const port = Number(process.env.PORT) || 3000;
-app.listen(port, () => console.log(`ecolift API listening on ${port}`));
+require('./config/migrate')()
+  .catch((err) => console.error('Schema migration failed:', err.message))
+  .finally(() => {
+    app.listen(port, () => console.log(`ecolift API listening on ${port}`));
+    require('./services/pages').start();
+  });

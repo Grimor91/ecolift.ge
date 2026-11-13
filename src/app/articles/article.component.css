@@ -1,0 +1,128 @@
+.article-inner {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.back {
+  color: var(--brand);
+  font-weight: 600;
+  text-decoration: none;
+}
+h1 {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 18px 0 8px;
+}
+.meta {
+  color: var(--muted);
+  font-size: 14px;
+}
+.cover {
+  width: 100%;
+  border-radius: 14px;
+  margin: 12px 0 28px;
+  max-height: 460px;
+  object-fit: cover;
+}
+.article-body {
+  font-size: 17px;
+  line-height: 1.75;
+  overflow-wrap: break-word;
+}
+/* The article text comes from the database, so its tags need ::ng-deep. */
+.article-body ::ng-deep h2 {
+  font-size: 25px;
+  font-weight: 700;
+  margin: 40px 0 14px;
+}
+.article-body ::ng-deep h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 28px 0 10px;
+}
+.article-body ::ng-deep p,
+.article-body ::ng-deep ul,
+.article-body ::ng-deep ol {
+  margin-bottom: 16px;
+}
+.article-body ::ng-deep li {
+  margin-bottom: 6px;
+}
+.article-body ::ng-deep img {
+  display: block;
+  width: 100%;
+  border-radius: 12px;
+  margin: 24px 0 6px;
+}
+.article-body ::ng-deep figure {
+  margin: 28px 0;
+}
+.article-body ::ng-deep figure img {
+  margin: 0 0 8px;
+}
+.article-body ::ng-deep figcaption {
+  color: var(--muted);
+  font-size: 14px;
+  text-align: center;
+}
+.article-body ::ng-deep blockquote {
+  background: var(--brand-soft);
+  border-left: 4px solid var(--brand);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 20px 0;
+}
+.article-body ::ng-deep blockquote p:last-child {
+  margin-bottom: 0;
+}
+.article-body ::ng-deep .table-wrap {
+  overflow-x: auto;
+  margin: 20px 0;
+}
+.article-body ::ng-deep table {
+  width: 100%;
+  min-width: 600px;
+  border-collapse: collapse;
+  font-size: 15px;
+  background: #fff;
+}
+.article-body ::ng-deep th,
+.article-body ::ng-deep td {
+  border: 1px solid var(--line);
+  padding: 10px 12px;
+  vertical-align: top;
+  text-align: left;
+}
+.article-body ::ng-deep th {
+  background: var(--brand-soft);
+}
+.article-body ::ng-deep a {
+  color: var(--brand-dark);
+}
+.article-cta {
+  margin-top: 48px;
+  padding: 28px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+.article-cta p {
+  width: 100%;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+@media (max-width: 576px) {
+  h1 {
+    font-size: 23px;
+  }
+  .article-body {
+    font-size: 16px;
+  }
+}

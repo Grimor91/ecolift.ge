@@ -118,3 +118,79 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 26px;
   }
 }
+
+/* Link from the escalator page to the articles. */
+.articles-banner {
+  text-align: center;
+  max-width: 900px;
+  margin: 8px auto 56px;
+  padding: 28px 24px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+.articles-banner p {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+/* Heading and short text at the top of the lifts and escalators pages. */
+.page-intro {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 16px 8px;
+  text-align: center;
+}
+.page-intro h1 {
+  font-size: 34px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.page-intro p {
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.7;
+  margin-bottom: 22px;
+}
+.page-intro-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+@media (max-width: 576px) {
+  .page-intro h1 {
+    font-size: 26px;
+  }
+}
+
+/* Lift type pages: key points under the intro */
+.page-intro-points {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto 24px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+.page-intro-points li {
+  background: var(--brand-soft);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 15px;
+}
+.gallery-img img {
+  object-fit: cover;
+}
+@media (max-width: 650px) {
+  .gallery-lightbox-container {
+    display: block !important;
+  }
+  .gallery-lightbox-container .gallery-img img {
+    width: 100% !important;
+  }
+}

@@ -1,3 +1,16 @@
+<section class="page-intro">
+  <h1>{{ "intro.passengerTitle" | translate }}</h1>
+  <p>{{ "intro.passengerText" | translate }}</p>
+  <ul class="page-intro-points">
+    <li>{{ "intro.passengerPoint1" | translate }}</li>
+    <li>{{ "intro.passengerPoint2" | translate }}</li>
+    <li>{{ "intro.passengerPoint3" | translate }}</li>
+  </ul>
+  <div class="page-intro-actions">
+    <a class="btn-brand" routerLink="/quote">{{ "intro.quote" | translate }}</a>
+    <a class="btn btn-outline-success" routerLink="/service">{{ "intro.service" | translate }}</a>
+  </div>
+</section>
 <div class="gallery-lightbox-container">
   <div class="gallery">
     <div *ngFor="let a of data; let i = index" class="gallery-img">

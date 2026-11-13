@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /admin
+Disallow: /cart
+Disallow: /api/admin
+
+Sitemap: https://ecolift.ge/api/sitemap.xml

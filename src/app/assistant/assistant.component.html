@@ -1,0 +1,61 @@
+<ng-container *ngIf="!hidden">
+  <section class="chat" *ngIf="open" role="dialog" [attr.aria-label]="'assistant.title' | translate">
+    <header>
+      <span class="avatar"><i class="fa-solid fa-robot"></i></span>
+      <div>
+        <strong>{{ "assistant.title" | translate }}</strong>
+        <small>{{ "assistant.subtitle" | translate }}</small>
+      </div>
+      <button type="button" class="close" (click)="open = false" [attr.aria-label]="'assistant.close' | translate">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </header>
+
+    <div class="log" #log>
+      <div class="msg" *ngFor="let m of messages" [class.user]="m.from === 'user'">
+        <p class="bubble">{{ m.text }}</p>
+
+        <p class="bubble" *ngIf="m.extraText">{{ m.extraText }}</p>
+        <div class="products" *ngIf="m.products?.length">
+          <a class="product" *ngFor="let p of m.products" [routerLink]="['/parts', p.id]" (click)="followed()">
+            <img *ngIf="p.image" [src]="api.imageUrl(p.image)" alt="" loading="lazy" />
+            <span class="noimg" *ngIf="!p.image"><i class="fa-solid fa-gear"></i></span>
+            <span><small>{{ p.code }}</small>{{ p.name }}</span>
+          </a>
+          <a class="see-all" *ngIf="m.searchQuery" routerLink="/parts" [queryParams]="{ search: m.searchQuery }" (click)="followed()">
+            {{ "assistant.seeAll" | translate }} <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+
+        <div class="actions" *ngIf="m.actions?.length">
+          <ng-container *ngFor="let a of m.actions">
+            <a *ngIf="links[a].route" [routerLink]="links[a].route" (click)="followed()">
+              <i class="fa-solid" [ngClass]="links[a].icon"></i> {{ "assistant.action." + a | translate }}
+            </a>
+            <a *ngIf="links[a].href" [href]="links[a].href" target="_blank" rel="noopener">
+              <i [ngClass]="[a === 'contact' ? 'fa-brands' : 'fa-solid', links[a].icon]"></i> {{ "assistant.action." + a | translate }}
+            </a>
+          </ng-container>
+        </div>
+      </div>
+      <div class="msg" *ngIf="sending"><p class="bubble typing"><span></span><span></span><span></span></p></div>
+    </div>
+
+    <div class="quick" *ngIf="messages.length < 2">
+      <button type="button" *ngFor="let q of quick" (click)="ask(q)">{{ "assistant.quick." + q | translate }}</button>
+    </div>
+
+    <form (ngSubmit)="send()">
+      <input name="message" [(ngModel)]="input" maxlength="500" autocomplete="off"
+        [placeholder]="'assistant.placeholder' | translate" />
+      <button type="submit" [disabled]="sending || !input.trim()" [attr.aria-label]="'assistant.send' | translate">
+        <i class="fa-solid fa-paper-plane"></i>
+      </button>
+    </form>
+  </section>
+
+  <button type="button" class="launcher" (click)="toggle()" [class.active]="open" [attr.aria-label]="'assistant.title' | translate">
+    <i class="fa-solid" [ngClass]="open ? 'fa-xmark' : 'fa-comments'"></i>
+    <span *ngIf="!open">{{ "assistant.launcher" | translate }}</span>
+  </button>
+</ng-container>

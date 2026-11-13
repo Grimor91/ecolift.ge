@@ -1,8 +1,20 @@
 <div class="admin-panel container">
   <div class="topbar">
     <h1>ადმინ პანელი</h1>
-    <button class="btn btn-outline-secondary btn-sm" (click)="logout()">გასვლა</button>
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-secondary btn-sm" (click)="showPassword = !showPassword">პაროლის შეცვლა</button>
+      <button class="btn btn-outline-secondary btn-sm" (click)="logout()">გასვლა</button>
+    </div>
   </div>
+
+  <form *ngIf="showPassword" class="password-form row g-2 mb-4" (ngSubmit)="changePassword()">
+    <div class="col-md-3"><input class="form-control" type="password" name="pwCurrent" autocomplete="current-password" [(ngModel)]="passwordForm.current" placeholder="ძველი პაროლი" required /></div>
+    <div class="col-md-3"><input class="form-control" type="password" name="pwNext" autocomplete="new-password" [(ngModel)]="passwordForm.next" placeholder="ახალი (მინ. 10 სიმბოლო)" required /></div>
+    <div class="col-md-3"><input class="form-control" type="password" name="pwRepeat" autocomplete="new-password" [(ngModel)]="passwordForm.repeat" placeholder="გაიმეორეთ ახალი პაროლი" required /></div>
+    <div class="col-md-3"><button class="btn btn-success w-100">შენახვა</button></div>
+    <p *ngIf="passwordMessage" class="text-success mb-0">{{ passwordMessage }}</p>
+    <p *ngIf="passwordError" class="text-danger mb-0">{{ passwordError }}</p>
+  </form>
 
   <ul class="nav nav-tabs mb-4">
     <li class="nav-item"><button class="nav-link" [class.active]="tab === 'products'" (click)="tab = 'products'">ნაწილები</button></li>
@@ -11,6 +23,20 @@
         შეკვეთები <span *ngIf="newOrdersCount" class="badge bg-danger">{{ newOrdersCount }}</span>
       </button>
     </li>
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="tab === 'service'" (click)="tab = 'service'; loadServiceRequests()">
+        სერვისის განაცხადები <span *ngIf="newServiceCount" class="badge bg-danger">{{ newServiceCount }}</span>
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="tab === 'quotes'" (click)="tab = 'quotes'; loadQuoteRequests()">
+        ფასის მოთხოვნები <span *ngIf="newQuoteCount" class="badge bg-danger">{{ newQuoteCount }}</span>
+      </button>
+    </li>
+    <li class="nav-item"><button class="nav-link" [class.active]="tab === 'news'" (click)="tab = 'news'; loadNews()">სიახლეები</button></li>
+    <li class="nav-item"><button class="nav-link" [class.active]="tab === 'articles'" (click)="tab = 'articles'; loadArticles()">სტატიები</button></li>
+    <li class="nav-item"><button class="nav-link" [class.active]="tab === 'assistant'" (click)="tab = 'assistant'; loadAssistant()">ასისტენტი</button></li>
+    <li class="nav-item"><button class="nav-link" [class.active]="tab === 'visits'" (click)="tab = 'visits'; loadVisits()">ვიზიტორები</button></li>
     <li class="nav-item"><button class="nav-link" [class.active]="tab === 'categories'" (click)="tab = 'categories'">კატეგორიები</button></li>
   </ul>
 
@@ -139,6 +165,348 @@
         <li *ngFor="let i of o.items">{{ i.product_code }} — {{ i.product_name }} × {{ i.quantity }}</li>
       </ul>
     </div>
+  </ng-container>
+
+  <!-- Service requests -->
+  <ng-container *ngIf="tab === 'service'">
+    <p *ngIf="!serviceRequests.length" class="text-muted">განაცხადები ჯერ არ არის.</p>
+    <div class="order-card" *ngFor="let r of serviceRequests">
+      <div class="d-flex justify-content-between flex-wrap gap-2">
+        <div>
+          <strong>#{{ r.id }}</strong> · {{ r.created_at | date: "dd.MM.yyyy HH:mm" }}
+          <span *ngIf="r.urgent" class="badge bg-danger ms-2">სასწრაფო</span>
+          <span *ngIf="!r.email_sent" class="badge bg-warning text-dark ms-2">მეილი ვერ გაიგზავნა</span>
+        </div>
+        <select class="form-select form-select-sm status" [ngModel]="r.status" (ngModelChange)="setServiceStatus(r, $event)">
+          <option *ngFor="let s of statuses" [value]="s.value">{{ s.label }}</option>
+        </select>
+      </div>
+      <div class="mt-2">
+        <strong>{{ issueLabels[r.issue] }}</strong> · {{ equipmentLabels[r.equipment] }}
+      </div>
+      <div>
+        {{ r.customer_name }} · <a [href]="'tel:' + r.phone">{{ r.phone }}</a> · {{ r.address }}
+      </div>
+      <p *ngIf="r.comment" class="comment mb-0">{{ r.comment }}</p>
+    </div>
+  </ng-container>
+
+  <!-- Quote requests -->
+  <ng-container *ngIf="tab === 'quotes'">
+    <p *ngIf="!quoteRequests.length" class="text-muted">ფასის მოთხოვნები ჯერ არ არის.</p>
+    <div class="order-card" *ngFor="let r of quoteRequests">
+      <div class="d-flex justify-content-between flex-wrap gap-2">
+        <div>
+          <strong>#{{ r.id }}</strong> · {{ r.created_at | date: "dd.MM.yyyy HH:mm" }}
+          <span *ngIf="!r.email_sent" class="badge bg-warning text-dark ms-2">მეილი ვერ გაიგზავნა</span>
+        </div>
+        <select class="form-select form-select-sm status" [ngModel]="r.status" (ngModelChange)="setQuoteStatus(r, $event)">
+          <option *ngFor="let s of statuses" [value]="s.value">{{ s.label }}</option>
+        </select>
+      </div>
+      <div class="mt-2">
+        <strong>{{ productLabels[r.product] }}</strong> · {{ buildingLabels[r.building] }}
+        <ng-container *ngIf="r.floors"> · {{ r.floors }} სართული</ng-container>
+        <ng-container *ngIf="r.capacity"> · {{ capacityLabels[r.capacity] }}</ng-container>
+      </div>
+      <div *ngIf="hasSizes(r)" class="sizes">
+        შახტა: {{ mm(r.shaft_width) }} × {{ mm(r.shaft_depth) }} · ორმო: {{ mm(r.pit_depth) }}
+        · ბოლო სართული: {{ mm(r.last_floor_height) }} · ტიპიური სართული: {{ mm(r.floor_height) }}
+      </div>
+      <button *ngIf="r.drawing_name" class="btn btn-sm btn-outline-success mt-1" (click)="downloadDrawing(r)">
+        ნახაზი: {{ r.drawing_name }}
+      </button>
+      <div>
+        {{ r.customer_name }} · <a [href]="'tel:' + r.phone">{{ r.phone }}</a>
+        <ng-container *ngIf="r.email"> · <a [href]="'mailto:' + r.email">{{ r.email }}</a></ng-container>
+        <ng-container *ngIf="r.city"> · {{ r.city }}</ng-container>
+      </div>
+      <p *ngIf="r.comment" class="comment mb-0">{{ r.comment }}</p>
+    </div>
+  </ng-container>
+
+  <!-- News (LinkedIn posts) -->
+  <ng-container *ngIf="tab === 'news'">
+    <p class="text-muted">
+      LinkedIn-ზე პოსტის ქვეშ დააჭირეთ <strong>···</strong> → <strong>Copy link to post</strong> (ან <strong>Embed this post</strong> → Copy code),
+      ჩასვით აქ და დააჭირეთ „დამატება“. პოსტი გამოჩნდება მთავარ გვერდზე და „სიახლეების“ გვერდზე.
+    </p>
+    <form class="row g-2 mb-2" (ngSubmit)="addNews()">
+      <div class="col-md-9"><input class="form-control" name="newsLink" [(ngModel)]="newsLink" placeholder="https://www.linkedin.com/posts/..." /></div>
+      <div class="col-md-3"><button class="btn btn-success w-100" [disabled]="!newsLink.trim()">დამატება</button></div>
+    </form>
+    <p *ngIf="newsError" class="text-danger">{{ newsError }}</p>
+    <p *ngIf="!news.length" class="text-muted mt-3">სიახლეები ჯერ არ არის დამატებული.</p>
+    <ul class="list-group mt-3">
+      <li class="list-group-item d-flex justify-content-between align-items-center gap-2" *ngFor="let n of news">
+        <span>{{ n.created_at | date: "dd.MM.yyyy HH:mm" }} · <a [href]="linkedInUrl(n)" target="_blank" rel="noopener">LinkedIn-ზე ნახვა</a></span>
+        <button class="btn btn-sm btn-outline-danger" (click)="deleteNews(n)">წაშლა</button>
+      </li>
+    </ul>
+  </ng-container>
+
+  <!-- Articles -->
+  <ng-container *ngIf="tab === 'articles'">
+    <form class="product-form article-form" (ngSubmit)="saveArticle()">
+      <h2>{{ editingArticle ? "რედაქტირება" : "ახალი სტატია" }}</h2>
+
+      <div class="btn-group mb-3" role="group">
+        <button type="button" class="btn btn-sm" *ngFor="let l of articleLangs"
+          [class.btn-success]="articleLang === l.code" [class.btn-outline-success]="articleLang !== l.code"
+          (click)="articleLang = l.code">{{ l.label }}</button>
+      </div>
+
+      <ng-container *ngFor="let l of articleLangs">
+        <div *ngIf="articleLang === l.code">
+          <label class="form-label">სათაური ({{ l.label }}){{ l.code === "ka" ? " *" : "" }}</label>
+          <input class="form-control mb-2" [name]="'title_' + l.code" [(ngModel)]="articleForm['title_' + l.code]" />
+          <label class="form-label">მოკლე აღწერა ({{ l.label }}): ჩანს სტატიების სიაში და Google-ში</label>
+          <textarea class="form-control mb-2" rows="2" [name]="'summary_' + l.code" [(ngModel)]="articleForm['summary_' + l.code]"></textarea>
+          <label class="form-label">ტექსტი ({{ l.label }})</label>
+          <textarea #bodyArea class="form-control article-text" rows="18" [name]="'body_' + l.code" [(ngModel)]="articleForm['body_' + l.code]"></textarea>
+          <div class="d-flex flex-wrap gap-2 align-items-center mt-2">
+            <label class="btn btn-sm btn-outline-secondary mb-0">
+              ფოტოს ჩასმა ტექსტში
+              <input type="file" accept="image/jpeg,image/png,image/webp" hidden (change)="insertArticleImage($event, bodyArea)" />
+            </label>
+            <small class="text-muted">
+              ფორმატი: <code>## სათაური</code>, <code>### ქვესათაური</code>, <code>- სიის პუნქტი</code>, <code>**მუქი**</code>, ცარიელი ხაზი = ახალი აბზაცი
+            </small>
+          </div>
+        </div>
+      </ng-container>
+
+      <div class="row g-2 mt-3">
+        <div class="col-md-9">
+          <label class="form-label">მისამართი (slug): ecolift.ge/articles/…</label>
+          <input class="form-control" name="slug" [(ngModel)]="articleForm['slug']" placeholder="ცარიელი = სათაურიდან" />
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="articlePublished" name="is_published" [(ngModel)]="articleForm['is_published']" />
+            <label class="form-check-label" for="articlePublished">საიტზე ჩანს</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <label class="form-label d-block">გარეკანის ფოტო</label>
+        <div class="d-flex align-items-center gap-3">
+          <img *ngIf="articleForm['cover_image']" class="article-cover" [src]="api.articleImageUrl(articleForm['cover_image'])" alt="" />
+          <label class="btn btn-sm btn-outline-secondary mb-0">
+            {{ articleForm['cover_image'] ? "შეცვლა" : "ატვირთვა" }}
+            <input type="file" accept="image/jpeg,image/png,image/webp" hidden (change)="uploadArticleCover($event)" />
+          </label>
+          <button *ngIf="articleForm['cover_image']" type="button" class="btn btn-sm btn-outline-danger" (click)="articleForm['cover_image'] = ''">მოხსნა</button>
+        </div>
+      </div>
+
+      <div class="d-flex gap-2 mt-4">
+        <button class="btn btn-success" [disabled]="savingArticle || uploadingArticleImage">შენახვა</button>
+        <button type="button" class="btn btn-outline-secondary" *ngIf="editingArticle" (click)="resetArticleForm()">გაუქმება</button>
+      </div>
+      <p *ngIf="uploadingArticleImage" class="text-muted mt-2">ფოტო იტვირთება...</p>
+      <p *ngIf="articleMessage" class="text-success mt-2">{{ articleMessage }}</p>
+      <p *ngIf="articleError" class="text-danger mt-2">{{ articleError }}</p>
+    </form>
+
+    <p *ngIf="!articles.length" class="text-muted mt-3">სტატიები ჯერ არ არის.</p>
+    <ul class="list-group mt-3">
+      <li class="list-group-item d-flex justify-content-between align-items-center gap-2 flex-wrap" *ngFor="let a of articles">
+        <span>
+          <strong>{{ a.title_ka }}</strong>
+          <span *ngIf="!a.is_published" class="badge bg-secondary ms-1">დამალული</span>
+          <br /><small class="text-muted">{{ a.created_at | date: "dd.MM.yyyy" }} · /articles/{{ a.slug }}</small>
+        </span>
+        <span class="d-flex gap-2">
+          <a class="btn btn-sm btn-outline-secondary" [routerLink]="['/articles', a.slug]" target="_blank">ნახვა</a>
+          <button class="btn btn-sm btn-outline-primary" (click)="editArticle(a)">რედაქტირება</button>
+          <button class="btn btn-sm btn-outline-danger" (click)="deleteArticle(a)">წაშლა</button>
+        </span>
+      </li>
+    </ul>
+  </ng-container>
+
+  <!-- Assistant (chat window) -->
+  <ng-container *ngIf="tab === 'assistant'">
+    <p class="text-muted">
+      საიტის ჩატი ნაწილებს თავად ეძებს კატალოგში. აქ წერთ პასუხებს სხვა კითხვებზე: როცა სტუმრის შეკითხვაში
+      რომელიმე საკვანძო სიტყვაა, ჩატი ამ პასუხს აჩვენებს. შენახვისთანავე მუშაობს.
+    </p>
+
+    <form class="product-form" (ngSubmit)="saveAnswer()">
+      <h2>{{ editingAnswer ? "პასუხის რედაქტირება" : "ახალი პასუხი" }}</h2>
+      <label class="form-label">სათაური (მხოლოდ თქვენთვის, სიაში ჩანს) *</label>
+      <input class="form-control mb-2" name="title" [(ngModel)]="answerForm.title" maxlength="190" />
+
+      <label class="form-label">საკვანძო სიტყვები *</label>
+      <textarea class="form-control mb-1" rows="3" name="keywords" [(ngModel)]="answerForm.keywords"
+        placeholder="მიწოდება, მიტანა, delivery, доставка"></textarea>
+      <small class="text-muted d-block mb-2">
+        გამოყავით მძიმით. ჩაწერეთ სამივე ენაზე. რამდენიმე სიტყვა ერთად (მაგ. "ახალი ლიფტი") ნიშნავს, რომ ორივე უნდა იყოს შეკითხვაში.
+        დაბოლოებები და პატარა შეცდომები ავტომატურად ემთხვევა.
+      </small>
+
+      <label class="form-label">პასუხი ქართულად *</label>
+      <textarea class="form-control mb-2" rows="3" name="answer_ka" [(ngModel)]="answerForm.answer_ka"></textarea>
+      <label class="form-label">პასუხი ინგლისურად</label>
+      <textarea class="form-control mb-2" rows="3" name="answer_en" [(ngModel)]="answerForm.answer_en"></textarea>
+      <label class="form-label">პასუხი რუსულად</label>
+      <textarea class="form-control mb-2" rows="3" name="answer_ru" [(ngModel)]="answerForm.answer_ru"></textarea>
+
+      <div class="row g-2">
+        <div class="col-md-8">
+          <label class="form-label">ღილაკი პასუხის ქვეშ</label>
+          <select class="form-select" name="action" [(ngModel)]="answerForm.action">
+            <option *ngFor="let a of assistantActions" [ngValue]="a.value">{{ a.label }}</option>
+          </select>
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="answerActive" name="is_active" [(ngModel)]="answerForm.is_active" />
+            <label class="form-check-label" for="answerActive">ჩართულია</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex gap-2 mt-3">
+        <button class="btn btn-success" [disabled]="savingAnswer">შენახვა</button>
+        <button type="button" class="btn btn-outline-secondary" *ngIf="editingAnswer" (click)="resetAnswerForm()">გაუქმება</button>
+      </div>
+      <p *ngIf="answerMessage" class="text-success mt-2">{{ answerMessage }}</p>
+      <p *ngIf="answerError" class="text-danger mt-2">{{ answerError }}</p>
+    </form>
+
+    <h3 class="h5 mt-4">რას ეკითხებიან ჩატს</h3>
+    <div class="d-flex flex-wrap gap-3 align-items-center mb-2">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="onlyUnanswered" [(ngModel)]="onlyUnanswered" (ngModelChange)="loadAssistantQuestions()" />
+        <label class="form-check-label" for="onlyUnanswered">მხოლოდ უპასუხოდ დარჩენილი</label>
+      </div>
+      <button class="btn btn-sm btn-outline-secondary" (click)="loadAssistantQuestions()">განახლება</button>
+    </div>
+    <p *ngIf="!assistantQuestions.length" class="text-muted">კითხვები ჯერ არ არის.</p>
+    <ul class="list-group mb-4" *ngIf="assistantQuestions.length">
+      <li class="list-group-item d-flex justify-content-between align-items-center gap-2 flex-wrap" *ngFor="let q of assistantQuestions">
+        <span>
+          {{ q.message }}
+          <br />
+          <small class="text-muted">
+            {{ q.created_at | date: "dd.MM.yyyy HH:mm" }} · {{ q.lang }}
+            <ng-container *ngIf="q.answer_title"> · პასუხი: {{ q.answer_title }}</ng-container>
+            <ng-container *ngIf="q.products_found"> · ნაწილები: {{ q.products_found }}</ng-container>
+            <span *ngIf="!q.answered" class="badge bg-warning text-dark ms-1">უპასუხო</span>
+          </small>
+        </span>
+        <button *ngIf="!q.answered" class="btn btn-sm btn-outline-primary" (click)="answerQuestion(q)">პასუხის დამატება</button>
+      </li>
+    </ul>
+
+    <h3 class="h5">პასუხები ({{ assistantAnswers.length }})</h3>
+    <ul class="list-group">
+      <li class="list-group-item d-flex justify-content-between align-items-center gap-2 flex-wrap" *ngFor="let a of assistantAnswers">
+        <span>
+          <strong>{{ a.title }}</strong>
+          <span *ngIf="!a.is_active" class="badge bg-secondary ms-1">გამორთული</span>
+          <span *ngIf="a.action" class="badge bg-light text-dark ms-1">{{ actionLabel(a.action) }}</span>
+          <br /><small class="text-muted">{{ a.keywords | slice: 0 : 140 }}{{ a.keywords.length > 140 ? "…" : "" }}</small>
+        </span>
+        <span class="d-flex gap-2">
+          <button class="btn btn-sm btn-outline-primary" (click)="editAnswer(a)">რედაქტირება</button>
+          <button class="btn btn-sm btn-outline-danger" (click)="deleteAnswer(a)">წაშლა</button>
+        </span>
+      </li>
+    </ul>
+  </ng-container>
+
+  <!-- Visitors -->
+  <ng-container *ngIf="tab === 'visits'">
+    <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+      <span>პერიოდი:</span>
+      <select class="form-select form-select-sm status" [(ngModel)]="visitDays" (ngModelChange)="loadVisits()">
+        <option [ngValue]="7">ბოლო 7 დღე</option>
+        <option [ngValue]="30">ბოლო 30 დღე</option>
+        <option [ngValue]="90">ბოლო 90 დღე</option>
+        <option [ngValue]="180">ბოლო 180 დღე</option>
+      </select>
+      <button class="btn btn-sm btn-outline-secondary" (click)="loadVisits()">განახლება</button>
+    </div>
+    <p *ngIf="!visits" class="text-muted">იტვირთება...</p>
+    <ng-container *ngIf="visits as v">
+      <div *ngIf="!v.countryLookup" class="alert alert-warning">
+        ქვეყნების ბაზა სერვერზე ჯერ არ არის დაყენებული, ამიტომ ქვეყანა არ ჩანს.
+        cPanel → <strong>Setup Node.js App</strong> → ecolift-server → <strong>Run NPM Install</strong>, შემდეგ <strong>Restart</strong>.
+      </div>
+      <div class="row g-3 mb-4">
+        <div class="col-md-4" *ngFor="let s of [
+          { label: 'დღეს', value: v.today },
+          { label: 'ბოლო 7 დღე', value: v.week },
+          { label: 'ბოლო ' + v.days + ' დღე', value: v.period }
+        ]">
+          <div class="visit-stat">
+            <div class="text-muted">{{ s.label }}</div>
+            <div class="visit-number">{{ s.value.visitors }}</div>
+            <div>ვიზიტორი · {{ s.value.views }} გვერდის ნახვა</div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="h5">დღეების მიხედვით</h3>
+      <div class="visit-days mb-4">
+        <div class="visit-day" *ngFor="let d of v.perDay" [title]="d.date + ': ' + d.visitors + ' ვიზიტორი, ' + d.views + ' ნახვა'">
+          <div class="visit-bar" [style.height.%]="(d.views / busiestDay) * 100"></div>
+        </div>
+      </div>
+
+      <div class="row g-4 mb-4">
+        <div class="col-md-6">
+          <h3 class="h5">ქვეყნები</h3>
+          <p *ngIf="!v.countries.length" class="text-muted">მონაცემები ჯერ არ არის.</p>
+          <table class="table table-sm" *ngIf="v.countries.length">
+            <thead><tr><th>ქვეყანა</th><th class="text-end">ვიზიტორი</th><th class="text-end">ნახვა</th></tr></thead>
+            <tbody>
+              <tr *ngFor="let c of v.countries"><td><img *ngIf="c.country" class="flag" [src]="flag(c.country)" alt="" /> {{ c.name }}</td><td class="text-end">{{ c.visitors }}</td><td class="text-end">{{ c.views }}</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-6">
+          <h3 class="h5">გვერდები</h3>
+          <table class="table table-sm" *ngIf="v.pages.length">
+            <thead><tr><th>გვერდი</th><th class="text-end">ნახვა</th></tr></thead>
+            <tbody>
+              <tr *ngFor="let p of v.pages"><td>{{ p.path === '/' ? 'მთავარი' : p.path }}</td><td class="text-end">{{ p.views }}</td></tr>
+            </tbody>
+          </table>
+          <h3 class="h5 mt-3">საიდან მოვიდნენ</h3>
+          <p *ngIf="!v.referrers.length" class="text-muted">პირდაპირ შემოსულები (ბმულის აკრეფით ან სანიშნიდან).</p>
+          <table class="table table-sm" *ngIf="v.referrers.length">
+            <tbody>
+              <tr *ngFor="let r of v.referrers"><td class="text-break">{{ r.referrer }}</td><td class="text-end">{{ r.visitors }}</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <h3 class="h5">ბოლო 200 ნახვა</h3>
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead><tr><th>დრო</th><th>IP</th><th>ქვეყანა</th><th>გვერდი</th><th>მოწყობილობა</th><th>საიდან</th></tr></thead>
+          <tbody>
+            <tr *ngFor="let r of v.recent">
+              <td class="text-nowrap">{{ r.created_at | date: "dd.MM HH:mm" }}</td>
+              <td>{{ r.ip }}</td>
+              <td class="text-nowrap"><img *ngIf="r.country" class="flag" [src]="flag(r.country)" alt="" /> {{ r.country_name || '-' }}</td>
+              <td>{{ r.path }}</td>
+              <td>{{ r.device ? deviceLabels[r.device] : '-' }}</td>
+              <td class="text-break">{{ r.referrer || '' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-muted small">
+        ჩანაწერები 180 დღის შემდეგ ავტომატურად იშლება. თქვენი საკუთარი ნახვები (როცა ადმინში შესული ხართ) არ ითვლება.
+      </p>
+    </ng-container>
   </ng-container>
 
   <!-- Categories -->

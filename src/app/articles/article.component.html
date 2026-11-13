@@ -1,0 +1,25 @@
+<article class="section article" *ngIf="article">
+  <div class="article-inner">
+    <a class="back" routerLink="/articles">← {{ "articles.all" | translate }}</a>
+    <h1>{{ article | localized: "title" }}</h1>
+    <p class="meta">
+      <span *ngIf="article.author">{{ "articles.author" | translate }}: {{ article.author }} · </span>
+      {{ article.created_at | date: "dd.MM.yyyy" }}
+    </p>
+    <img *ngIf="article.cover_image" class="cover" [src]="api.articleImageUrl(article.cover_image)" [alt]="article | localized: 'title'" />
+    <div class="article-body" [innerHTML]="article | localized: 'body' | markdown"></div>
+
+    <div class="article-cta">
+      <p>{{ "articles.cta" | translate }}</p>
+      <a class="btn-brand" routerLink="/service">{{ "articles.ctaService" | translate }}</a>
+      <a class="btn btn-outline-success" routerLink="/quote">{{ "articles.ctaQuote" | translate }}</a>
+    </div>
+  </div>
+</article>
+
+<section class="section" *ngIf="notFound">
+  <div class="article-inner text-center">
+    <p class="text-muted">{{ "articles.notFound" | translate }}</p>
+    <a routerLink="/articles">{{ "articles.all" | translate }}</a>
+  </div>
+</section>

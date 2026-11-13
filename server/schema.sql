@@ -66,3 +66,120 @@ CREATE TABLE IF NOT EXISTS order_items (
   CONSTRAINT fk_items_order FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
   CONSTRAINT fk_items_product FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS service_requests (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  customer_name VARCHAR(190) NOT NULL,
+  phone VARCHAR(50) NOT NULL,
+  address VARCHAR(255) NOT NULL,
+  equipment VARCHAR(30) NOT NULL,
+  issue VARCHAR(30) NOT NULL,
+  urgent TINYINT(1) NOT NULL DEFAULT 0,
+  comment TEXT NULL,
+  lang VARCHAR(5) NULL,
+  status ENUM('new','in_progress','done','cancelled') NOT NULL DEFAULT 'new',
+  email_sent TINYINT(1) NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS quote_requests (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  customer_name VARCHAR(190) NOT NULL,
+  phone VARCHAR(50) NOT NULL,
+  email VARCHAR(190) NULL,
+  company VARCHAR(190) NULL,
+  city VARCHAR(190) NULL,
+  product VARCHAR(30) NOT NULL,
+  building VARCHAR(30) NOT NULL,
+  floors SMALLINT UNSIGNED NULL,
+  capacity VARCHAR(20) NULL,
+  shaft_width SMALLINT UNSIGNED NULL,
+  shaft_depth SMALLINT UNSIGNED NULL,
+  pit_depth SMALLINT UNSIGNED NULL,
+  last_floor_height SMALLINT UNSIGNED NULL,
+  floor_height SMALLINT UNSIGNED NULL,
+  drawing_file VARCHAR(100) NULL,
+  drawing_name VARCHAR(255) NULL,
+  comment TEXT NULL,
+  lang VARCHAR(5) NULL,
+  status ENUM('new','in_progress','done','cancelled') NOT NULL DEFAULT 'new',
+  email_sent TINYINT(1) NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS news_posts (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  urn VARCHAR(80) NOT NULL UNIQUE,
+  height SMALLINT UNSIGNED NOT NULL DEFAULT 600,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- One row per page a visitor opened (sent by the site itself, so bots that
+-- don't run JavaScript are not counted). Rows older than 180 days are deleted.
+CREATE TABLE IF NOT EXISTS visits (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  ip VARCHAR(45) NOT NULL,
+  country CHAR(2) NULL,
+  path VARCHAR(255) NOT NULL,
+  referrer VARCHAR(255) NULL,
+  device VARCHAR(10) NULL,
+  user_agent VARCHAR(255) NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_visits_created (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Technical articles (/articles). Texts are Markdown; images live in uploads/.
+CREATE TABLE IF NOT EXISTS articles (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  slug VARCHAR(120) NOT NULL UNIQUE,
+  title_ka VARCHAR(255) NOT NULL,
+  title_en VARCHAR(255) NULL,
+  title_ru VARCHAR(255) NULL,
+  summary_ka TEXT NULL,
+  summary_en TEXT NULL,
+  summary_ru TEXT NULL,
+  body_ka MEDIUMTEXT NULL,
+  body_en MEDIUMTEXT NULL,
+  body_ru MEDIUMTEXT NULL,
+  cover_image VARCHAR(100) NULL,
+  author VARCHAR(190) NULL,
+  is_published TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Site assistant (chat window). Answers the admin edits: keywords in any of the
+-- three languages (comma separated), the answer in each language and an
+-- optional button that opens a page (service, quote, parts, contact).
+CREATE TABLE IF NOT EXISTS assistant_answers (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(190) NOT NULL,
+  keywords TEXT NOT NULL,
+  answer_ka TEXT NOT NULL,
+  answer_en TEXT NULL,
+  answer_ru TEXT NULL,
+  action VARCHAR(20) NULL,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  sort_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- What visitors asked the assistant, so the admin sees questions it could not
+-- answer and can add them. Rows older than 180 days are deleted.
+CREATE TABLE IF NOT EXISTS assistant_questions (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  message VARCHAR(500) NOT NULL,
+  lang VARCHAR(5) NULL,
+  answer_id INT UNSIGNED NULL,
+  products_found SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+  answered TINYINT(1) NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY idx_assistant_questions_created (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- One-time data updates shipped with the server (see config/migrate.js).
+CREATE TABLE IF NOT EXISTS seed_runs (
+  name VARCHAR(100) PRIMARY KEY,
+  applied_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

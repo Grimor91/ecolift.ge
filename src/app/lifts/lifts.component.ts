@@ -42,30 +42,15 @@ export class LiftsComponent {
   constructor(private actroute: ActivatedRoute) {}
   
   data: item[] = [
-    
-    
-    {
-      imageSrc: 'assets/lifts/image_2024-01-13_14-58-39.png',
-      imageAlt: '3',
-      downloadUrl:'assets/lifts/image_2024-01-13_14-58-39.png'
-    },
-    {
-      imageSrc: 'assets/lifts/image_2024-01-13_15-01-12.png',
-      imageAlt: '4',
-      downloadUrl:'assets/lifts/image_2024-01-13_15-01-12.png'
-    },
-    {
-      imageSrc: 'assets/lifts/image_2024-01-13_15-09-39.png',
-      imageAlt: '5',
-      downloadUrl:'assets/lifts/image_2024-01-13_15-09-39.png'
-    },
-    {
-      imageSrc: 'assets/lifts/image_2024-01-13_15-10-53.png',
-      imageAlt: '6',
-      downloadUrl:'assets/lifts/image_2024-01-13_15-10-53.png'
-    },
-    
-    
+    { imageSrc: 'assets/lifts/passenger/passenger-02.jpg', imageAlt: 'ოქროსფერი სამგზავრო ლიფტის კაბინა', downloadUrl: 'assets/lifts/passenger/passenger-02.jpg' },
+    { imageSrc: 'assets/lifts/passenger/passenger-05.jpg', imageAlt: 'სპილენძისფერი პანელები და LED ჭერი', downloadUrl: 'assets/lifts/passenger/passenger-05.jpg' },
+    { imageSrc: 'assets/lifts/passenger/passenger-07.jpg', imageAlt: 'ლიფტი კერძო სახლში', downloadUrl: 'assets/lifts/passenger/passenger-07.jpg' },
+    { imageSrc: 'assets/lifts/passenger/passenger-01.jpg', imageAlt: 'სამგზავრო ლიფტი უჟანგავი ფოლადის კაბინით', downloadUrl: 'assets/lifts/passenger/passenger-01.jpg' },
+    { imageSrc: 'assets/lifts/passenger/passenger-06.jpg', imageAlt: 'შუშის კაბინა მარმარილოს იატაკით', downloadUrl: 'assets/lifts/passenger/passenger-06.jpg' },
+    { imageSrc: 'assets/lifts/freight/freight-01.jpg', imageAlt: 'მცირე სატვირთო ლიფტი (dumbwaiter)', downloadUrl: 'assets/lifts/freight/freight-01.jpg' },
+    { imageSrc: 'assets/lifts/passenger/passenger-03.jpg', imageAlt: 'სპილენძისფერი სამგზავრო ლიფტის კაბინა', downloadUrl: 'assets/lifts/passenger/passenger-03.jpg' },
+    { imageSrc: 'assets/lifts/passenger/passenger-10.jpg', imageAlt: 'ოქროსფერი კაბინა თაღოვანი დეკორით', downloadUrl: 'assets/lifts/passenger/passenger-10.jpg' },
+    { imageSrc: 'assets/lifts/passenger/passenger-09.jpg', imageAlt: 'ლიფტი მარმარილოს მოპირკეთებით', downloadUrl: 'assets/lifts/passenger/passenger-09.jpg' },
   ];
   
   previewimage = false;

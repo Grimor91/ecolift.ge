@@ -1,9 +1,27 @@
 <section class="hero">
   <div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade" data-bs-ride="carousel">
     <div class="carousel-inner">
-      <div class="carousel-item active item1"></div>
-      <div class="carousel-item item2"></div>
-      <div class="carousel-item item3"></div>
+      <!-- Glass lifts: the cabins are separate layers that ride up and down -->
+      <div class="carousel-item active item2" data-bs-interval="10000">
+        <div class="cabin cabin-left"></div>
+        <div class="cabin cabin-right"></div>
+      </div>
+      <!-- Atrium: both cabins ride along their shafts towards the roof -->
+      <div class="carousel-item item1" data-bs-interval="9000">
+        <div class="stage stage-atrium">
+          <div class="atrium-cabin atrium-left"></div>
+          <div class="atrium-cabin atrium-right"></div>
+        </div>
+      </div>
+      <!-- Escalator: a short looping clip of the moving steps over the photo -->
+      <div class="carousel-item item3" data-bs-interval="8000">
+        <div class="stage stage-escalator">
+          <video #esc class="escalator-steps" autoplay muted loop playsinline disablepictureinpicture aria-hidden="true" tabindex="-1">
+            <source src="/assets/img/hero/escalator.webm" type="video/webm" />
+            <source src="/assets/img/hero/escalator.mp4" type="video/mp4" />
+          </video>
+        </div>
+      </div>
     </div>
   </div>
 

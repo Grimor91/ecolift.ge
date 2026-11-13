@@ -1,0 +1,130 @@
+[
+  {
+    "title": "ადამიანი გაიჭედა ლიფტში",
+    "keywords": "გაიჭედა, გაიჭედნენ, ჩაიკეტა, ჩაიკეტნენ, ჩარჩა, ჩარჩნენ, დარჩა შიგნით, stuck, trapped, locked inside, застрял, застряли, заперт, заперты",
+    "answer_ka": "თუ ლიფტში ადამიანი გაიჭედა, ნუ დაელოდებით ფორმას, დაგვირეკეთ ახლავე: +995 598 75 00 06. ნუ ეცდებით კარის ძალით გაღებას და ნურც ადამიანს გამოიყვანთ თავად, ეს საშიშია.",
+    "answer_en": "If someone is stuck in the lift, do not wait for a form, call us now: +995 598 75 00 06. Do not force the doors open or try to get the person out yourself, it is dangerous.",
+    "answer_ru": "Если в лифте застрял человек, не ждите формы, позвоните нам сейчас: +995 598 75 00 06. Не открывайте двери силой и не пытайтесь вывести человека сами, это опасно.",
+    "action": "call"
+  },
+  {
+    "title": "ლიფტი გაფუჭდა / შეკეთება",
+    "keywords": "გაფუჭდა, გაფუჭებული, გაჩერდა, არ მუშაობს, შეკეთება, შევაკეთო, რემონტი, ავარია, ხმაური, ხმაურობს, ვიბრაცია, კარი არ იღება, კარი არ იხურება, broken, stopped, not working, does not work, doesnt work, repair, fix, breakdown, noise, vibration, сломался, сломан, остановился, не работает, ремонт, починить, поломка, шум, вибрация",
+    "answer_ka": "ლიფტისა და ესკალატორის შეკეთებას ვაკეთებთ თბილისში, ბათუმში და მთელ საქართველოში. შეავსეთ სერვისის განაცხადი და ტექნიკოსი დაგიკავშირდებათ. თუ სასწრაფოა, დაგვირეკეთ: +995 598 75 00 06.",
+    "answer_en": "We repair lifts and escalators in Tbilisi, Batumi and all of Georgia. Fill in the service request and a technician will contact you. If it is urgent, call us: +995 598 75 00 06.",
+    "answer_ru": "Мы ремонтируем лифты и эскалаторы в Тбилиси, Батуми и по всей Грузии. Заполните заявку на сервис, и техник свяжется с вами. Если срочно, звоните: +995 598 75 00 06.",
+    "action": "service"
+  },
+  {
+    "title": "ტექნიკური მომსახურება",
+    "keywords": "მომსახურება, ტექნიკური მომსახურება, გეგმიური, სერვისი, სერვისის ხელშეკრულება, ყოველთვიური, maintenance, service contract, servicing, monthly service, обслуживание, техобслуживание, сервис, сервисный договор",
+    "answer_ka": "ვთავაზობთ ლიფტებისა და ესკალატორების რეგულარულ ტექნიკურ მომსახურებას: შემოწმება, რეგულირება, ნაწილების დროული შეცვლა. ეს ზრდის უსაფრთხოებას და ამცირებს ავარიებს. შეავსეთ განაცხადი (აირჩიეთ \"გეგმიური მომსახურება\") და პირობებს შეგითანხმებთ.",
+    "answer_en": "We offer regular maintenance of lifts and escalators: inspection, adjustment and timely replacement of parts. It keeps passengers safe and reduces breakdowns. Send a service request (choose \"Scheduled maintenance\") and we will agree the terms with you.",
+    "answer_ru": "Мы предлагаем регулярное техобслуживание лифтов и эскалаторов: осмотр, регулировка, своевременная замена деталей. Это повышает безопасность и снижает число поломок. Отправьте заявку (выберите \"Плановое обслуживание\"), и мы согласуем условия.",
+    "action": "service"
+  },
+  {
+    "title": "მოდერნიზაცია",
+    "keywords": "მოდერნიზაცია, განახლება, ძველი ლიფტი, საბჭოთა ლიფტი, modernization, modernisation, upgrade, old elevator, old lift, модернизация, старый лифт, обновление",
+    "answer_ka": "ძველი ლიფტის მოდერნიზაციით, ნაკლები ხარჯით, მიიღებთ უსაფრთხო და თანამედროვე აღჭურვილობას. შეავსეთ სერვისის განაცხადი (აირჩიეთ \"მოდერნიზაცია\"), ტექნიკოსი ნახავს ლიფტს და შემოგთავაზებთ ვარიანტს.",
+    "answer_en": "Modernizing an old lift gives you safe, modern equipment for much less than a full replacement. Send a service request (choose \"Modernization\"), a technician will inspect the lift and suggest options.",
+    "answer_ru": "Модернизация старого лифта дает безопасное современное оборудование дешевле полной замены. Отправьте заявку (выберите \"Модернизация\"), техник осмотрит лифт и предложит варианты.",
+    "action": "service"
+  },
+  {
+    "title": "ახალი ლიფტი / ფასის შეთავაზება",
+    "keywords": "ახალი ლიფტი, ლიფტის ფასი, ლიფტი რა ღირს, ლიფტის დაყენება, მონტაჟი, დამონტაჟება, ინსტალაცია, შეთავაზება, კორპუსისთვის ლიფტი, სახლისთვის ლიფტი, new elevator, new lift, elevator price, lift price, installation, install, quote, offer, новый лифт, цена лифта, стоимость лифта, установка, монтаж, коммерческое предложение",
+    "answer_ka": "ახალი ლიფტის ან ესკალატორის ფასი დამოკიდებულია შენობაზე, სართულების რაოდენობაზე და შახტის ზომებზე. შეავსეთ ფასის მოთხოვნის ფორმა (შეგიძლიათ ნახაზიც მიამაგროთ) და მოგიმზადებთ შეთავაზებას.",
+    "answer_en": "The price of a new lift or escalator depends on the building, number of floors and shaft size. Fill in the quote form (you can attach a drawing) and we will prepare an offer.",
+    "answer_ru": "Цена нового лифта или эскалатора зависит от здания, количества этажей и размеров шахты. Заполните форму запроса цены (можно приложить чертеж), и мы подготовим предложение.",
+    "action": "quote"
+  },
+  {
+    "title": "ნაწილის ფასი",
+    "keywords": "ფასი, ფასები, ღირს, რა ღირს, რამდენი ღირს, ღირებულება, price, prices, cost, how much, цена, цены, стоимость, сколько стоит",
+    "answer_ka": "ნაწილების ფასი დამოკიდებულია მოდელზე და მარაგზე, ამიტომ საიტზე \"ფასი მოთხოვნით\" წერია. დაამატეთ ნაწილი კალათაში და გამოგზავნეთ შეკვეთა, დაგირეკავთ ფასით და ვადით. ახალი ლიფტის ფასისთვის გამოიყენეთ ფასის მოთხოვნის ფორმა.",
+    "answer_en": "Part prices depend on the model and stock, so the site shows \"price on request\". Add the part to the cart and send the order, we will call you with the price and lead time. For a new lift price, use the quote form.",
+    "answer_ru": "Цена деталей зависит от модели и наличия, поэтому на сайте указано \"цена по запросу\". Добавьте деталь в корзину и отправьте заказ, мы перезвоним с ценой и сроком. Для цены нового лифта используйте форму запроса цены.",
+    "action": "parts"
+  },
+  {
+    "title": "როგორ შევუკვეთო ნაწილი",
+    "keywords": "შეკვეთა, შევუკვეთო, შეკვეთის გაკეთება, ვიყიდო, ყიდვა, შეძენა, კალათა, ნაწილი მჭირდება, სათადარიგო ნაწილი, ნაწილები, order, buy, purchase, cart, spare part, spare parts, parts, заказ, заказать, купить, корзина, запчасть, запчасти, детали",
+    "answer_ka": "ნაწილის შეკვეთა მარტივია: იპოვეთ ნაწილი კატალოგში (ან დამიწერეთ მისი სახელი, მარკა ან კოდი და მე მოვძებნი), დაამატეთ კალათაში და გამოგზავნეთ შეკვეთა სახელით და ტელეფონით. ონლაინ გადახდა არ არის, დაგიკავშირდებით და ყველაფერს შეგითანხმებთ.",
+    "answer_en": "Ordering a part is simple: find it in the catalog (or type its name, brand or code here and I will search), add it to the cart and send the order with your name and phone. There is no online payment, we will contact you to agree everything.",
+    "answer_ru": "Заказать деталь просто: найдите ее в каталоге (или напишите здесь название, марку или код, и я поищу), добавьте в корзину и отправьте заказ с именем и телефоном. Онлайн-оплаты нет, мы свяжемся с вами и все согласуем.",
+    "action": "parts"
+  },
+  {
+    "title": "მიწოდება",
+    "keywords": "მიწოდება, მიტანა, მომიტანთ, გამოგზავნა, ვადა, როდის მოვა, delivery, deliver, shipping, ship, lead time, доставка, доставить, привезти, срок",
+    "answer_ka": "ვმუშაობთ მთელ საქართველოში: თბილისში, ბათუმში და ყველა რეგიონში. მიწოდების ვადას და პირობებს შეკვეთის შემდეგ ტელეფონით შეგითანხმებთ, ის დამოკიდებულია ნაწილზე და მარაგზე.",
+    "answer_en": "We work across Georgia: Tbilisi, Batumi and all regions. We agree the delivery time and terms by phone after the order; they depend on the part and stock.",
+    "answer_ru": "Мы работаем по всей Грузии: Тбилиси, Батуми и все регионы. Срок и условия доставки согласуем по телефону после заказа, они зависят от детали и наличия.",
+    "action": "contact"
+  },
+  {
+    "title": "გადახდა",
+    "keywords": "გადახდა, გადავიხადო, ბარათით, ნაღდი, ინვოისი, payment, pay, card, cash, invoice, оплата, оплатить, картой, наличные, счет",
+    "answer_ka": "საიტზე ონლაინ გადახდა არ არის. შეკვეთის ან განაცხადის შემდეგ დაგიკავშირდებით და გადახდის პირობებს შეგითანხმებთ.",
+    "answer_en": "There is no online payment on the site. After your order or request we will contact you and agree the payment terms.",
+    "answer_ru": "Онлайн-оплаты на сайте нет. После заказа или заявки мы свяжемся с вами и согласуем условия оплаты.",
+    "action": "contact"
+  },
+  {
+    "title": "სად ვმუშაობთ / მისამართი",
+    "keywords": "მისამართი, სად ხართ, სად მდებარეობთ, ოფისი, ქალაქი, თბილისი, ბათუმი, ქუთაისი, რეგიონი, რეგიონებში, address, where, office, location, city, tbilisi, batumi, kutaisi, region, адрес, где, офис, город, тбилиси, батуми, кутаиси, регион",
+    "answer_ka": "ჩვენი ოფისი ბათუმშია, დავით მამულაძის ქ. 13. ვმუშაობთ თბილისში, ბათუმში და საქართველოს ყველა რეგიონში: მიწოდება, მონტაჟი, მომსახურება და ნაწილები.",
+    "answer_en": "Our office is in Batumi, 13 Davit Mamuladze St. We work in Tbilisi, Batumi and every region of Georgia: supply, installation, service and parts.",
+    "answer_ru": "Наш офис в Батуми, ул. Давида Мамуладзе 13. Работаем в Тбилиси, Батуми и во всех регионах Грузии: поставка, монтаж, обслуживание и запчасти.",
+    "action": "contact"
+  },
+  {
+    "title": "კონტაქტი / ტელეფონი",
+    "keywords": "ტელეფონი, ნომერი, დარეკვა, დაგირეკოთ, კონტაქტი, დაკავშირება, ელფოსტა, მეილი, ვოტსაპი, whatsapp, phone, number, call, contact, email, e-mail, mail, телефон, номер, позвонить, контакт, контакты, связаться, почта",
+    "answer_ka": "დაგვიკავშირდით: ტელეფონი და WhatsApp +995 598 75 00 06, ელფოსტა sales@ecolift.ge.",
+    "answer_en": "Contact us: phone and WhatsApp +995 598 75 00 06, email sales@ecolift.ge.",
+    "answer_ru": "Свяжитесь с нами: телефон и WhatsApp +995 598 75 00 06, почта sales@ecolift.ge.",
+    "action": "contact"
+  },
+  {
+    "title": "ლიფტების სახეები",
+    "keywords": "ლიფტები, სამგზავრო, სატვირთო, პანორამული, შუშის ლიფტი, სამზარეულოს ლიფტი, საავადმყოფოს, ინდივიდუალური, ლიფტის სახეები, რა ლიფტები გაქვთ, passenger, freight, cargo, panoramic, glass elevator, dumbwaiter, hospital, types of elevators, what elevators, пассажирский, грузовой, панорамный, стеклянный лифт, кухонный лифт, больничный, виды лифтов",
+    "answer_ka": "გთავაზობთ სამგზავრო, სატვირთო, პანორამულ (შუშის), საავადმყოფოს, სამზარეულოს და ინდივიდუალური დიზაინის ლიფტებს. ნახეთ ლიფტების გვერდი, ან შეავსეთ ფასის მოთხოვნა და შეგირჩევთ.",
+    "answer_en": "We offer passenger, freight, panoramic (glass), hospital, dumbwaiter and tailor-made lifts. See the lifts page, or send a quote request and we will help you choose.",
+    "answer_ru": "Предлагаем пассажирские, грузовые, панорамные (стеклянные), больничные, кухонные лифты и лифты по индивидуальному дизайну. Посмотрите страницу лифтов или отправьте запрос цены, и мы поможем выбрать.",
+    "action": "lifts"
+  },
+  {
+    "title": "ესკალატორები",
+    "keywords": "ესკალატორი, ესკალატორები, მოძრავი ბილიკი, ტრავოლატორი, escalator, escalators, moving walk, travelator, эскалатор, эскалаторы, траволатор, движущаяся дорожка",
+    "answer_ka": "ვაწვდით, ვამონტაჟებთ და ვემსახურებით ესკალატორებს და მოძრავ ბილიკებს. ნაწილებიც გვაქვს: ჩაწერეთ რომელი ნაწილი გჭირდებათ და მოვძებნი.",
+    "answer_en": "We supply, install and service escalators and moving walks. We also have parts: type which part you need and I will search.",
+    "answer_ru": "Мы поставляем, монтируем и обслуживаем эскалаторы и траволаторы. Есть и запчасти: напишите, какая деталь нужна, и я поищу.",
+    "action": "escalators"
+  },
+  {
+    "title": "გარანტია",
+    "keywords": "გარანტია, საგარანტიო, warranty, guarantee, гарантия, гарантийный",
+    "answer_ka": "ვაძლევთ პროდუქტისა და შესრულებული სამუშაოს გარანტიას, ასევე შესაძლებელია ხანგრძლივი გარანტია. ზუსტ ვადას კონკრეტული აღჭურვილობის მიხედვით შეთავაზებაში მიუთითებთ.",
+    "answer_en": "We give a product warranty and a warranty on the work done, and an extended warranty is possible. The exact period depends on the equipment and is stated in the offer.",
+    "answer_ru": "Мы даем гарантию на продукцию и выполненные работы, возможна расширенная гарантия. Точный срок зависит от оборудования и указывается в предложении.",
+    "action": "contact"
+  },
+  {
+    "title": "კომპანიის შესახებ",
+    "keywords": "ვინ ხართ, კომპანია, თქვენს შესახებ, ეკოლიფტი, ecolift, about, who are you, company, о компании, кто вы, компания",
+    "answer_ka": "Ecolift Plus ლიფტებისა და ესკალატორების კომპანიაა: მიწოდება, დაპროექტება, მონტაჟი, ტექნიკური მომსახურება, მოდერნიზაცია და სათადარიგო ნაწილები თბილისში, ბათუმში და მთელ საქართველოში.",
+    "answer_en": "Ecolift Plus is a lift and escalator company: supply, design, installation, maintenance, modernization and spare parts in Tbilisi, Batumi and all of Georgia.",
+    "answer_ru": "Ecolift Plus — компания по лифтам и эскалаторам: поставка, проектирование, монтаж, обслуживание, модернизация и запчасти в Тбилиси, Батуми и по всей Грузии.",
+    "action": null
+  },
+  {
+    "title": "ტექნიკური სტატიები",
+    "keywords": "სტატია, სტატიები, ინფორმაცია, როგორ მუშაობს, article, articles, how does it work, статья, статьи, как работает",
+    "answer_ka": "ჩვენს საიტზე არის ტექნიკური სტატიები ლიფტებსა და ესკალატორებზე. გადახედეთ სტატიების გვერდს.",
+    "answer_en": "Our site has technical articles about lifts and escalators. Have a look at the articles page.",
+    "answer_ru": "На нашем сайте есть технические статьи о лифтах и эскалаторах. Загляните на страницу статей.",
+    "action": "articles"
+  }
+]

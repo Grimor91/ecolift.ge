@@ -16,7 +16,10 @@
     "hoists": "Hoists",
     "documentary": "Documentation",
     "parts": "Parts",
-    "cart": "Cart"
+    "cart": "Cart",
+    "service": "Service",
+    "news": "News",
+    "articles": "Articles"
   },
   "text": {
     "folow": "Follow us on social media",
@@ -132,8 +135,8 @@
     "continue": "Browse parts"
   },
   "home": {
-    "heroTitle": "Elevators, escalators and spare parts",
-    "heroText": "From design and installation to maintenance, in Batumi and across Georgia.",
+    "heroTitle": "Elevators and escalators across Georgia",
+    "heroText": "Supply, installation, maintenance and spare parts: in Tbilisi, Batumi and every region of Georgia.",
     "orderParts": "Order parts",
     "contactUs": "Contact us",
     "whatWeDo": "What we do",
@@ -148,5 +151,236 @@
     "call": "Call",
     "rights": "All rights reserved",
     "follow": "Follow us"
+  },
+  "service": {
+    "title": "Elevator maintenance and repair",
+    "lead": "Elevator and escalator repair, scheduled maintenance and modernization in Tbilisi, Batumi and across Georgia. Fill in the form and our technician will contact you.",
+    "emergencyTitle": "Someone stuck in the elevator?",
+    "emergencyText": "Don't wait for the form, call us now.",
+    "equipment": "What equipment?",
+    "issue": "What happened?",
+    "urgent": "Urgent, the elevator is not working",
+    "address": "Address *",
+    "addressPlaceholder": "City, street, building, entrance",
+    "comment": "More details",
+    "commentPlaceholder": "E.g. which floor it stopped on, what noise you hear",
+    "send": "Send request",
+    "error": "The request could not be sent. Please try again or call us.",
+    "thanks": "Request received",
+    "requestNumber": "Request number",
+    "another": "New request",
+    "cta": "Request service",
+    "eq": {
+      "passenger": "Passenger elevator",
+      "freight": "Freight elevator",
+      "escalator": "Escalator",
+      "other": "Other"
+    },
+    "is": {
+      "stopped": "Elevator stopped",
+      "stuck": "Someone is stuck",
+      "doors": "Door problem",
+      "noise": "Noise or vibration",
+      "maintenance": "Scheduled maintenance",
+      "modernization": "Modernization",
+      "other": "Other"
+    }
+  },
+  "quote": {
+    "title": "New elevator price",
+    "lead": "Tell us about your building and we will prepare a price. Not sure about the details? That's fine, we will help.",
+    "step1": "You fill in the form",
+    "step2": "An engineer calls to confirm the details",
+    "step3": "You get a price and a timeline",
+    "product": "What do you need?",
+    "building": "Building type",
+    "floors": "Number of floors",
+    "capacity": "Load capacity",
+    "email": "Email",
+    "city": "City",
+    "commentPlaceholder": "E.g. is there already a shaft, when do you need it",
+    "send": "Request a price",
+    "thanks": "Request received",
+    "cta": "New elevator price",
+    "pr": {
+      "passenger": "Passenger elevator",
+      "freight": "Freight elevator",
+      "panoramic": "Panoramic elevator",
+      "home": "Home elevator",
+      "escalator": "Escalator",
+      "other": "Other"
+    },
+    "bu": {
+      "residential": "Apartment building",
+      "house": "Private house",
+      "office": "Office or business center",
+      "hotel": "Hotel",
+      "hospital": "Hospital",
+      "mall": "Shopping mall",
+      "industrial": "Factory or warehouse",
+      "other": "Other"
+    },
+    "ca": {
+      "400": "400 kg (5 people)",
+      "630": "630 kg (8 people)",
+      "1000": "1000 kg (13 people)",
+      "1600": "1600 kg or more",
+      "unsure": "Not sure"
+    },
+    "sizes": "Shaft and floor dimensions (if known)",
+    "mm": "mm",
+    "sz": {
+      "shaft_width": "Shaft width",
+      "shaft_depth": "Shaft depth",
+      "pit_depth": "Pit depth",
+      "last_floor_height": "Last floor height (headroom)",
+      "floor_height": "Typical floor height"
+    },
+    "drawing": "Drawing",
+    "uploadDrawing": "Upload drawing",
+    "removeDrawing": "Remove drawing",
+    "drawingHint": "PDF, JPG, PNG, DWG or DXF, up to 15 MB",
+    "drawingTooBig": "File is too large (max 15 MB)"
+  },
+  "news": {
+    "title": "News",
+    "followLinkedIn": "Follow us on LinkedIn →",
+    "empty": "News is coming soon.",
+    "all": "All news"
+  },
+  "seo": {
+    "home": {
+      "title": "Ecolift | Elevators and escalators in Tbilisi, Batumi and Georgia",
+      "description": "Supply, installation, service and spare parts for elevators and escalators in Tbilisi, Batumi and across Georgia. Ecolift Plus."
+    },
+    "lifts": {
+      "title": "Elevators in Tbilisi, Batumi and across Georgia | Ecolift",
+      "description": "Supply, installation and service of passenger, panoramic, freight and tailor-made elevators in Tbilisi, Batumi and every region of Georgia."
+    },
+    "passenger": {
+      "title": "Passenger elevators in Tbilisi and Batumi | Ecolift",
+      "description": "Passenger elevators for apartment buildings, offices and hotels. Design, installation and service in Tbilisi, Batumi and across Georgia."
+    },
+    "panoramic": {
+      "title": "Panoramic elevators | Ecolift",
+      "description": "Panoramic glass elevators for malls, hotels and private houses."
+    },
+    "dumbwaiters": {
+      "title": "Freight elevators and dumbwaiters | Ecolift",
+      "description": "Freight elevators and dumbwaiters for restaurants, warehouses and factories."
+    },
+    "tailormade": {
+      "title": "Tailor-made elevators | Ecolift",
+      "description": "Elevators designed for non-standard shafts and buildings."
+    },
+    "escalators": {
+      "title": "Escalators in Tbilisi, Batumi and across Georgia | Ecolift",
+      "description": "Supply, installation, maintenance and repair of escalators and moving walks in Tbilisi, Batumi and across Georgia."
+    },
+    "parts": {
+      "title": "Elevator spare parts | Ecolift",
+      "description": "Elevator and escalator spare parts: controllers, motors, door operators, buttons, sensors and more. Order online."
+    },
+    "cart": {
+      "title": "Cart | Ecolift",
+      "description": "Your order."
+    },
+    "service": {
+      "title": "Elevator maintenance and repair in Tbilisi and Batumi | Ecolift",
+      "description": "Elevator or escalator out of order? Repair, scheduled maintenance and modernization in Tbilisi, Batumi and across Georgia."
+    },
+    "quote": {
+      "title": "New elevator price | Ecolift",
+      "description": "Request a price for a new elevator or escalator: enter the shaft sizes and upload a drawing."
+    },
+    "news": {
+      "title": "News | Ecolift",
+      "description": "Ecolift news and completed projects."
+    },
+    "about": {
+      "title": "About us | Ecolift",
+      "description": "Ecolift Plus: elevator and escalator company working in Tbilisi, Batumi and across Georgia."
+    },
+    "resources": {
+      "title": "Documents and brochures | Ecolift",
+      "description": "Elevator and escalator catalogues, brochures and technical documents."
+    },
+    "articles": {
+      "title": "Technical articles on elevators and escalators | Ecolift",
+      "description": "Design, loads, wear, maintenance and diagnostics of escalators and elevators. Articles by Ecolift."
+    }
+  },
+  "articles": {
+    "title": "Technical articles",
+    "lead": "Design, maintenance and diagnostics of elevators and escalators: articles for engineers and building managers.",
+    "empty": "Articles are coming soon.",
+    "read": "Read",
+    "all": "All articles",
+    "author": "Author",
+    "notFound": "Article not found.",
+    "cta": "Need an escalator or elevator inspected or serviced?",
+    "ctaService": "Request service",
+    "ctaQuote": "Get a quote",
+    "escalatorBanner": "Escalator design, wear and diagnostics: read our technical articles."
+  },
+  "intro": {
+    "liftsTitle": "Elevators across Georgia",
+    "liftsText": "Ecolift Plus supplies, installs and services passenger, panoramic, freight and tailor-made elevators in Tbilisi, Batumi and every region of Georgia. We work with apartment buildings, hotels, offices and private houses: from design and installation to scheduled maintenance and repair.",
+    "escalatorsTitle": "Escalators across Georgia",
+    "escalatorsText": "Supply, installation, maintenance and repair of escalators and moving walks in Tbilisi, Batumi and across Georgia, for shopping centres, hotels, airports and public buildings.",
+    "quote": "Get a quote",
+    "service": "Request service",
+    "passengerTitle": "Passenger elevators",
+    "passengerText": "Passenger elevators for residential buildings, hotels, offices and private homes. We match the cabin design to your interior: stainless steel, gold and copper finish panels, glass, marble floors, LED lighting and touchscreen control panels. We supply, install and service elevators in Tbilisi, Batumi and across Georgia.",
+    "passengerPoint1": "Capacity from 450 to 2000 kg",
+    "passengerPoint2": "Custom cabin design",
+    "passengerPoint3": "Installation and maintenance",
+    "freightTitle": "Freight elevators and dumbwaiters",
+    "freightText": "Dumbwaiters for restaurants, hotels and cafes to move food, dishes and small loads between floors. Freight elevators for warehouses, shops and factories. We adapt the size, capacity and finish to your building and your needs.",
+    "freightPoint1": "Restaurants and hotels",
+    "freightPoint2": "Warehouses and factories",
+    "freightPoint3": "Stainless steel cabins",
+    "panoramicTitle": "Panoramic elevators",
+    "panoramicText": "Panoramic glass elevators for shopping centres, hotels, offices and private houses. A glass cabin and shaft bring space and light into the building and make the elevator part of the interior. We adapt the design, size and finish to your building, and supply, install and service elevators in Tbilisi, Batumi and across Georgia.",
+    "panoramicPoint1": "Glass cabin and shaft",
+    "panoramicPoint2": "Inside the building or on the facade",
+    "panoramicPoint3": "Installation and maintenance",
+    "tailormadeTitle": "Tailor-made elevators",
+    "tailormadeText": "Elevators for non-standard shafts and buildings: old buildings, small or irregular shafts, a shallow pit or low top floor, private houses. We design the size, capacity and cabin around your building. Send us the shaft dimensions or a drawing and we will prepare an offer.",
+    "tailormadePoint1": "Non-standard shaft sizes",
+    "tailormadePoint2": "Custom cabin design",
+    "tailormadePoint3": "From design to installation",
+    "aboutTitle": "About Ecolift Plus",
+    "aboutText": "Ecolift Plus is an elevator and escalator company. We supply, install, maintain and repair passenger, panoramic, freight and tailor-made elevators, escalators and moving walks, and offer elevator and escalator spare parts. We work in Tbilisi, Batumi and across Georgia.",
+    "aboutPoint1": "Elevators and escalators",
+    "aboutPoint2": "Installation, maintenance and repair",
+    "aboutPoint3": "Spare parts"
+  },
+  "assistant": {
+    "launcher": "Have a question?",
+    "title": "Ecolift assistant",
+    "subtitle": "Parts, service, prices",
+    "close": "Close",
+    "send": "Send",
+    "welcome": "Hello! Tell me what you need: a part name, brand or code (e.g. \"Otis door motor\" or \"EL-0123\"), or choose below.",
+    "placeholder": "Type your question...",
+    "seeAll": "See all in the catalog",
+    "error": "I could not answer right now. Try again shortly or call us.",
+    "quick": {
+      "findPart": "I need a part",
+      "broken": "My lift is broken",
+      "newLift": "New lift price",
+      "contact": "Phone and address"
+    },
+    "action": {
+      "service": "Service request",
+      "quote": "Request a price",
+      "parts": "Parts catalog",
+      "call": "Call",
+      "contact": "WhatsApp",
+      "lifts": "Lifts",
+      "escalators": "Escalators",
+      "articles": "Articles"
+    }
   }
 }

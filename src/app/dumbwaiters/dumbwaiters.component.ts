@@ -41,8 +41,11 @@ export class DumbwaitersComponent implements OnInit {
   constructor(private actroute: ActivatedRoute) {}
   
   data: item[] = [
-    
-    
+    { imageSrc: 'assets/lifts/freight/freight-01.jpg', imageAlt: 'მცირე სატვირთო ლიფტი (dumbwaiter) რესტორნისთვის' },
+    { imageSrc: 'assets/lifts/freight/freight-02.jpg', imageAlt: 'მცირე სატვირთო ლიფტი დახურული კარით' },
+    { imageSrc: 'assets/lifts/freight/freight-03.jpg', imageAlt: 'მცირე სატვირთო ლიფტის კაბინა თაროთი' },
+    { imageSrc: 'assets/lifts/freight/freight-04.jpg', imageAlt: 'მცირე სატვირთო ლიფტის ორფრთიანი კარი' },
+    { imageSrc: 'assets/lifts/freight/freight-05.jpg', imageAlt: 'სატვირთო ლიფტის კარი' },
   ];
   
   previewimage = false;
