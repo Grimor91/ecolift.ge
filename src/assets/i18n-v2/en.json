@@ -19,7 +19,8 @@
     "cart": "Cart",
     "service": "Service",
     "news": "News",
-    "articles": "Articles"
+    "articles": "Articles",
+    "company": "Company"
   },
   "text": {
     "folow": "Follow us on social media",
@@ -150,7 +151,9 @@
     "addressValue": "13 David Mamuladze St, Batumi",
     "call": "Call",
     "rights": "All rights reserved",
-    "follow": "Follow us"
+    "follow": "Follow us",
+    "visitTitle": "Visit our office",
+    "directions": "Get directions"
   },
   "service": {
     "title": "Elevator maintenance and repair",

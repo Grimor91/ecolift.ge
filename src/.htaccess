@@ -75,11 +75,12 @@
 # Security headers (checked with securityheaders.com).
 # The Content-Security-Policy lists every outside address the site really uses:
 #   styles/fonts: Google Fonts, Font Awesome (cdnjs + pro.fontawesome.com), flag icons (jsdelivr)
-#   scripts: Google Maps on /aboutus (maps.googleapis.com, maps.gstatic.com)
-#   frames: the YouTube video on the home page, LinkedIn posts on /news, Google Maps
+#   scripts: only the site's own files
+#   frames: the YouTube video and the office map on the home page, LinkedIn posts on /news
 #   images: any https address (map tiles, country flags in the admin panel, LinkedIn)
-# 'unsafe-inline' stays for scripts and styles: Angular's build loads its CSS with an
-# inline onload="" and adds component styles at runtime; Google Maps needs 'unsafe-eval'.
+# Scripts: no inline code allowed (angular.json turns off inlineCritical, whose
+# onload="" would need it).
+# Styles keep 'unsafe-inline': Angular adds component styles at runtime.
 # When adding a new outside service (chat widget, analytics...), add its address here.
 <IfModule mod_headers.c>
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
@@ -87,7 +88,7 @@
   Header always set X-Content-Type-Options "nosniff"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
   Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()"
-  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://maps.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://pro.fontawesome.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://pro.fontawesome.com; img-src 'self' data: blob: https:; media-src 'self' blob:; connect-src 'self' https://maps.googleapis.com https://*.googleapis.com https://maps.gstatic.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com https://www.linkedin.com https://www.google.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://pro.fontawesome.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://pro.fontawesome.com; img-src 'self' data: blob: https:; media-src 'self' blob:; connect-src 'self'; frame-src https://www.youtube.com https://www.youtube-nocookie.com https://www.linkedin.com https://www.google.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
   Header always unset X-Powered-By
 </IfModule>
 

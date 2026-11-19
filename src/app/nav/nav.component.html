@@ -1,194 +1,78 @@
-<nav class="navbar navbar-expand-xl bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" routerLink="/"
-      ><img
-        class="ecoliftlogo"
-        src="assets/img/photo_2023-10-26_20-04-05.jpg"
-        alt="55"
-    /></a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNavDropdown"
-      aria-controls="navbarNavDropdown"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">{{
-            "navbar.home" | translate
-          }}</a>
-        </li>
+<header class="site-nav" [class.open]="menuOpen">
+  <div class="site-nav-inner">
+    <a class="site-nav-logo" routerLink="/" (click)="closeMenu()">
+      <img src="assets/img/photo_2023-10-26_20-04-05.jpg" alt="Ecolift Plus" />
+    </a>
 
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            routerLink="/lifts"
-            routerLinkActive="active"
-            aria-expanded="false"
-          >
-            {{ "navbar.elevators" | translate }}
-          </a>
-          <ul class="dropdown-menu dropdown-menu-start">
-            <li>
-              <a
-                class="dropdown-item"
-                routerLink="cardpassenger"
-                (click)="closeDropdown()"
-                >{{ "text.Passanger" | translate }}</a
-              >
-            </li>
-            <hr />
-            <li>
-              <a
-                class="dropdown-item"
-                routerLink="panoramic"
-                (click)="closeDropdown()"
-                >{{ "text.Panoramic" | translate }}</a
-              >
-            </li>
-            <hr />
-            <li>
-              <a
-                class="dropdown-item"
-                routerLink="Dumbwaiters"
-                (click)="closeDropdown()"
-                >{{ "text.Dumbwaiters" | translate }}</a
-              >
-            </li>
-            <hr />
-            <li>
-              <a
-                class="dropdown-item"
-                routerLink="tailormade"
-                (click)="closeDropdown()"
-                >{{ "text.Tailormade" | translate }}
-              </a>
-            </li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            routerLink="/escolator"
-            (click)="closeDropdown()"
-            >{{ "navbar.escalators" | translate }}</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            href="https://alimak.com/ "
-            target="_blank"
-            (click)="closeDropdown()"
-            >{{ "navbar.hoists" | translate }}</a
-          >
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/parts" routerLinkActive="active" (click)="closeDropdown()">
-            {{ "navbar.parts" | translate }}
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/service" routerLinkActive="active" (click)="closeDropdown()">
-            {{ "navbar.service" | translate }}
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/cart" routerLinkActive="active" (click)="closeDropdown()">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" [attr.aria-label]="'navbar.cart' | translate" role="img">
-              <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle>
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-            </svg>
-            <span *ngIf="cart.count" class="badge rounded-pill bg-success">{{ cart.count }}</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/news" routerLinkActive="active" (click)="closeDropdown()">
-            {{ "navbar.news" | translate }}
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/articles" routerLinkActive="active" (click)="closeDropdown()">
-            {{ "navbar.articles" | translate }}
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/resources" routerLinkActive="active">
-            {{ "navbar.documentary" | translate }}
-          </a>
-        </li>
+    <nav class="site-nav-links" aria-label="Menu">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">
+        {{ "navbar.home" | translate }}
+      </a>
 
-        <li class="nav-item">
-          <a class="get nav-link geta" routerLink="/quote" (click)="closeDropdown()">
-            {{ "navbar.getQuote" | translate }}
+      <div class="site-nav-group" [class.expanded]="openGroup === 'lifts'">
+        <div class="site-nav-group-head">
+          <a routerLink="/lifts" routerLinkActive="active" (click)="closeMenu()">{{ "navbar.elevators" | translate }}</a>
+          <button type="button" class="site-nav-caret" (click)="toggleGroup('lifts')"
+            [attr.aria-expanded]="openGroup === 'lifts'" [attr.aria-label]="'navbar.elevators' | translate">
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+        </div>
+        <div class="site-nav-menu">
+          <a routerLink="/cardpassenger" routerLinkActive="active" (click)="closeMenu()">{{ "text.Passanger" | translate }}</a>
+          <a routerLink="/panoramic" routerLinkActive="active" (click)="closeMenu()">{{ "text.Panoramic" | translate }}</a>
+          <a routerLink="/Dumbwaiters" routerLinkActive="active" (click)="closeMenu()">{{ "text.Dumbwaiters" | translate }}</a>
+          <a routerLink="/tailormade" routerLinkActive="active" (click)="closeMenu()">{{ "text.Tailormade" | translate }}</a>
+          <a href="https://alimak.com/" target="_blank" rel="noopener" (click)="closeMenu()">
+            {{ "navbar.hoists" | translate }} <i class="fa-solid fa-arrow-up-right-from-square"></i>
           </a>
-        </li>
+        </div>
+      </div>
 
-        <!-- Language dropdown -->
-        <!-- Language dropdown with a default flag -->
-        <li class="nav-item dropdown languagebar">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            id="languageDropdown"
-            role="button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            <img
-              src="../../assets/img/photo_2023-10-26_21-05-40.jpg"
-              alt="Georgian"
-              class="language-icon"
-            />
-            <span class="lang-code">{{ "language.code" | translate }}</span>
-          </a>
-          <div
-            class="dropdown-menu dropdown-menu-language"
-            id="language-dropdown"
-            aria-labelledby="languageDropdown"
-          >
-            <ul class="language-list">
-              <li
-                (click)="toggleLanguage('ka', $event)"
-                class="language-option"
-              >
-                <img
-                  src="../../assets/img/photo_2023-10-26_21-05-40.jpg"
-                  alt="Georgian"
-                  class="language-icon"
-                />
-              </li>
-              <li
-                (click)="toggleLanguage('en', $event)"
-                class="language-option"
-              >
-                <img
-                  src="../../assets/img/photo_2023-10-26_21-07-49.jpg"
-                  alt="English"
-                  class="language-icon"
-                />
-              </li>
-              <li
-                (click)="toggleLanguage('ru', $event)"
-                class="language-option"
-              >
-                <img
-                  src="../../assets/img/photo_2023-10-26_21-08-44.jpg"
-                  alt="Russian"
-                  class="language-icon"
-                />
-              </li>
-            </ul>
-          </div>
-        </li>
-      </ul>
+      <a routerLink="/escolator" routerLinkActive="active" (click)="closeMenu()">{{ "navbar.escalators" | translate }}</a>
+      <a routerLink="/parts" routerLinkActive="active" (click)="closeMenu()">{{ "navbar.parts" | translate }}</a>
+      <a routerLink="/service" routerLinkActive="active" (click)="closeMenu()">{{ "navbar.service" | translate }}</a>
+
+      <div class="site-nav-group" [class.expanded]="openGroup === 'company'">
+        <div class="site-nav-group-head">
+          <button type="button" class="site-nav-group-btn" (click)="toggleGroup('company')"
+            [attr.aria-expanded]="openGroup === 'company'">
+            {{ "navbar.company" | translate }} <i class="fa-solid fa-chevron-down"></i>
+          </button>
+        </div>
+        <div class="site-nav-menu">
+          <a routerLink="/aboutus" routerLinkActive="active" (click)="closeMenu()">{{ "navbar.about" | translate }}</a>
+          <a routerLink="/news" routerLinkActive="active" (click)="closeMenu()">{{ "navbar.news" | translate }}</a>
+          <a routerLink="/articles" routerLinkActive="active" (click)="closeMenu()">{{ "navbar.articles" | translate }}</a>
+          <a routerLink="/resources" routerLinkActive="active" (click)="closeMenu()">{{ "navbar.documentary" | translate }}</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="site-nav-actions">
+      <a class="site-nav-cart" routerLink="/cart" (click)="closeMenu()" [attr.aria-label]="'navbar.cart' | translate">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span *ngIf="cart.count" class="site-nav-badge">{{ cart.count }}</span>
+      </a>
+
+      <div class="site-nav-lang" [class.expanded]="openGroup === 'lang'">
+        <button type="button" class="site-nav-lang-btn" (click)="toggleGroup('lang')" [attr.aria-expanded]="openGroup === 'lang'">
+          <img [src]="flags[currentLang]" alt="" />
+          <span>{{ "language.code" | translate }}</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="site-nav-menu site-nav-lang-menu">
+          <button type="button" *ngFor="let l of langs" (click)="toggleLanguage(l.code, $event)" [class.active]="l.code === currentLang">
+            <img [src]="flags[l.code]" alt="" /> {{ l.label }}
+          </button>
+        </div>
+      </div>
+
+      <a class="site-nav-quote" routerLink="/quote" (click)="closeMenu()">{{ "navbar.getQuote" | translate }}</a>
+
+      <button type="button" class="site-nav-burger" (click)="menuOpen = !menuOpen; openGroup = null"
+        [attr.aria-expanded]="menuOpen" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </div>
-</nav>
+</header>

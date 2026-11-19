@@ -1,0 +1,16 @@
+<section class="location-section">
+  <div class="location-card" data-aos="fade-up" data-aos-once="true">
+    <div class="location-map">
+      <iframe [src]="mapUrl" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+        [title]="'home.visitTitle' | translate" allowfullscreen></iframe>
+    </div>
+    <div class="location-info">
+      <h2>{{ "home.visitTitle" | translate }}</h2>
+      <p><i class="fa-solid fa-location-dot"></i> {{ "home.addressValue" | translate }}</p>
+      <p><a href="tel:+995598750006"><i class="fa-solid fa-phone"></i> +995 598 75 00 06</a></p>
+      <a class="location-btn" [href]="directionsUrl" target="_blank" rel="noopener">
+        <i class="fa-solid fa-diamond-turn-right"></i> {{ "home.directions" | translate }}
+      </a>
+    </div>
+  </div>
+</section>
