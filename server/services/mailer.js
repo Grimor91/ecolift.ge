@@ -10,10 +10,20 @@ const transporter = nodemailer.createTransport({
 const escape = (s) =>
   String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-function orderHtml(orderId, customer, items) {
+function itemsTable(items) {
   const rows = items
     .map((i) => `<tr><td>${escape(i.code)}</td><td>${escape(i.name)}</td><td align="center">${i.quantity}</td></tr>`)
     .join('');
+  return `<table border="1" cellpadding="6" cellspacing="0">
+      <tr><th>კოდი</th><th>დასახელება</th><th>რაოდენობა</th></tr>${rows}
+    </table>`;
+}
+
+function itemsHtml(orderId, items) {
+  return `<h2>შეკვეთა #${orderId}</h2>${itemsTable(items)}`;
+}
+
+function orderHtml(orderId, customer, items) {
   return `
     <h2>ახალი შეკვეთა #${orderId}</h2>
     <p><b>სახელი:</b> ${escape(customer.name)}<br>
@@ -21,9 +31,7 @@ function orderHtml(orderId, customer, items) {
        <b>ელ-ფოსტა:</b> ${escape(customer.email || '-')}<br>
        <b>კომპანია:</b> ${escape(customer.company || '-')}</p>
     <p><b>კომენტარი:</b><br>${escape(customer.comment || '-').replace(/\n/g, '<br>')}</p>
-    <table border="1" cellpadding="6" cellspacing="0">
-      <tr><th>კოდი</th><th>დასახელება</th><th>რაოდენობა</th></tr>${rows}
-    </table>`;
+    ${itemsTable(items)}`;
 }
 
 async function sendOrderEmails(orderId, customer, items) {
@@ -41,7 +49,10 @@ async function sendOrderEmails(orderId, customer, items) {
         from: process.env.MAIL_FROM,
         to: customer.email,
         subject: `Ecolift — შეკვეთა #${orderId} მიღებულია`,
-        html: `<p>გმადლობთ, თქვენი შეკვეთა მიღებულია. მალე დაგიკავშირდებით.</p>${html}`,
+        // Only the order number and the parts from our catalog: anything typed into the
+        // form (name, comment) stays out, so the form can't be used to send someone
+        // else a message from our address.
+        html: `<p>გმადლობთ, თქვენი შეკვეთა მიღებულია. მალე დაგიკავშირდებით.</p>${itemsHtml(orderId, items)}`,
       })
       .catch((err) => console.error('Customer confirmation email failed:', err.message));
   }

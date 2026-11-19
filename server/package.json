@@ -20,8 +20,8 @@
     "geoip-country": "^5.0.0",
     "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.3",
-    "multer": "^2.4.0",
+    "multer": "^2.5.0",
     "mysql2": "^3.24.4",
-    "nodemailer": "^10.0.11"
+    "nodemailer": "^10.6.0"
   }
 }
