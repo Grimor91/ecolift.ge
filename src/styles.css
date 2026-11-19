@@ -9,7 +9,8 @@ body {
     font-family: 'Noto Sans Georgian', 'Open Sans', sans-serif;
     background-color: #ffffff;
     overflow-x: hidden;
-    
+    /* clip, unlike hidden, keeps the sticky header working */
+    overflow-x: clip;
 }
 
 @media (max-width: 767px){

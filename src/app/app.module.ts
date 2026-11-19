@@ -26,7 +26,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PanoramaComponent } from './panorama/panorama.component';
 import { TailormodeComponent } from './tailormode/tailormode.component';
-import { GoogleMapsModule } from '@angular/google-maps';
+import { LocationComponent } from './location/location.component';
 import { AboutusComponent } from './aboutus/aboutus.component';
 import { OwlComponent } from './owl/owl.component';
 import { ServiceComponent } from './service/service.component';
@@ -73,6 +73,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     PanoramaComponent,
     TailormodeComponent,
     AboutusComponent,
+    LocationComponent,
     OwlComponent,
     ServiceComponent,
     LiftsComponent,
@@ -95,7 +96,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    GoogleMapsModule,
     BrowserAnimationsModule,
     CarouselModule,
     ResourcesComponent,

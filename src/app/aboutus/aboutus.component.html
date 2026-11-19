@@ -11,12 +11,3 @@
     <a class="btn btn-outline-success" routerLink="/service">{{ "intro.service" | translate }}</a>
   </div>
 </section>
-<google-map *ngIf="mapReady" height="400px"
-            width="750px"
-            [center]="center"
-            [zoom]="zoom"
-            (mapClick)="addMarker($event)">
-  <map-marker *ngFor="let markerPosition of markerPositions"
-              [position]="markerPosition"
-              [options]="markerOptions"></map-marker>
-</google-map>
