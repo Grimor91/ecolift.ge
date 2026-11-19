@@ -14,6 +14,8 @@ const pages = require('../services/pages');
 
 const router = express.Router();
 
+const DUMMY_HASH = bcrypt.hashSync('not-a-real-password', 12);
+
 const loginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 10, standardHeaders: true, legacyHeaders: false });
 
 router.post('/login', loginLimiter, async (req, res) => {
@@ -23,10 +25,13 @@ router.post('/login', loginLimiter, async (req, res) => {
   }
   const [rows] = await db.query('SELECT * FROM admins WHERE email = ?', [email.trim().toLowerCase()]);
   const admin = rows[0];
-  if (!admin || !(await bcrypt.compare(password, admin.password_hash))) {
+  // Compare against a dummy hash when the email is unknown, so the answer takes
+  // the same time and does not reveal which emails are admins.
+  const ok = await bcrypt.compare(password.slice(0, 200), admin ? admin.password_hash : DUMMY_HASH);
+  if (!admin || !ok) {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
-  const token = jwt.sign({ id: admin.id, email: admin.email }, process.env.JWT_SECRET, { expiresIn: '12h' });
+  const token = jwt.sign({ id: admin.id, email: admin.email }, process.env.JWT_SECRET, { algorithm: 'HS256', expiresIn: '12h' });
   res.json({ token });
 });
 
