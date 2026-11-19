@@ -11,7 +11,7 @@
     <a class="btn btn-outline-success" routerLink="/service">{{ "intro.service" | translate }}</a>
   </div>
 </section>
-<google-map height="400px"
+<google-map *ngIf="mapReady" height="400px"
             width="750px"
             [center]="center"
             [zoom]="zoom"
