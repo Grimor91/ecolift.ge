@@ -1,0 +1,38 @@
+<section class="finder">
+  <div class="finder-inner">
+    <div class="finder-text">
+      <h2>{{ "design.finderTitle" | translate }}</h2>
+      <p>{{ "design.finderText" | translate }}</p>
+    </div>
+    <form class="finder-search" (ngSubmit)="submit()" role="search">
+      <input
+        type="search"
+        name="q"
+        [(ngModel)]="query"
+        [placeholder]="'design.finderPlaceholder' | translate"
+        [attr.aria-label]="'shop.searchPlaceholder' | translate"
+        autocomplete="off"
+      />
+      <button type="submit"><i class="fa-solid fa-magnifying-glass"></i> {{ "shop.search" | translate }}</button>
+    </form>
+    <div class="finder-brands">
+      <span class="finder-label">{{ "design.byBrand" | translate }}</span>
+      <div class="brand-row">
+        <button
+          type="button"
+          class="call-btn"
+          *ngFor="let b of brands"
+          [class.lit]="pressed === b.search"
+          (click)="pick(b.search)"
+        >
+          <i aria-hidden="true">{{ b.short }}</i>
+          <span>{{ b.label }}</span>
+        </button>
+        <a class="call-btn all" routerLink="/parts">
+          <i aria-hidden="true" class="fa-solid fa-ellipsis"></i>
+          <span>{{ "design.allParts" | translate }}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

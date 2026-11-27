@@ -12,7 +12,7 @@
     "escalators": "Escalators",
     "ebrochure": "E-Brochure",
     "contact": "Contact",
-    "getQuote": "Get a Quote",
+    "getQuote": "Get a price",
     "hoists": "Hoists",
     "documentary": "Documentation",
     "parts": "Parts",
@@ -385,5 +385,31 @@
       "escalators": "Escalators",
       "articles": "Articles"
     }
+  },
+  "design": {
+    "finderTitle": "Find a part for your elevator",
+    "finderText": "Type the code from your old part or pick your elevator's brand.",
+    "finderPlaceholder": "e.g. KDS300 or A4J18899",
+    "byBrand": "By brand",
+    "allParts": "All parts",
+    "prodFreight": "Freight elevators",
+    "prodParts": "Spare parts",
+    "howTitle": "How we can help",
+    "path1Title": "New elevator or escalator",
+    "path1Text": "Design, supply and installation, from the project to handover.",
+    "path2Title": "Maintenance and repair",
+    "path2Text": "Regular maintenance, emergency call-outs and technical supervision.",
+    "path3Title": "Modernization",
+    "path3Text": "Upgrade an old elevator: controller, doors, car. It costs less than a new one.",
+    "path3Cta": "Ask for a consultation",
+    "path4Text": "Over 490 parts for Kone, Otis, Mitsubishi, Schindler and other elevators.",
+    "path4Cta": "Browse parts",
+    "year1": "year",
+    "year2": "years",
+    "year10": "years",
+    "cabin3d": "3D cabin tour",
+    "maker": "Manufacturer's website",
+    "category": "Category",
+    "brand": "Brand"
   }
 }

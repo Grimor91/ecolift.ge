@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ApiService } from '../shop/api.service';
 import { CartService } from '../shop/cart.service';
 import { Category, Product } from '../shop/models';
+import { PART_BRANDS } from '../part-finder/part-finder.component';
 
 @Component({
   selector: 'app-parts',
@@ -21,6 +22,7 @@ export class PartsComponent implements OnInit {
   loading = false;
   error = false;
   addedId: number | null = null;
+  brands = PART_BRANDS;
 
   constructor(
     public api: ApiService,
@@ -42,6 +44,23 @@ export class PartsComponent implements OnInit {
     return Math.ceil(this.total / this.limit);
   }
 
+  /** The brand whose name is the current search, if any. */
+  get activeBrand(): string | null {
+    const s = this.search.trim().toLowerCase();
+    return this.brands.find((b) => b.search.toLowerCase() === s)?.search ?? null;
+  }
+
+  /** Page numbers to show: first, last and two around the current one; 0 = "…". */
+  get pageList(): number[] {
+    const last = this.pages;
+    const out: number[] = [];
+    for (let n = 1; n <= last; n++) {
+      if (n === 1 || n === last || Math.abs(n - this.page) <= 2) out.push(n);
+      else if (out[out.length - 1] !== 0) out.push(0);
+    }
+    return out;
+  }
+
   load(page = 1): void {
     this.page = page;
     this.loading = true;
@@ -52,6 +71,7 @@ export class PartsComponent implements OnInit {
         this.total = res.total;
         this.limit = res.limit;
         this.loading = false;
+        if (window.scrollY > 300) window.scrollTo({ top: 0, behavior: 'smooth' });
       },
       error: () => {
         this.error = true;
@@ -62,6 +82,11 @@ export class PartsComponent implements OnInit {
 
   selectCategory(id: number | null): void {
     this.category = id;
+    this.load();
+  }
+
+  selectBrand(search: string | null): void {
+    this.search = search ?? '';
     this.load();
   }
 

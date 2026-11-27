@@ -38,24 +38,6 @@ html.motion .reveal.is-visible:hover {
   transition-delay: 0ms;
 }
 
-/* Line under section titles that grows when the title appears */
-.section-title::after {
-  content: '';
-  display: block;
-  width: 56px;
-  height: 4px;
-  border-radius: 2px;
-  background: var(--brand);
-  margin: 14px auto 0;
-}
-html.motion .section-title.reveal::after {
-  width: 0;
-  transition: width 0.8s 0.3s ease;
-}
-html.motion .section-title.reveal.is-visible::after {
-  width: 56px;
-}
-
 /* ---------- Home page hero ---------- */
 html.motion .hero-content > * {
   animation: hero-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;

@@ -20,6 +20,22 @@
 .launcher.active {
   padding: 12px 15px;
 }
+/* Once the page is scrolled the label folds away so the button doesn't cover
+   cards; it comes back on hover or keyboard focus. */
+.launcher span {
+  max-width: 160px;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: max-width 0.3s ease, opacity 0.2s;
+}
+:host-context(html.scrolled) .launcher:not(:hover):not(:focus-visible) {
+  padding: 14px 15px;
+  gap: 0;
+}
+:host-context(html.scrolled) .launcher:not(:hover):not(:focus-visible) span {
+  max-width: 0;
+  opacity: 0;
+}
 
 .chat {
   position: fixed;

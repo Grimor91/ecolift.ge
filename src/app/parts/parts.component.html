@@ -1,64 +1,90 @@
 <div class="container parts-container">
-  <h1>{{ "shop.title" | translate }}</h1>
-
-  <form class="search-bar" (ngSubmit)="load()">
-    <input
-      type="search"
-      class="form-control"
-      name="search"
-      [(ngModel)]="search"
-      [placeholder]="'shop.searchPlaceholder' | translate"
-    />
-    <button type="submit" class="btn btn-success">{{ "shop.search" | translate }}</button>
-  </form>
-
-  <div class="categories" *ngIf="categories.length">
-    <button class="btn btn-sm" [class.btn-success]="!category" [class.btn-outline-success]="category" (click)="selectCategory(null)">
-      {{ "shop.all" | translate }}
-    </button>
-    <button
-      *ngFor="let c of categories"
-      class="btn btn-sm"
-      [class.btn-success]="category === c.id"
-      [class.btn-outline-success]="category !== c.id"
-      (click)="selectCategory(c.id)"
-    >
-      {{ c | localized: "name" }}
-    </button>
+  <div class="parts-head">
+    <h1>{{ "shop.title" | translate }}</h1>
+    <form class="search-bar" (ngSubmit)="load()" role="search">
+      <input
+        type="search"
+        class="form-control"
+        name="search"
+        [(ngModel)]="search"
+        [placeholder]="'shop.searchPlaceholder' | translate"
+        [attr.aria-label]="'shop.searchPlaceholder' | translate"
+      />
+      <button type="submit" class="btn btn-success">{{ "shop.search" | translate }}</button>
+    </form>
   </div>
 
-  <div *ngIf="loading" class="state">{{ "shop.loading" | translate }}</div>
-  <div *ngIf="error" class="state">{{ "shop.loadError" | translate }}</div>
-  <div *ngIf="!loading && !error && !products.length" class="state">{{ "shop.empty" | translate }}</div>
+  <!-- Phones and tablets: two dropdowns instead of the side list -->
+  <div class="filter-selects">
+    <select class="form-select" [ngModel]="category" (ngModelChange)="selectCategory($event)" name="cat" [attr.aria-label]="'design.category' | translate">
+      <option [ngValue]="null">{{ "design.category" | translate }}: {{ "shop.all" | translate }}</option>
+      <option *ngFor="let c of categories" [ngValue]="c.id">{{ c | localized: "name" }}</option>
+    </select>
+    <select class="form-select" [ngModel]="activeBrand" (ngModelChange)="selectBrand($event)" name="brand" [attr.aria-label]="'design.brand' | translate">
+      <option [ngValue]="null">{{ "design.brand" | translate }}: {{ "shop.all" | translate }}</option>
+      <option *ngFor="let b of brands" [ngValue]="b.search">{{ b.label }}</option>
+    </select>
+  </div>
 
-  <div class="row g-4" *ngIf="!loading && !error">
-    <div class="col-12 col-sm-6 col-lg-4 col-xl-3" *ngFor="let p of products">
-      <div class="card h-100 product-card">
-        <a [routerLink]="['/parts', p.id]" class="img-wrap">
-          <img *ngIf="p.images.length; else noImg" [src]="api.imageUrl(p.images[0].url)" [alt]="p | localized: 'name'" />
-          <ng-template #noImg><div class="no-img">{{ p.code }}</div></ng-template>
-        </a>
-        <div class="card-body d-flex flex-column">
-          <small class="text-muted">{{ "shop.code" | translate }}: {{ p.code }}</small>
-          <h5 class="card-title">
-            <a [routerLink]="['/parts', p.id]">{{ p | localized: "name" }}</a>
-          </h5>
-          <div class="price">
-            <ng-container *ngIf="p.price !== null; else onRequest">{{ p.price }} ₾</ng-container>
-            <ng-template #onRequest>{{ "shop.priceOnRequest" | translate }}</ng-template>
+  <div class="parts-layout">
+    <aside class="filters" *ngIf="categories.length">
+      <h2>{{ "design.category" | translate }}</h2>
+      <button type="button" [class.on]="!category" (click)="selectCategory(null)">{{ "shop.all" | translate }}</button>
+      <button type="button" *ngFor="let c of categories" [class.on]="category === c.id" (click)="selectCategory(c.id)">
+        {{ c | localized: "name" }}
+      </button>
+
+      <h2>{{ "design.brand" | translate }}</h2>
+      <button type="button" [class.on]="!activeBrand" (click)="selectBrand(null)">{{ "shop.all" | translate }}</button>
+      <button type="button" *ngFor="let b of brands" [class.on]="activeBrand === b.search" (click)="selectBrand(b.search)">
+        {{ b.label }}
+      </button>
+    </aside>
+
+    <div class="results">
+      <div *ngIf="loading" class="state">{{ "shop.loading" | translate }}</div>
+      <div *ngIf="error" class="state">{{ "shop.loadError" | translate }}</div>
+      <div *ngIf="!loading && !error && !products.length" class="state">{{ "shop.empty" | translate }}</div>
+
+      <div class="row g-3" *ngIf="!loading && !error">
+        <div class="col-6 col-md-4 col-xxl-3" *ngFor="let p of products">
+          <div class="card h-100 product-card">
+            <a [routerLink]="['/parts', p.id]" class="img-wrap">
+              <img *ngIf="p.images.length; else noImg" [src]="api.imageUrl(p.images[0].url)" [alt]="p | localized: 'name'" loading="lazy" />
+              <ng-template #noImg><div class="no-img">{{ p.code }}</div></ng-template>
+            </a>
+            <div class="card-body d-flex flex-column">
+              <small class="text-muted">{{ "shop.code" | translate }}: {{ p.code }}</small>
+              <h5 class="card-title">
+                <a [routerLink]="['/parts', p.id]">{{ p | localized: "name" }}</a>
+              </h5>
+              <div class="price">
+                <ng-container *ngIf="p.price !== null; else onRequest">{{ p.price }} ₾</ng-container>
+                <ng-template #onRequest>{{ "shop.priceOnRequest" | translate }}</ng-template>
+              </div>
+              <small *ngIf="!p.in_stock" class="text-danger">{{ "shop.outOfStock" | translate }}</small>
+              <button class="btn btn-success mt-auto" (click)="addToCart(p)">
+                {{ (addedId === p.id ? "shop.added" : "shop.addToCart") | translate }}
+              </button>
+            </div>
           </div>
-          <small *ngIf="!p.in_stock" class="text-danger">{{ "shop.outOfStock" | translate }}</small>
-          <button class="btn btn-success mt-auto" (click)="addToCart(p)">
-            {{ (addedId === p.id ? "shop.added" : "shop.addToCart") | translate }}
-          </button>
         </div>
       </div>
+
+      <nav *ngIf="pages > 1" class="pager" aria-label="Pages">
+        <button type="button" class="pg" [disabled]="page <= 1" (click)="load(page - 1)" aria-label="‹">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <ng-container *ngFor="let n of pageList">
+          <span *ngIf="n === 0" class="gap">…</span>
+          <button *ngIf="n !== 0" type="button" class="pg" [class.on]="n === page" [attr.aria-current]="n === page ? 'page' : null" (click)="load(n)">
+            {{ n }}
+          </button>
+        </ng-container>
+        <button type="button" class="pg" [disabled]="page >= pages" (click)="load(page + 1)" aria-label="›">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </nav>
     </div>
   </div>
-
-  <nav *ngIf="pages > 1" class="pager">
-    <button class="btn btn-outline-secondary btn-sm" [disabled]="page <= 1" (click)="load(page - 1)">‹</button>
-    <span>{{ page }} / {{ pages }}</span>
-    <button class="btn btn-outline-secondary btn-sm" [disabled]="page >= pages" (click)="load(page + 1)">›</button>
-  </nav>
 </div>

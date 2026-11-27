@@ -10,6 +10,8 @@ const REVEAL = [
   '.section-lead',
   '.page-intro > *',
   '.tile',
+  '.prod-card',
+  '.path',
   '.stat',
   '.value',
   '.service-list li',
@@ -106,9 +108,11 @@ export class MotionService {
 
   // "10+" counts 0 -> 10 and keeps the "+".
   private countUp(stat: HTMLElement): void {
+    // Only the leading number text is animated, so a unit after it (<small>) stays.
     const strong = stat.querySelector('strong');
-    const match = strong?.textContent?.trim().match(/^(\d+)(.*)$/);
-    if (!strong || !match) return;
+    const node = strong?.firstChild;
+    const match = node?.nodeType === Node.TEXT_NODE ? node.textContent?.trim().match(/^(\d+)(.*)$/) : null;
+    if (!node || !match) return;
     const target = +match[1];
     const suffix = match[2];
     const start = performance.now();
@@ -116,7 +120,7 @@ export class MotionService {
     const step = (now: number) => {
       const t = Math.min(1, (now - start) / duration);
       const eased = 1 - Math.pow(1 - t, 3);
-      strong.textContent = Math.round(target * eased) + suffix;
+      node.textContent = Math.round(target * eased) + suffix;
       if (t < 1) requestAnimationFrame(step);
     };
     requestAnimationFrame(step);

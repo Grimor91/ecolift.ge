@@ -1,0 +1,160 @@
+.finder {
+  background: #10201e;
+  color: #fff;
+  padding: 44px 16px 48px;
+}
+.finder-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 22px 48px;
+  align-items: center;
+}
+.finder-text h2 {
+  color: #fff;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+.finder-text p {
+  color: rgba(255, 255, 255, 0.72);
+  margin: 0;
+  font-size: 16px;
+}
+.finder-search {
+  display: flex;
+  gap: 10px;
+}
+.finder-search input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  font-size: 16px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid #2f4644;
+  background: #0b1716;
+  color: #fff;
+}
+.finder-search input::placeholder {
+  color: #7f9693;
+}
+.finder-search input:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(18, 149, 136, 0.35);
+}
+.finder-search button {
+  border: 0;
+  border-radius: 12px;
+  padding: 0 24px;
+  background: var(--brand);
+  color: #fff;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.finder-search button:hover {
+  background: var(--brand-dark);
+}
+.finder-brands {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 6px;
+}
+.finder-label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+}
+.brand-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 10px;
+}
+
+/* Brand buttons look like brushed-steel lift call buttons and light up when pressed. */
+.call-btn {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 0;
+  width: 92px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.85);
+  font: inherit;
+  font-size: 13px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.call-btn i {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  color: #3b4746;
+  background: radial-gradient(circle at 50% 50%, #e9eded 0 52%, #b6bfbf 53% 56%, #eef1f1 57% 100%);
+  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.25), 0 2px 0 #050d0c;
+  transition: box-shadow 0.2s, color 0.2s;
+}
+.call-btn.all i {
+  font-size: 18px;
+}
+.call-btn:hover i,
+.call-btn:focus-visible i,
+.call-btn.lit i {
+  color: var(--brand-dark);
+  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.2), 0 0 0 3px #40d3c3, 0 0 20px rgba(64, 211, 195, 0.55);
+}
+.call-btn:hover,
+.call-btn:focus-visible {
+  color: #fff;
+}
+.call-btn:focus-visible {
+  outline: none;
+}
+
+@media (max-width: 991px) {
+  .finder-inner {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 575px) {
+  .finder {
+    padding: 32px 16px 36px;
+  }
+  .finder-text h2 {
+    font-size: 22px;
+  }
+  .finder-search button {
+    padding: 0 16px;
+  }
+  .brand-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px 6px;
+  }
+  .call-btn {
+    width: auto;
+    font-size: 12px;
+  }
+  .call-btn i {
+    width: 54px;
+    height: 54px;
+    font-size: 11px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .call-btn i {
+    transition: none;
+  }
+}

@@ -1,7 +1,7 @@
 <header class="site-nav" [class.open]="menuOpen">
   <div class="site-nav-inner">
     <a class="site-nav-logo" routerLink="/" (click)="closeMenu()">
-      <img src="assets/img/photo_2023-10-26_20-04-05.jpg" alt="Ecolift Plus" />
+      <img src="assets/img/logo.svg" alt="Ecolift Plus" width="704" height="340" />
     </a>
 
     <nav class="site-nav-links" aria-label="Menu">
@@ -49,6 +49,10 @@
     </nav>
 
     <div class="site-nav-actions">
+      <a class="site-nav-phone" href="tel:+995598750006" [attr.aria-label]="'home.call' | translate">
+        <i class="fa-solid fa-phone"></i><span>+995 598 75 00 06</span>
+      </a>
+
       <a class="site-nav-cart" routerLink="/cart" (click)="closeMenu()" [attr.aria-label]="'navbar.cart' | translate">
         <i class="fa-solid fa-cart-shopping"></i>
         <span *ngIf="cart.count" class="site-nav-badge">{{ cart.count }}</span>
