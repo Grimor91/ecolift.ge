@@ -1,49 +1,87 @@
 .parts-container {
-  padding: 30px 16px 60px;
+  padding: 32px 24px 60px;
   margin-top: 30px;
   margin-bottom: 30px;
   background: #fff;
-  border-radius: 8px;
+  border-radius: 14px;
 }
 
+.parts-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 32px;
+  margin-bottom: 28px;
+}
 h1 {
-  text-align: center;
-  margin-bottom: 24px;
-  color: #333;
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--ink);
 }
-
 .search-bar {
   display: flex;
   gap: 8px;
-  max-width: 600px;
-  margin: 0 auto 16px;
+  flex: 0 1 560px;
+}
+.search-bar .form-control {
+  padding: 11px 14px;
+  border-radius: 10px;
+}
+.search-bar .btn {
+  border-radius: 10px;
+  padding: 0 22px;
+  font-weight: 600;
 }
 
-.categories {
+/* Desktop: filters in a column on the left, parts on the right. */
+.parts-layout {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+}
+.filters {
+  position: sticky;
+  top: 96px;
+  max-height: calc(100vh - 116px);
+  overflow-y: auto;
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-  margin-bottom: 24px;
+  flex-direction: column;
+  gap: 2px;
+  padding-right: 6px;
+  scrollbar-width: thin;
 }
-
-/* With 25+ categories the wrapped chips fill a whole phone screen,
-   so on small screens they become one row that scrolls sideways. */
-@media (max-width: 767.98px) {
-  .categories {
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    overflow-x: auto;
-    padding-bottom: 6px;
-    margin-inline: -16px;
-    padding-inline: 16px;
-    scrollbar-width: thin;
-  }
-
-  .categories .btn {
-    flex: 0 0 auto;
-    white-space: nowrap;
-  }
+.filters h2 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+  margin: 0 0 6px 10px;
+}
+.filters h2:not(:first-child) {
+  margin-top: 22px;
+}
+.filters button {
+  text-align: left;
+  border: 0;
+  background: none;
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--ink);
+}
+.filters button:hover {
+  background: var(--bg);
+}
+.filters button.on {
+  background: var(--brand-soft);
+  color: var(--brand-dark);
+  font-weight: 700;
+}
+.filter-selects {
+  display: none;
 }
 
 .state {
@@ -54,24 +92,26 @@ h1 {
 }
 
 .product-card {
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  border: 1px solid var(--line);
   overflow: hidden;
+  transition: border-color 0.2s;
 }
-
+.product-card:hover {
+  border-color: var(--brand);
+}
 .img-wrap {
   text-decoration: none;
   display: block;
   aspect-ratio: 4 / 3;
-  background: #f4f4f4;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
 }
-
 .img-wrap img {
   width: 100%;
   height: 100%;
   object-fit: contain;
 }
-
 .no-img {
   height: 100%;
   display: flex;
@@ -80,21 +120,99 @@ h1 {
   color: #999;
   font-size: 20px;
 }
-
+.card-title {
+  font-size: 16px;
+  line-height: 1.4;
+  margin: 4px 0 6px;
+}
 .card-title a {
-  color: #333;
+  color: var(--ink);
   text-decoration: none;
 }
-
 .price {
   font-weight: 600;
+  font-size: 14px;
+  color: var(--brand-dark);
   margin-bottom: 12px;
 }
 
+/* Numbered pages, big enough to tap. */
 .pager {
   display: flex;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 6px;
   align-items: center;
   justify-content: center;
-  margin-top: 30px;
+  margin-top: 36px;
+}
+.pg {
+  min-width: 42px;
+  height: 42px;
+  padding: 0 10px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.pg:hover:not(:disabled) {
+  border-color: var(--brand);
+  color: var(--brand-dark);
+}
+.pg.on {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+.pg:disabled {
+  opacity: 0.4;
+}
+.gap {
+  color: var(--muted);
+  padding: 0 4px;
+}
+
+@media (max-width: 991.98px) {
+  .parts-layout {
+    grid-template-columns: 1fr;
+  }
+  .filters {
+    display: none;
+  }
+  .filter-selects {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .filter-selects .form-select {
+    padding: 10px 12px;
+    border-radius: 10px;
+  }
+}
+@media (max-width: 575.98px) {
+  .parts-container {
+    padding: 24px 12px 40px;
+    margin-top: 12px;
+  }
+  h1 {
+    font-size: 26px;
+  }
+  .search-bar {
+    flex-basis: 100%;
+  }
+  .filter-selects {
+    grid-template-columns: 1fr;
+  }
+  .card-body {
+    padding: 10px;
+  }
+  .card-title {
+    font-size: 14px;
+  }
+  .card-body .btn {
+    font-size: 13px;
+    padding: 7px 6px;
+  }
 }

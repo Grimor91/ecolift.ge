@@ -1,108 +1,73 @@
 .showroom {
-  max-width: 1200px;
+  max-width: 1232px;
   margin: 0 auto;
   padding: 0 16px 72px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
 }
-
-.showroom-left {
+.show-card {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
   height: 320px;
   border-radius: 14px;
   overflow: hidden;
   background-position: center;
-  background-repeat: repeat;
   background-size: cover;
-  padding: 15px;
-}
-
-.showroom-right {
-  height: 320px;
-  overflow: hidden;
-  border-radius: 14px;
-  background-position: center;
-  background-repeat: repeat;
-  background-size: cover;
-  padding: 15px;
-}
-
-.spanlogo {
-  position: absolute;
-  left: 24px;
-  bottom: 24px;
-  border: #fff 1px;
-  width: 80px;
-  height: 80px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  background-color: #fff;
-}
-
-.spanlogo2 {
-  position: absolute;
-  left: 24px;
-  bottom: 24px;
-  border: #fff 1px;
-  width: 80px;
-  height: 80px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  background-color: #fff;
-}
-
-.showroom-logo {
-  color: black;
   text-decoration: none;
 }
-
-.showroom-left {
-  position: relative;
+.show-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(transparent 40%, rgba(8, 20, 19, 0.8));
+}
+.show-left {
   background-image: url(/assets/img/Intro-1.jpg);
 }
-
-.showroom-left::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.35);
-}
-
-.showroom-right {
-  position: relative;
+.show-right {
   background-image: url(/assets/img/WhatsApp\ Image\ 2023-03-15\ at\ 19.24.jpeg);
 }
-
-.showroom-right::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.35);
+.show-caption {
+  position: relative;
+  margin: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 16px;
+  transition: background 0.2s, color 0.2s;
 }
-
+.show-caption i {
+  color: var(--brand);
+}
+.show-caption .ext {
+  font-size: 12px;
+  color: var(--muted);
+}
+.show-card:hover .show-caption,
+.show-card:focus-visible .show-caption {
+  background: var(--brand);
+  color: #fff;
+}
+.show-card:hover .show-caption i,
+.show-card:focus-visible .show-caption i {
+  color: #fff;
+}
 @media (max-width: 767px) {
   .showroom {
     grid-template-columns: 1fr;
   }
-
-  .showroom-left,
-  .showroom-right {
+  .show-card {
     height: 220px;
   }
-
-  .spanlogo,
-  .spanlogo2 {
-    left: 16px;
-    bottom: 16px;
+  .show-caption {
+    margin: 14px;
+    font-size: 15px;
   }
 }

@@ -1,51 +1,55 @@
 <section class="section section-white">
   <div class="section-inner">
     <h2 class="section-title">{{ "text.Services" | translate }}</h2>
-    <div class="row g-3 products">
-      <div class="col-6 col-lg-3">
-        <a class="tile product" routerLink="/lifts">
-          <div class="tile-icon"><i class="fa-solid fa-elevator"></i></div>
-          <h3>{{ "text.Consulting" | translate }}</h3>
-        </a>
-      </div>
-      <div class="col-6 col-lg-3">
-        <a class="tile product" routerLink="/escolator">
-          <div class="tile-icon"><i class="fa-solid fa-stairs"></i></div>
-          <h3>{{ "text.equipment" | translate }}</h3>
-        </a>
-      </div>
-      <div class="col-6 col-lg-3">
-        <div class="tile product">
-          <div class="tile-icon"><i class="fa-solid fa-door-open"></i></div>
-          <h3>{{ "text.commissioning" | translate }}</h3>
-        </div>
-      </div>
-      <div class="col-6 col-lg-3">
-        <div class="tile product">
-          <div class="tile-icon"><i class="fa-solid fa-fire-extinguisher"></i></div>
-          <h3>{{ "text.decor" | translate }}</h3>
-        </div>
-      </div>
+    <div class="prod-grid">
+      <a class="prod-card" routerLink="/cardpassenger">
+        <img src="assets/img/home/passenger.jpg" alt="" loading="lazy" width="600" height="800" />
+        <span>{{ "text.Passanger" | translate }}</span>
+      </a>
+      <a class="prod-card" routerLink="/lifts">
+        <img src="assets/img/home/freight.jpg" alt="" loading="lazy" width="600" height="800" />
+        <span>{{ "design.prodFreight" | translate }}</span>
+      </a>
+      <a class="prod-card" routerLink="/escolator">
+        <img src="assets/img/home/escalator.jpg" alt="" loading="lazy" width="600" height="800" />
+        <span>{{ "navbar.escalators" | translate }}</span>
+      </a>
+      <a class="prod-card light" routerLink="/parts">
+        <img src="assets/img/home/parts.jpg" alt="" loading="lazy" width="600" height="800" />
+        <span>{{ "design.prodParts" | translate }}</span>
+      </a>
     </div>
+  </div>
+</section>
 
-    <h2 class="section-title services-title">{{ "text.AdditionalServicesheader" | translate }}</h2>
-    <ul class="service-list">
-      <li>{{ "text.AdditionalServices" | translate }}</li>
-      <li>{{ "text.Design-production" | translate }}</li>
-      <li>{{ "text.service-design" | translate }}</li>
-      <li>{{ "text.service-Technical" | translate }}</li>
-      <li>{{ "text.service-Production" | translate }}</li>
-      <li>{{ "text.service-Logistics" | translate }}</li>
-      <li>{{ "text.service-Installation" | translate }}</li>
-      <li>{{ "text.service-Handing" | translate }}</li>
-      <li>{{ "text.service-Tailor" | translate }}</li>
-      <li>{{ "text.service-Maintenance" | translate }}</li>
-      <li>{{ "text.service-Modernization" | translate }}</li>
-      <li><a routerLink="/parts">{{ "text.service-Spare" | translate }}</a></li>
-    </ul>
-    <div class="services-cta">
-      <a class="btn-brand" routerLink="/service"><i class="fa-solid fa-screwdriver-wrench"></i> {{ "service.cta" | translate }}</a>
-      <a class="btn-outline" routerLink="/quote"><i class="fa-solid fa-file-invoice"></i> {{ "quote.cta" | translate }}</a>
+<section class="section">
+  <div class="section-inner">
+    <h2 class="section-title">{{ "design.howTitle" | translate }}</h2>
+    <div class="paths">
+      <div class="path">
+        <i class="fa-solid fa-elevator"></i>
+        <h3>{{ "design.path1Title" | translate }}</h3>
+        <p>{{ "design.path1Text" | translate }}</p>
+        <a class="btn-brand" routerLink="/quote">{{ "quote.cta" | translate }}</a>
+      </div>
+      <div class="path">
+        <i class="fa-solid fa-screwdriver-wrench"></i>
+        <h3>{{ "design.path2Title" | translate }}</h3>
+        <p>{{ "design.path2Text" | translate }}</p>
+        <a class="btn-brand" routerLink="/service">{{ "service.cta" | translate }}</a>
+      </div>
+      <div class="path">
+        <i class="fa-solid fa-arrows-rotate"></i>
+        <h3>{{ "design.path3Title" | translate }}</h3>
+        <p>{{ "design.path3Text" | translate }}</p>
+        <a class="btn-outline" routerLink="/service">{{ "design.path3Cta" | translate }}</a>
+      </div>
+      <div class="path">
+        <i class="fa-solid fa-gears"></i>
+        <h3>{{ "design.prodParts" | translate }}</h3>
+        <p>{{ "design.path4Text" | translate }}</p>
+        <a class="btn-outline" routerLink="/parts">{{ "design.path4Cta" | translate }}</a>
+      </div>
     </div>
   </div>
 </section>

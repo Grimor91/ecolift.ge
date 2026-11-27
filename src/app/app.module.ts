@@ -30,6 +30,7 @@ import { LocationComponent } from './location/location.component';
 import { AboutusComponent } from './aboutus/aboutus.component';
 import { OwlComponent } from './owl/owl.component';
 import { ServiceComponent } from './service/service.component';
+import { PartFinderComponent } from './part-finder/part-finder.component';
 import { LiftsComponent } from './lifts/lifts.component';
 import { AdminpanelComponent } from './adminpanel/adminpanel.component';
 import { PartsComponent } from './parts/parts.component';
@@ -48,7 +49,7 @@ import { ArticleComponent } from './articles/article.component';
 import { AssistantComponent } from './assistant/assistant.component';
 // The query string makes browsers fetch fresh translations after a deploy
 // instead of reusing a cached copy; bump it whenever the JSON files change.
-const TRANSLATIONS_VERSION = '2026-10-18';
+const TRANSLATIONS_VERSION = '2026-11-27';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n-v2/', `.json?v=${TRANSLATIONS_VERSION}`);
@@ -76,6 +77,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     LocationComponent,
     OwlComponent,
     ServiceComponent,
+    PartFinderComponent,
     LiftsComponent,
     AdminpanelComponent,
     PartsComponent,

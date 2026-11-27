@@ -4,6 +4,7 @@
   justify-content: space-between;
   padding: 56px 16px 24px;
   gap: 24px;
+  max-width: 1232px;
 }
 .follow h2 {
   font-size: 28px;
